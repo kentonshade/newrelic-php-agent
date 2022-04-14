@@ -34,5 +34,6 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=low
-          command: test  # Optional
+          # GHA: Receiving errors related to path
+          command: test --file=tests/include/newrelic-integration/package.json
           json: false  # Optional

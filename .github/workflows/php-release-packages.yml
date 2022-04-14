@@ -39,7 +39,7 @@ jobs:
       - name: Download Alpine release artifacts
         # uses: dawidd6/action-download-artifact@v2.14.1
         # GHA: Testing new version of action
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v2
         with:
           # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
           # Required, if artifact is from a different repo
@@ -81,7 +81,7 @@ jobs:
       # Download CentOS release artifacts
       # GHa: Determine the ref to use with the download action
       - name: Download CentOS release artifacts
-        uses: dawidd6/action-download-artifact@v2.14.1
+        uses: dawidd6/action-download-artifact@v2
         with:
           workflow: NEW-release-build.yml
           branch: gha-dev
@@ -96,7 +96,7 @@ jobs:
       # Download arm64 release artifacts
       # GHa: Determine the ref to use with the download action
       - name: Download arm64 release artifacts
-        uses: dawidd6/action-download-artifact@v2.14.1
+        uses: dawidd6/action-download-artifact@v2
         with:
           workflow: NEW-release-build.yml
           branch: gha-dev
