@@ -37,7 +37,9 @@ jobs:
       # Download Alpine release artifacts
       # GHa: Determine the ref to use with the download action
       - name: Download Alpine release artifacts
-        uses: dawidd6/action-download-artifact@v2.14.1
+        # uses: dawidd6/action-download-artifact@v2.14.1
+        # GHA: Testing new version of action
+        uses: dawidd6/action-download-artifact@v3
         with:
           # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
           # Required, if artifact is from a different repo
@@ -105,10 +107,10 @@ jobs:
           repo: ${{github.repository}}
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Check our directories
         run: |
-          pwd && ls -la
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          tree artifacts-alpine/
+          tree artifacts-centos/
+          tree artifacts-arm64/
           # lsb_release -a
           ## apt list --installed
