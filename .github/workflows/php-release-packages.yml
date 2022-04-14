@@ -68,7 +68,7 @@ jobs:
           # will download all artifacts if not specified
           # and extract them in respective subdirectories
           # https://github.com/actions/download-artifact#download-all-artifacts
-          # name: php-release-agent-checkout-repo-artifacts
+          name: combined-releases-${{ github.sha }}
           # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
           path: artifacts-alpine
           # Optional, defaults to current repo
@@ -76,7 +76,7 @@ jobs:
           # Optional, check the workflow run whether it has an artifact
           # then will get the last available artifact from previous workflow
           # default false, just try to download from the last one
-          # check_artifacts: true
+          check_artifacts: true
 
       # Download CentOS release artifacts
       # GHa: Determine the ref to use with the download action
