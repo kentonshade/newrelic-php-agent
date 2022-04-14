@@ -261,7 +261,8 @@ jobs:
           cp -R newrelic-nr-alpine*/* alpine/
           cp -R newrelic-nr-centos*/* centos/
           rm -rf newrelic-nr-alpine*/ newrelic-nr-centos*/
-          cd ../ && tree releases/
+          cd ../ && mv releases combined-releases
+          tree combined-releases/
 
       # GHA: Note the format of GitHub variable reference in contexts
       # UNDERSCORE REPLACED WITH . SYNTAX
@@ -269,6 +270,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ github.sha }}
-          path: releases
+          name: combined-releases-${{ github.sha }}
+          path: combined-releases/
           if-no-files-found: error
