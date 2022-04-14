@@ -1,0 +1,114 @@
+---
+# GHA: Jenkins job:
+# https://phpagent-build.pdx.vm.datanerd.us/job/php-release-packages/configure
+# GHA (04/07): This job downloads artifacts generated from the new
+# release build workflow (confirm with Amber)
+# We need download the artifacts generated per OS (CentOS, Alpine, AND arm64)
+# GHA We may need to use a workflow_run trigger for this;
+# /home/kenton/repos/github/my-actions/.github/workflows/workflow-2.yaml
+
+name: php-release-packages
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  workflow_run:
+    workflows: ['NEW release_CI (php-release-agent)']
+    branches:
+      - gha-dev
+      - dev
+      - main
+    types: ## Review if this is the comperehensive types available
+      - completed
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  php-release-packages:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      ## GHA: We will download all artifacts and then remove what is not needed
+      ##
+      # Download Alpine release artifacts
+      # GHa: Determine the ref to use with the download action
+      - name: Download Alpine release artifacts
+        uses: dawidd6/action-download-artifact@v2.14.1
+        with:
+          # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
+          # Required, if artifact is from a different repo
+          # github_token: ${{secrets.GITHUB_TOKEN}}
+          # Required, workflow file name or ID
+          workflow: NEW-release-build.yml
+          # Optional, the status or conclusion of a completed workflow to search for
+          # Can be one of a workflow conclusion:
+          #   "failure", "success", "neutral", "cancelled", "skipped", "timed_out", "action_required"
+          # Or a workflow status:
+          #   "completed", "in_progress", "queued"
+          # workflow_conclusion: success
+          # Optional, will get head commit SHA
+          # pr: ${{github.event.pull_request.number}}
+          # Optional, no need to specify if PR is
+          # commit: ${{github.event.pull_request.head.sha}}
+          # Optional, will use the branch
+          branch: gha-dev
+          # Optional, defaults to all types
+          # event: push
+          # Optional, will use specified workflow run
+          # run_id: 1122334455
+          # Optional, run number from the workflow
+          # run_number: 34
+          # Optional, uploaded artifact name,
+          # will download all artifacts if not specified
+          # and extract them in respective subdirectories
+          # https://github.com/actions/download-artifact#download-all-artifacts
+          # name: php-release-agent-checkout-repo-artifacts
+          # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
+          path: artifacts-alpine
+          # Optional, defaults to current repo
+          repo: ${{github.repository}}
+          # Optional, check the workflow run whether it has an artifact
+          # then will get the last available artifact from previous workflow
+          # default false, just try to download from the last one
+          # check_artifacts: true
+
+      # Download CentOS release artifacts
+      # GHa: Determine the ref to use with the download action
+      - name: Download CentOS release artifacts
+        uses: dawidd6/action-download-artifact@v2.14.1
+        with:
+          workflow: NEW-release-build.yml
+          branch: gha-dev
+          # GHA: We'll add commit here as well?
+          # We might need to grab a workflow run ID
+          # commit:
+          # name: php-release-agent-checkout-repo-artifacts
+          path: artifacts-centos
+          repo: ${{github.repository}}
+
+      # GHA: WIP!
+      # Download arm64 release artifacts
+      # GHa: Determine the ref to use with the download action
+      - name: Download arm64 release artifacts
+        uses: dawidd6/action-download-artifact@v2.14.1
+        with:
+          workflow: NEW-release-build.yml
+          branch: gha-dev
+          # GHA: We'll add commit here as well
+          # commit:
+          # name: php-release-agent-checkout-repo-artifacts
+          path: artifacts-arm64
+          repo: ${{github.repository}}
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          pwd && ls -la
+          echo Add other actions to build,
+          echo test, and deploy your project.
+          # lsb_release -a
+          ## apt list --installed
