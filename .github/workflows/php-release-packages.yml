@@ -66,57 +66,58 @@ jobs:
           branch: gha-dev
           # Optional, defaults to all types
           # event: push
+          ## GHA: testing static values below
           # Optional, will use specified workflow run
-          # run_id: 1122334455
+          run_id: 2169362908
           # Optional, run number from the workflow
-          # run_number: 34
+          run_number: 92
           # Optional, uploaded artifact name,
           # will download all artifacts if not specified
           # and extract them in respective subdirectories
           # https://github.com/actions/download-artifact#download-all-artifacts
-          name: combined-releases-${{ github.sha }}
+          # name: combined-releases-${{ github.sha }}
           # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
-          path: artifacts-alpine
+          path: combined-artifacts
           # Optional, defaults to current repo
           repo: ${{github.repository}}
           # Optional, check the workflow run whether it has an artifact
           # then will get the last available artifact from previous workflow
           # default false, just try to download from the last one
-          check_artifacts: true
+          # check_artifacts: true
 
       # Download CentOS release artifacts
       # GHa: Determine the ref to use with the download action
-      - name: Download CentOS release artifacts
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: NEW-release-build.yml
-          branch: gha-dev
-          # GHA: We'll add commit here as well?
-          # We might need to grab a workflow run ID
-          # commit:
-          # name: php-release-agent-checkout-repo-artifacts
-          path: artifacts-centos
-          repo: ${{github.repository}}
+      # - name: Download CentOS release artifacts
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     workflow: NEW-release-build.yml
+      #     branch: gha-dev
+      #     # GHA: We'll add commit here as well?
+      #     # We might need to grab a workflow run ID
+      #     # commit:
+      #     # name: php-release-agent-checkout-repo-artifacts
+      #     path: artifacts-centos
+      #     repo: ${{github.repository}}
 
       # GHA: WIP!
       # Download arm64 release artifacts
       # GHa: Determine the ref to use with the download action
-      - name: Download arm64 release artifacts
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: NEW-release-build.yml
-          branch: gha-dev
-          # GHA: We'll add commit here as well
-          # commit:
-          # name: php-release-agent-checkout-repo-artifacts
-          path: artifacts-arm64
-          repo: ${{github.repository}}
+      # - name: Download arm64 release artifacts
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     workflow: NEW-release-build.yml
+      #     branch: gha-dev
+      #     # GHA: We'll add commit here as well
+      #     # commit:
+      #     # name: php-release-agent-checkout-repo-artifacts
+      #     path: artifacts-arm64
+      #     repo: ${{github.repository}}
 
       # Runs a set of commands using the runners shell
       - name: Check our directories
         run: |
-          tree artifacts-alpine/
-          tree artifacts-centos/
-          tree artifacts-arm64/
+          tree combined-artifacts/
+          # tree artifacts-centos/
+          # tree artifacts-arm64/
           # lsb_release -a
           ## apt list --installed
