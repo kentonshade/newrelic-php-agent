@@ -37,12 +37,21 @@ jobs:
       # Download Alpine release artifacts
       # GHa: Determine the ref to use with the download action
 
+      # GHA: Need an action here that checks the latest workflow run ID
+      # for NEW-release-build.yml.  Use gh command
+      # Set env variable to run ID.  I don't think run number is necessary
+      - name: Get dependent workflow ID
+        if: ${{ always() }}
+        run: |
+          # RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)
+          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+
       # Check ENV variables
       - name: Check environmental variables
         if: ${{ always() }}
         run: printenv | sort -f
 
-      - name: Download Alpine release artifacts
+      - name: Download combined-artifacts
         # uses: dawidd6/action-download-artifact@v2.14.1
         # GHA: Testing new version of action
         uses: dawidd6/action-download-artifact@v2
@@ -68,9 +77,10 @@ jobs:
           # event: push
           ## GHA: testing static values below
           # Optional, will use specified workflow run
-          run_id: 2169362908
+          # run_id: 2169362908
+          run_id: ${{ env.RUN_ID }}
           # Optional, run number from the workflow
-          run_number: 92
+          # run_number: 92
           # Optional, uploaded artifact name,
           # will download all artifacts if not specified
           # and extract them in respective subdirectories
