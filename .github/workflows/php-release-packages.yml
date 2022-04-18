@@ -41,9 +41,13 @@ jobs:
       # for NEW-release-build.yml.  Use gh command
       # Set env variable to run ID.  I don't think run number is necessary
       - name: Get dependent workflow ID
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ always() }}
         run: |
           # RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # Check ENV variables
