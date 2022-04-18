@@ -115,7 +115,7 @@ jobs:
       GROUP: 'mycirrus'
       IMAGE: 'newrelic:nr-centos8-1.1'
     container:  ## GHA: testing using private docker image
-      image: ${{ env.GROUP }}/${{ env.IMAGE }}
+      image: mycirrus/newrelic:nr-centos8-1.1
       credentials:
         username: ${{ secrets.DOCKER_REPO_USER }}
         password: ${{ secrets.DOCKER_USER_TOKEN }}
