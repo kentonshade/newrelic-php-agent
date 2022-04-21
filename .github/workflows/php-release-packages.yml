@@ -113,9 +113,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GROUP: 'mycirrus'
-      IMAGE: 'newrelic:nr-centos8-1.1'
+      IMAGE: 'newrelic:nr-centos6-1.2'
     container:  ## GHA: testing using private docker image
-      image: mycirrus/newrelic:nr-centos8-1.1
+      image: mycirrus/newrelic:nr-centos6-1.2
       credentials:
         username: ${{ secrets.DOCKER_REPO_USER }}
         password: ${{ secrets.DOCKER_USER_TOKEN }}
@@ -159,7 +159,12 @@ jobs:
       - name: Build Redhat
         run: |
           echo "Calling build-redhat.sh"
-          # ./packaging/build-redhat.sh
+          ./packaging/build-redhat.sh
+
+      # Check for new content in releases
+      - name: Check for new content in releases
+        run: |
+          tree releases/
 
 
   # GHA: This job requires Ubuntu runner
@@ -208,6 +213,11 @@ jobs:
           echo "Calling build-debian.sh"
           # ./packaging/build-debian.sh
 
+      # Check for new content in releases
+      - name: Check for new content in releases
+        run: |
+          tree releases/
+
 
   # GHA: This job requires Ubuntu runner
   # We will require the artifacts from new release build
@@ -254,3 +264,8 @@ jobs:
         run: |
           echo "Calling build-tgz.sh"
           # ./packaging/build-tgz.sh
+
+      # Check for new content in releases
+      - name: Check for new content in releases
+        run: |
+          tree releases/
