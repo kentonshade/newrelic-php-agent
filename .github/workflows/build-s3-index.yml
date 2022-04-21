@@ -1,0 +1,65 @@
+# GHA: From Jenkins
+
+---
+
+name: build-s3-index
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  # push:
+  #   branches: [ gha-testing ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      Repository:
+        description: "For which repository would you like to build indices(choose staging or production)?"
+        required: false
+        default: 'staging'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build-s3-index:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # GHA: Determine if we need the S3 Index Repo, this is agent repo for now.
+      - uses: actions/checkout@v2
+
+      # GHA: set AWS credentials
+      # GHA: Check updates to this action
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Execute shell script
+      - name: Run a multi-line script
+        run: |
+          echo "Executing shell script - Build S3 Index"
+          # curl -O https://dl.google.com/go/go1.15.3.freebsd-amd64.tar.gz
+          # tar zxf go*.tar.gz
+          # export PATH=$( pwd )/go/bin:$PATH
+          # # jt: This might be something that's only needed temporarily. I had to add it, as
+          # # otherwise go-getting the aws-sdk would fail.
+          # GOPATH=$( pwd ) go get golang.org/x/text/...
+          # GOPATH=$( pwd ) go get github.com/aws/aws-sdk-go
+          # if [ "$Repository" == "Staging" ]; then
+          #   echo "Indexing the Staging repository...\n"
+          #   GOPATH=$( pwd ) AWS_REGION=us-east-1 go run src/indexer/main.go -bucket nr-downloads-private -prefix 75ac22b116 -upload
+          # else
+          #   if [ "$Repository" == "Production" ]; then
+          #     echo "Indexing the Production repository...\n"
+          #     GOPATH=$( pwd ) AWS_REGION=us-east-1 go run src/indexer/main.go -bucket nr-downloads-main -prefix php_agent -upload
+          #     echo "Now do a curl -i -X POST -H 'Fastly-Key:<your key>' https://api.fastly.com/service/2RMeBJ1ZTGnNJYvrWMgQhk/purge_all to purge the Fastly cache.\n"
+          #   else
+          #     echo "I don't know that environment. That's scary to me, so I'm exiting.."
+          #     exit 1
+          #   fi
+          # fi
