@@ -270,7 +270,7 @@ jobs:
       - name: Build Tar
         run: |
           echo "Calling build-tgz.sh"
-          # ./packaging/build-tgz.sh
+          ./packaging/build-tgz.sh
 
       # Check for new content in releases
       - name: Check for new content in releases
