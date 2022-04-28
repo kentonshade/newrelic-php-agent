@@ -146,6 +146,12 @@ jobs:
           echo "/opt/nr/php/${PHP_VER}/bin/phpize" >> $GITHUB_PATH
           echo "/opt/nr/php/${PHP_VER}/bin/php-config" >> $GITHUB_PATH
 
+      # Add ENV variables required in makefile
+      - name: Add ENV variables required in makefile
+        run: |
+          echo "AGENT_VERSION="${GITHUB_RUN_NUMBER}"" >> $GITHUB_ENV
+          echo "GIT_COMMIT="${GITHUB_SHA}"" >> $GITHUB_ENV
+
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
       - name: 'Test call phpvm.bash, then build-release.sh'
@@ -159,7 +165,7 @@ jobs:
           find / -name phpize
           whereis phpize
           echo "Calling release_build.sh"
-          ./.github/docker/linux/release_build.sh
+          ./.github/docker/linux/release_build_gha.sh
 
       # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
       #   if: ${{ matrix.image_os == 'newrelic:nr-alpine3.4-1.0' }}
