@@ -154,7 +154,7 @@ jobs:
 
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
-      - name: 'Test call phpvm.bash, then build-release.sh'
+      - name: 'Test call phpvm.bash, then release_build_gha.sh'
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' || matrix.image_os == 'newrelic:nr-centos7-1.1' }}
         # if: ${{ matrix.arch == 'x64' }}
         run: |
@@ -164,7 +164,7 @@ jobs:
           echo "Where is phpize?"
           find / -name phpize
           whereis phpize
-          echo "Calling release_build.sh"
+          echo "Calling release_build_gha.sh"
           ./.github/docker/linux/release_build_gha.sh
 
       # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
