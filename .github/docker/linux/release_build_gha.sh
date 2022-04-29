@@ -17,4 +17,5 @@ make release-installer
 make release-docs
 make release-scripts
 make -r -j $(nproc) release-"${PHP_VER}"-gha "OPTIMIZE=1" "ARCH=${ARCH}"
+make release-versions
 # PHPS="${PHP_VER}" make -r -j $(nproc) release "OPTIMIZE=1" "ARCH=${ARCH}"
