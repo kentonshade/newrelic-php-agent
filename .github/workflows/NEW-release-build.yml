@@ -167,12 +167,6 @@ jobs:
           echo "Calling release_build_gha.sh"
           ./.github/docker/linux/release_build_gha.sh
 
-      # GHA: Adding this step for now as it fails rom the make commands
-      - name: Create VERSION and COMMIIT Files
-        run: |
-          echo "${AGENT_VERSION}" > releases/"${OS}"/VERSION
-          echo "${GIT_COMMIT}" > releases/"${OS}"/COMMIT
-
       # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
       #   if: ${{ matrix.image_os == 'newrelic:nr-alpine3.4-1.0' }}
       #   # if: ${{ matrix.arch == 'x64' }}
