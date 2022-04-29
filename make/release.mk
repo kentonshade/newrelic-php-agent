@@ -86,8 +86,8 @@ release-scripts: Makefile | releases/$(RELEASE_OS)/scripts/
 # GHA: Above release target does not successfully generate VERSION and COMMIT
 # Trying something else
 release-versions:
-	/bin/bash -x echo "${AGENT_VERSION}" > releases/"${RELEASE_OS}"/VERSION
-	/bin/bash -x echo "${GIT_COMMIT}" > releases/"${RELEASE_OS}"/COMMIT
+	echo "${AGENT_VERSION}" > releases/"${RELEASE_OS}"/VERSION
+	echo "${GIT_COMMIT}" > releases/"${RELEASE_OS}"/COMMIT
 
 # Build the agent sequentially for each version of PHP. This is necessary
 # because the PHP build process only supports in-tree builds.
