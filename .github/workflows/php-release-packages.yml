@@ -161,6 +161,11 @@ jobs:
         run: |
           mv releases/linux/LICENSE releases/linux/LICENSE.txt
 
+      # Install any remaining dependencies
+      - name: Install any remaining dependencies
+        run: |
+          yum install -y screen
+
       # Get the directories ready for buid-redhat.sh
       - name: Change gpg
         run: |
@@ -223,6 +228,11 @@ jobs:
       - name: Build/Runner dependecies
         run: |
           sudo apt -y install devscripts build-essential lintian
+
+      - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
+        run: |
+          sudo apt install \
+          -y $(dpkg-checkbuilddeps 2>&1 | sed -e 's/dpkg-checkbuilddeps:\serror:\sUnmet build dependencies: //g' -e  's/[\(][^)]*[\)] //g')
 
       - name: Build Debian
         run: |
