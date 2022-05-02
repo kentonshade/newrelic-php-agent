@@ -159,7 +159,7 @@ jobs:
       # Script required the tct extension
       - name: Asset renaming as required
         run: |
-          mv /releases/linux/LICENSE /releases/linux/LICENSE.txt
+          mv releases/linux/LICENSE releases/linux/LICENSE.txt
 
       # Get the directories ready for buid-redhat.sh
       - name: Change gpg
@@ -222,7 +222,7 @@ jobs:
 
       - name: Build/Runner dependecies
         run: |
-          sudo apt -y install debuild
+          sudo apt -y install dpkg-buildpackage
 
       - name: Build Debian
         run: |
