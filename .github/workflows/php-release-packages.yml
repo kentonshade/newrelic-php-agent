@@ -156,6 +156,11 @@ jobs:
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
 
+      # Script required the tct extension
+      - name: Asset renaming as required
+        run: |
+          mv /releases/linux/LICENSE /releases/linux/LICENSE.txt
+
       # Get the directories ready for buid-redhat.sh
       - name: Change gpg
         run: |
@@ -214,6 +219,10 @@ jobs:
           cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
+
+      - name: Build/Runner dependecies
+        run: |
+          sudo apt -y install debuild
 
       - name: Build Debian
         run: |
