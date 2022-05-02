@@ -222,7 +222,7 @@ jobs:
 
       - name: Build/Runner dependecies
         run: |
-          sudo apt -y install dpkg-buildpackage
+          sudo apt -y install devscripts build-essential lintian
 
       - name: Build Debian
         run: |
