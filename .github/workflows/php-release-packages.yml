@@ -235,7 +235,7 @@ jobs:
           ./packaging/build-debian.sh
 
       - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
-        if: ${{ failure }}
+        if: ${{ failure() }}
         run: |
           sudo apt install \
           -y $(dpkg-checkbuilddeps 2>&1 | sed -e 's/dpkg-checkbuilddeps:\serror:\sUnmet build dependencies: //g' -e  's/[\(][^)]*[\)] //g')
