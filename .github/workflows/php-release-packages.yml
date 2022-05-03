@@ -229,15 +229,16 @@ jobs:
         run: |
           sudo apt -y install devscripts build-essential lintian
 
-      - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
-        run: |
-          sudo apt install \
-          -y $(dpkg-checkbuilddeps 2>&1 | sed -e 's/dpkg-checkbuilddeps:\serror:\sUnmet build dependencies: //g' -e  's/[\(][^)]*[\)] //g')
-
       - name: Build Debian
         run: |
           echo "Calling build-debian.sh"
           ./packaging/build-debian.sh
+
+      - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
+        if: ${{ failure }}
+        run: |
+          sudo apt install \
+          -y $(dpkg-checkbuilddeps 2>&1 | sed -e 's/dpkg-checkbuilddeps:\serror:\sUnmet build dependencies: //g' -e  's/[\(][^)]*[\)] //g')
 
       # Check for new content in releases
       - name: Check for new content in releases
