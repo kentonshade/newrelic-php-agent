@@ -187,7 +187,9 @@ jobs:
   # GHA: This job requires Ubuntu runner
   # We will require the artifacts from new release build
   build-debian:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container:  ## GHA: testing using private docker image
+      image: ubuntu:14.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -230,11 +232,11 @@ jobs:
           sudo apt -y install devscripts build-essential lintian debhelper
 
       # GHA: Checking pcre error
-      - name: Build/Runner dependecies 2
-        run: |
-          sudo find / -name libpcre.so.*
-          sudo apt-get install libpcre3-dev
-          sudo find / -name libpcre.so.*
+      # - name: Build/Runner dependecies 2
+      #   run: |
+      #     sudo find / -name libpcre.so.*
+      #     sudo apt-get install libpcre3-dev
+      #     sudo find / -name libpcre.so.*
 
       - name: Build Debian
         run: |
