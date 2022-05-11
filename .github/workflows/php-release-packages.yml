@@ -240,12 +240,12 @@ jobs:
         run: |
           sudo apt -y install devscripts build-essential lintian debhelper
 
-      # GHA: Checking pcre error
-      # - name: Build/Runner dependecies 2
-      #   run: |
-      #     sudo find / -name libpcre.so.*
-      #     sudo apt-get install libpcre3-dev
-      #     sudo find / -name libpcre.so.*
+      GHA: Checking pcre error
+      - name: Build/Runner dependecies 2
+        run: |
+          sudo find / -name libpcre.so.*
+          # sudo apt-get install libpcre3-dev
+          # sudo find / -name libpcre.so.*
 
       - name: Build Debian
         run: |
