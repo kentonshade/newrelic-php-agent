@@ -194,6 +194,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Need gh cli and updated git
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install gh git
+          gh --version
+          git --version
+
       # GHA: Required to return latest release run
       # We will need to install gh for this container
       - name: Get dependent workflow ID
