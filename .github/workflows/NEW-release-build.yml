@@ -90,7 +90,8 @@ jobs:
         image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
-        php_ver: ['5.5', '5.6', '7.0']
+        # php_ver: ['5.5', '5.6', '7.0']
+        php_ver: ['5.5', '7.0']
         # GHA we'll need to exclude some combinations I believe
         # Check the arch for the new docker images
         arch: [x64]
