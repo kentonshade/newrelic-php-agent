@@ -319,3 +319,13 @@ jobs:
       - name: Check for new content in releases
         run: |
           tree releases/
+
+      # GHA: Note the format of GitHub variable reference in contexts
+      # UNDERSCORE REPLACED WITH . SYNTAX
+      # Github "scope"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: tar-releases-${{ github.sha }}
+          path: releases/*.tar.gz
+          if-no-files-found: error
