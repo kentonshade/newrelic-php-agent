@@ -152,7 +152,7 @@ jobs:
       - name: Consolidate releases
         run: |
           mkdir releases
-          cp -R combined-artifacts/combined-releases-*/alpine/* releases/
+          # cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
 
@@ -188,8 +188,8 @@ jobs:
   # We will require the artifacts from new release build
   build-debian:
     runs-on: ubuntu-latest
-    container:  ## GHA: testing using private docker image
-      image: ubuntu:14.04
+    # container:  ## GHA: testing using private docker image
+    #   image: ubuntu:14.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
