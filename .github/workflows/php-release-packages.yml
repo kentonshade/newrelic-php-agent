@@ -232,7 +232,7 @@ jobs:
       - name: Consolidate releases
         run: |
           mkdir releases
-          cp -R combined-artifacts/combined-releases-*/alpine/* releases/
+          # cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
 
