@@ -245,9 +245,8 @@ jobs:
         run: |
           sudo find / -name libpcre.so.*
           sudo apt-get install libpcre3 libpcre3-dev
-          ls -la /usr/lib/x86_64-linux-gnu/
           # sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so /usr/lib/x86_64-linux-gnu/libpcre.so.1
-          # sudo ln -s /usr/local/aws-sam-cli/1.48.0/dist/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so.1
+          sudo ln -s /usr/lib/x86_64-linux-gnu/libpcre.so /usr/lib/x86_64-linux-gnu/libpcre.so.1
           sudo find / -name libpcre.so.*
 
 
