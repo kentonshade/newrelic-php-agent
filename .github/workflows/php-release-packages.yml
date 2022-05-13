@@ -244,9 +244,8 @@ jobs:
       - name: Build/Runner dependecies 2
         run: |
           sudo find / -name libpcre.so.*
-          # sudo apt-get install libpcre16-3
-          cd /usr/lib/x86_64-linux-gnu/
-          sudo cp libpcre.so libpcre.so.1
+          # sudo apt-get install libpcre3 libpcre3-dev
+          # sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so /usr/lib/x86_64-linux-gnu/libpcre.so.1
           # sudo ln -s /usr/local/aws-sam-cli/1.48.0/dist/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so.1
           sudo find / -name libpcre.so.*
 
