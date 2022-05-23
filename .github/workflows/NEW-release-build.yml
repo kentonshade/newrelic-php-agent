@@ -27,6 +27,19 @@ on:
   # Run this workflow manually from the Actions tab or using the API
   #
   workflow_dispatch:
+    inputs:
+      ARM64:
+        description: "Optionally Run the arm64 job"
+        required: false
+        default: false
+      BUILD_NUMBER:
+        description: "BUILD_NUMBER to pass to workflow"
+        required: false
+        default: ""
+      BIGCHANGE:
+        description: "BUILD_NUMBER to pass to workflow"
+        required: false
+        default: false
 
 jobs:
   # GHA might be better to create sperarate jobs per image?
@@ -231,12 +244,215 @@ jobs:
           path: releases/
           if-no-files-found: error
 
+  # GHA: Need to a job to provision the arm64 runner
+  start-runner:
+    if: ${{ github.event.inputs.ARM64 ==  true }}
+    name: Start self-hosted EC2 runner
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Start EC2 runner
+        id: start-ec2-runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: start
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          ec2-image-id: ami-123
+          ec2-instance-type: t3.nano
+          subnet-id: subnet-123
+          security-group-id: sg-123
+          iam-role-name: my-role-name  # optional, requires additional permissions
+          aws-resource-tags: > # optional, requires additional permissions
+            [
+              {"Key": "Name", "Value": "ec2-github-runner"},
+              {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
+            ]
+
+  agent_release_arm64:
+    # GHA: Do not tun this job if false
+    if: ${{ github.event.inputs.ARM64 ==  true }}
+    needs: start-runner
+    env:
+      # GHA we need to add the various PHP versions supported to PHP_VER
+      # Confirm that these are passed to the container(s)
+      PHP_VER: ${{ matrix.php_ver }}
+      ARCH: ${{ matrix.arch }}
+      BUILD_TYPE: release
+      OS: ${{ matrix.os }}
+      # image_name: ${{ matrix.os }}:${{ matrix.php_ver }}${{ matrix.arch }}
+      # IMAGE_OS: ${{ matrix.image_os }}
+    runs-on: self-hosted
+    # container:  ## GHA: testing using private docker image
+    #   image: ${{ matrix.registry }}/${{ matrix.image_os }}
+    #   credentials:
+    #     username: ${{ secrets.DOCKER_REPO_USER }}
+    #     password: ${{ secrets.DOCKER_USER_TOKEN }}
+    strategy:
+      matrix:
+        # registry: [mycirrus]
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
+        os: [linux]
+        # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
+        # php_ver: ['5.5', '5.6', '7.0']
+        php_ver: ['8.0']
+        # GHA we'll need to exclude some combinations I believe
+        # Check the arch for the new docker images
+        arch: [x64]
+    steps:
+      # GHA: We need to also checkout the build script repo
+      # Per Amber, run the source command for eavh version of PHP:
+      # source [WHEREVERYOUPUTBUILDSCRIPTS]/php-build-scripts/bin/phpvm.bash change <PHP_VER>
+      # New workflow_trigger action section
+
+      - name: Checkout PHP Agent Repo
+        uses: actions/checkout@v3
+        with:
+          # ref: ${{ github.event.client_payload.ref }}
+          ref: main
+
+      - name: Checkout build scripts repository
+        uses: actions/checkout@v3
+        with:
+          repository: newrelic/php-agent-php-build-scripts
+          # Chaging ref temporarily for testing
+          # ref: master
+          ref: gha-dev
+          # GHA: Check for token
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: php-build-scripts
+
+      # This might have to exist within ".github"
+      # GHA No need to build these images? everything should be installed
+      # - name: Build Custom Docker Image
+      #   run: docker build --build-arg ARCH=$ARCH --build-arg PHP_VER=$PHP_VER --build-arg BUILD_TYPE=$BUILD_TYPE -f ./.github/docker/${OS}/${ARCH}/Dockerfile -t $image_name .
+      - name: Check the workspace
+        run: |
+          echo "current directory is " $(pwd)
+          ls -la
+
+      - name: Check php-build-scripts
+        run: |
+          echo "current directory is " $(pwd)
+          ls -la php-build-scripts/
+
+      # - name: Build and Test
+      #   run: |
+      #     echo "current directory is " $(pwd)
+      #     ls -la
+      #     cd / && ls -la
+      #     ls -la opt/nr/
+      #     ls -la github/
+
+      # GHA: This step shouldn't be necessary with the phpvm.bash
+      - name: Add the "opt/nr" path, install packages
+        run: |
+          echo "/opt/nr/php/${PHP_VER}/bin" >> $GITHUB_PATH
+          echo "/opt/nr/php/${PHP_VER}/bin/phpize" >> $GITHUB_PATH
+          echo "/opt/nr/php/${PHP_VER}/bin/php-config" >> $GITHUB_PATH
+
+      # Add ENV variables required
+      - name: Add ENV variables required in makefile
+        run: |
+          echo "AGENT_VERSION="${GITHUB_RUN_NUMBER}"" >> $GITHUB_ENV
+          echo "GIT_COMMIT="${GITHUB_SHA}"" >> $GITHUB_ENV
+          echo "BUILD_NUMBER="${GITHUB_RUN_NUMBER}"" >> $GITHUB_ENV
+
+      # GHA: Spme path issues need resolving
+      # GHA: We may have to run this and build-release in same step
+      - name: 'Test call phpvm.bash, then release_build_gha.sh'
+        # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' || matrix.image_os == 'newrelic:nr-centos7-1.1' }}
+        # if: ${{ matrix.arch == 'x64' }}
+        run: |
+          set -x
+          echo "Calling phpvm.bash"
+          source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
+          # echo "Where is phpize?"
+          # find / -name phpize
+          whereis phpize
+          echo "Calling release_build_gha.sh"
+          ./.github/docker/linux/release_build_gha.sh
+
+      # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
+      #   if: ${{ matrix.image_os == 'newrelic:nr-alpine3.4-1.0' }}
+      #   # if: ${{ matrix.arch == 'x64' }}
+      #   run: |
+      #     cd "${GITHUB_WORKSPACE}"
+      #     set -x
+      #     echo "Calling phpvm.bash"
+      #     source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
+      #     echo "Where is phpize?"
+      #     find / -name phpize
+      #     whereis phpize
+      #     echo "Calling release_build.sh"
+      #     ./.github/docker/linux/release_build_alpine_testing.sh
+
+      - name: Check content of releases directory
+        # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
+        # if: ${{ matrix.arch == 'x64' }}
+        run: |
+          tree releases/
+          ls -laR releases/
+
+      # - name: Test call of release_build.sh
+      #   if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
+      #   run: |
+      #     echo "This is CentOS 8, calling release_build.sh"
+      #     ./.github/docker/linux/release_build.sh
+
+      # Check ENV variables
+      # GHA: Check for IMAGE_OS value per matix run
+      - name: Check environmental variables
+        if: ${{ always() }}
+        run: printenv | sort -f
+
+      # GHA: below fails
+      # - name: Dump Env Context
+      #   run: echo env is ${{ toJSON(env) }}
+
+      # Rename matrix item to remove problem characers
+      # GHA only required for custom artifact naming
+      - name: Rename Matrix item
+        if: ${{ failure() || success() }}
+        env:
+          MATRIX_IMAGE: ${{ matrix.image_os }}
+        run: |
+          MATRIX_IMAGE=$(echo ${MATRIX_IMAGE} | sed 's|:|-|g')
+          echo "MATRIX_IMAGE="${MATRIX_IMAGE}"" >> $GITHUB_ENV
+
+
+      # GHA: We need to find a more efficient way of saving these
+      # Will we have to download abd comine as done in the following step?
+      # Or the aggregation can happen in workflows?
+      - name: Save build artifacts
+        # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
+        # if: ${{ matrix.arch == 'x64' }}
+        uses: actions/upload-artifact@v2
+        with:
+          # name: ${{ matrix.php_ver }}binaries
+          # name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}binaries
+          # path: releases
+          name: arm64-${{ matrix.php_ver }}-${{ matrix.arch }}binaries
+          path: releases/
+          if-no-files-found: error
+
   # GHA renamed for better readability ⇓
+  # GHA: We might have to refactor with conditionals for arm64
   combine-artifacts:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     name: Combine artifacts from matrix build
-    needs: agent_release_by_image
+    needs:
+      - agent_release_by_image
+      # - agent_release_arm64
     steps:
       # - name: Dump Env Context
       #   run: echo env is ${{ toJSON(env) }}
