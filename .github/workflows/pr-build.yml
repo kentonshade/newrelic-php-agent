@@ -11,7 +11,7 @@ name: 'NEW PR Build'
 #
 # Control when the action will run.
 #
-# on:
+on:
 #   # GHA only using this for testing
 #   push:
 #     branches:
