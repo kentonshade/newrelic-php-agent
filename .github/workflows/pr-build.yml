@@ -6,19 +6,19 @@
 
 ---
 
-name: 'NEW release_CI (php-release-agent)'
+name: 'NEW PR Build'
 
 #
 # Control when the action will run.
 #
-on:
-  # GHA only using this for testing
-  push:
-    branches:
-      # - gha-testing
-      - gha-dev
-      - dev
-      - main
+# on:
+#   # GHA only using this for testing
+#   push:
+#     branches:
+#       # - gha-testing
+#       - gha-dev
+#       - dev
+#       - main
   #
   # Run this workflow manually from the Actions tab or using the API
   #
@@ -38,40 +38,6 @@ on:
         default: false
 
 jobs:
-  # GHA might be better to create sperarate jobs per image?
-  # GHA creat a matrix value for the various images
-  # agent_release:
-  #   env:
-  #     # GHA we need to add the various PHP versions supported to PHP_VER
-  #     PHP_VER: ${{ matrix.php_ver }}
-  #     ARCH: ${{ matrix.arch }}
-  #     BUILD_TYPE: release
-  #     OS: ${{ matrix.os }}
-  #     image_name: ${{ matrix.os }}:${{ matrix.php_ver }}${{ matrix.arch }}
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       os: [linux]
-  #       php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
-  #       # GHA we'll need to exclude some combinations I believe
-  #       # Check the arch for the new docker images
-  #       arch: [x64, x86]
-  #   steps:
-  #     - name: Checkout PHP Agent Repo
-  #       uses: actions/checkout@v2
-  #       with:
-  #         ref: ${{ github.event.client_payload.ref }}
-  #     # GHA No need to build these images? everything should be installed
-  #     - name: Build Custom Docker Image
-  #       run: docker build --build-arg ARCH=$ARCH --build-arg PHP_VER=$PHP_VER --build-arg BUILD_TYPE=$BUILD_TYPE -f ./.github/docker/${OS}/${ARCH}/Dockerfile -t $image_name .
-  #     - name: Build and Test
-  #       run: docker run --name runtest --workdir /github/workspace --rm -e GITHUB_WORKSPACE -e GITHUB_ENV -v "${GITHUB_WORKSPACE}":"/github/workspace" $image_name
-  #     - name: Save build artifacts
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: ${{ matrix.php_ver }}binaries
-  #         path: releases
-  #         if-no-files-found: error
 
   # GHA: it might be prudent to break thes jobs up per OS
   # It might be a little convoluted to be checking for OS and then

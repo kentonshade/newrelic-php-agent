@@ -1,13 +1,33 @@
+---
+
+# GHA: Requires checkout of php_deployemtn
+# Jenkins: https://phpagent-build.pdx.vm.datanerd.us/job/php-publish-agent/configure
+
 name: php-publish-agent
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ gha-testing ]
+  # push:
+  #   branches: [ gha-testing ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      ACTION:
+        description: "Required - the action to perform"
+        required: true
+        default: ''
+        type: choice
+        options:
+        - release-2-testing
+        - testing-2-production
+        - bigchange-2-testing
+        - master-2-testing
+      VERSION:
+        description: "Required - the action version to publish"
+        required: true
+        default: ''
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,7 +44,137 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
+        uses: actions/checkout@v2
+        with:
+          repository: newrelic/php-agent-php_deployment.git
+          ref: master
+          # GHA Confirm we can (this works), and should use this token for this
+          # purpose
+          token: ${{ secrets.NODE_AGENT_GH_TOKEN }}
+          # path: <path>
+
+      # GHA: Required to return latest release run
+      # We will need to install gh for this container
+      # GHA These two following steps have to be conbfigured for different workflows
+      # Check for bigchange-2-testing
+      - name: Get dependent workflow ID
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
+          # Below check for correct workflow ID
+          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+      - name: Download combined-artifacts
+        if: ${{ github.event.inputs.ACTION ==  "bigchange-2-testing" }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          # GHA: Will we be able to use php-release-packages?
+          workflow: php-bigchange-packages.yml
+          branch: gha-dev
+          run_id: ${{ env.RUN_ID }}
+          path: incoming
+          # GHA: This should always be from the agent repo, but confirm
+          repo: ${{github.repository}}
+
+      # GHA We need another workflow ID?
+      - name: Get dependent workflow ID
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
+          # Below check for correct workflow ID
+          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+      - name: Download combined-artifacts
+        if: ${{ github.event.inputs.ACTION ==  "bigchange-2-testing" }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          # GHA: Can we use php-release-packages.yml, as php-release-tarballs consolidated?
+          workflow: php-bigchange-tarballs.yml
+          branch: gha-dev
+          run_id: ${{ env.RUN_ID }}
+          path: incoming
+          # GHA: This should always be from the agent repo, but confirm
+          repo: ${{github.repository}}
+
+
+      # Check for master-2-testing
+      # GHA THERE ARE NO PHP-MASTER-PACKAGES, NOR PHP-MASTER-TARBALLS JOBS
+      # ARE THESE ARTIFACTS REQUIRED?
+      - name: Get dependent workflow ID
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
+          # Below check for correct workflow ID
+          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+
+      - name: Download combined-artifacts
+        if: ${{ github.event.inputs.ACTION ==  "master-2-testing" }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: php-bigchange-packages.yml
+          branch: gha-dev
+          run_id: ${{ env.RUN_ID }}
+          path: combined-artifacts
+          # GHA: This should always be from the agent repo, but confirm
+          repo: ${{github.repository}}
+
+
+      # Check for release-2-testing
+      - name: Get dependent workflow ID
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
+          # Below check for correct workflow ID
+          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+
+      - name: Download combined-artifacts
+        if: ${{ github.event.inputs.ACTION ==  "release-2-testing" }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: php-bigchange-packages.yml
+          branch: gha-dev
+          run_id: ${{ env.RUN_ID }}
+          path: combined-artifacts
+          # GHA: This should always be from the agent repo, but confirm
+          repo: ${{github.repository}}
+
+
+      # Check for bigchange-2-testing
+      - name: Get dependent workflow ID
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
+          # Below check for correct workflow ID
+          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+
+      - name: Download combined-artifacts
+        if: ${{ github.event.inputs.ACTION ==  "bigchange-2-testing" }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: php-bigchange-packages.yml
+          branch: gha-dev
+          run_id: ${{ env.RUN_ID }}
+          path: combined-artifacts
+          # GHA: This should always be from the agent repo, but confirm
+          repo: ${{github.repository}}
+
+
+
+
 
       # Runs a single command using the runners shell
       - name: Run a one-line script

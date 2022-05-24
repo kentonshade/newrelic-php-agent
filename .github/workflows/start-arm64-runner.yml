@@ -1,0 +1,69 @@
+#
+# Testing Staring the arm64 runner
+#
+
+---
+
+name: 'Start arm64 Runner'
+
+#
+# Control when the action will run.
+#
+on:
+  # GHA only using this for testing
+  # push:
+  #   branches:
+  #     # - gha-testing
+  #     - gha-dev
+  #     - dev
+  #     - main
+  #
+  # Run this workflow manually from the Actions tab or using the API
+  #
+  workflow_dispatch:
+    inputs:
+      ARM64:
+        description: "Optionally Run the arm64 job"
+        required: false
+        default: false
+      BUILD_NUMBER:
+        description: "BUILD_NUMBER to pass to workflow"
+        required: false
+        default: ""
+      BIGCHANGE:
+        description: "BUILD_NUMBER to pass to workflow"
+        required: false
+        default: false
+
+jobs:
+  # GHA: Need to a job to provision the arm64 runner
+  start-arm64-runner:
+    if: ${{ github.event.inputs.ARM64 ==  true }}
+    name: Start self-hosted EC2 runner
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Start EC2 runner
+        id: start-ec2-runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: start
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          ec2-image-id: ami-123
+          ec2-instance-type: t3.nano
+          subnet-id: subnet-123
+          security-group-id: sg-123
+          iam-role-name: my-role-name  # optional, requires additional permissions
+          aws-resource-tags: > # optional, requires additional permissions
+            [
+              {"Key": "Name", "Value": "ec2-github-runner"},
+              {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
+            ]
