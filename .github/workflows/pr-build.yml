@@ -185,8 +185,8 @@ jobs:
           # path: releases
           name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
           path: |
-            /bin/integration_runner
-            /agent/.libs/newrelic.so
+            ./bin/integration_runner
+            ./agent/.libs/newrelic.so
           if-no-files-found: error
 
   # GHA: Need to a job to provision the arm64 runner
@@ -374,8 +374,8 @@ jobs:
           # path: releases
           name: arm64--${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
           path: |
-            /bin/integration_runner
-            /agent/.libs/newrelic.so
+            ./bin/integration_runner
+            ./agent/.libs/newrelic.so
           if-no-files-found: error
 
   # GHA renamed for better readability ⇓
