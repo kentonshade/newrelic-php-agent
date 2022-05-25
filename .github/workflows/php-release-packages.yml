@@ -194,14 +194,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Need gh cli and updated git
-        run: |
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt update
-          sudo apt-get -y --force-yes install gh git tree
-          gh --version
-          git --version
+      # - name: Need gh cli and updated git
+      #   run: |
+      #     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+      #     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+      #     sudo apt update
+      #     sudo apt-get -y --force-yes install gh git tree
+      #     gh --version
+      #     git --version
 
       # GHA: Required to return latest release run
       # We will need to install gh for this container
@@ -244,7 +244,8 @@ jobs:
       - name: Build/Runner dependecies 2
         run: |
           sudo find / -name libpcre.so.*
-          sudo apt-get install libpcre3 libpcre3-dev
+          # sudo apt-get install libpcre3 libpcre3-dev
+          sudo apt install libpcre2-posix2 libpcre2-dev
           # sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so /usr/lib/x86_64-linux-gnu/libpcre.so.1
           sudo ln -s /usr/lib/x86_64-linux-gnu/libpcre.so /usr/lib/x86_64-linux-gnu/libpcre.so.1
           sudo find / -name libpcre.so.*
