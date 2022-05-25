@@ -38,40 +38,6 @@ on:
         default: false
 
 jobs:
-  # GHA might be better to create sperarate jobs per image?
-  # GHA creat a matrix value for the various images
-  # agent_release:
-  #   env:
-  #     # GHA we need to add the various PHP versions supported to PHP_VER
-  #     PHP_VER: ${{ matrix.php_ver }}
-  #     ARCH: ${{ matrix.arch }}
-  #     BUILD_TYPE: release
-  #     OS: ${{ matrix.os }}
-  #     image_name: ${{ matrix.os }}:${{ matrix.php_ver }}${{ matrix.arch }}
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       os: [linux]
-  #       php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
-  #       # GHA we'll need to exclude some combinations I believe
-  #       # Check the arch for the new docker images
-  #       arch: [x64, x86]
-  #   steps:
-  #     - name: Checkout PHP Agent Repo
-  #       uses: actions/checkout@v2
-  #       with:
-  #         ref: ${{ github.event.client_payload.ref }}
-  #     # GHA No need to build these images? everything should be installed
-  #     - name: Build Custom Docker Image
-  #       run: docker build --build-arg ARCH=$ARCH --build-arg PHP_VER=$PHP_VER --build-arg BUILD_TYPE=$BUILD_TYPE -f ./.github/docker/${OS}/${ARCH}/Dockerfile -t $image_name .
-  #     - name: Build and Test
-  #       run: docker run --name runtest --workdir /github/workspace --rm -e GITHUB_WORKSPACE -e GITHUB_ENV -v "${GITHUB_WORKSPACE}":"/github/workspace" $image_name
-  #     - name: Save build artifacts
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: ${{ matrix.php_ver }}binaries
-  #         path: releases
-  #         if-no-files-found: error
 
   # GHA: it might be prudent to break thes jobs up per OS
   # It might be a little convoluted to be checking for OS and then
@@ -96,7 +62,7 @@ jobs:
       matrix:
         registry: [mycirrus]
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
-        image_os: ['newrelic:nr-centos7-1.2', 'newrelic:nr-alpine3.4-1.1']
+        image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
         # php_ver: ['5.5', '5.6', '7.0']
@@ -141,14 +107,6 @@ jobs:
           echo "current directory is " $(pwd)
           ls -la php-build-scripts/
 
-      # - name: Build and Test
-      #   run: |
-      #     echo "current directory is " $(pwd)
-      #     ls -la
-      #     cd / && ls -la
-      #     ls -la opt/nr/
-      #     ls -la github/
-
       # GHA: This step shouldn't be necessary with the phpvm.bash
       - name: Add the "opt/nr" path, install packages
         run: |
@@ -178,32 +136,12 @@ jobs:
           echo "Calling release_build_gha.sh"
           ./.github/docker/linux/release_build_gha.sh
 
-      # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
-      #   if: ${{ matrix.image_os == 'newrelic:nr-alpine3.4-1.0' }}
-      #   # if: ${{ matrix.arch == 'x64' }}
-      #   run: |
-      #     cd "${GITHUB_WORKSPACE}"
-      #     set -x
-      #     echo "Calling phpvm.bash"
-      #     source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
-      #     echo "Where is phpize?"
-      #     find / -name phpize
-      #     whereis phpize
-      #     echo "Calling release_build.sh"
-      #     ./.github/docker/linux/release_build_alpine_testing.sh
-
       - name: Check content of releases directory
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
         # if: ${{ matrix.arch == 'x64' }}
         run: |
           tree releases/
           ls -laR releases/
-
-      # - name: Test call of release_build.sh
-      #   if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
-      #   run: |
-      #     echo "This is CentOS 8, calling release_build.sh"
-      #     ./.github/docker/linux/release_build.sh
 
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
@@ -378,32 +316,12 @@ jobs:
           echo "Calling release_build_gha.sh"
           ./.github/docker/linux/release_build_gha.sh
 
-      # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
-      #   if: ${{ matrix.image_os == 'newrelic:nr-alpine3.4-1.0' }}
-      #   # if: ${{ matrix.arch == 'x64' }}
-      #   run: |
-      #     cd "${GITHUB_WORKSPACE}"
-      #     set -x
-      #     echo "Calling phpvm.bash"
-      #     source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
-      #     echo "Where is phpize?"
-      #     find / -name phpize
-      #     whereis phpize
-      #     echo "Calling release_build.sh"
-      #     ./.github/docker/linux/release_build_alpine_testing.sh
-
       - name: Check content of releases directory
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
         # if: ${{ matrix.arch == 'x64' }}
         run: |
           tree releases/
           ls -laR releases/
-
-      # - name: Test call of release_build.sh
-      #   if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
-      #   run: |
-      #     echo "This is CentOS 8, calling release_build.sh"
-      #     ./.github/docker/linux/release_build.sh
 
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
