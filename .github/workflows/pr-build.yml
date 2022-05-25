@@ -12,19 +12,23 @@ name: 'NEW PR Build'
 # Control when the action will run.
 #
 on:
-#   # GHA only using this for testing
-#   push:
-#     branches:
-#       # - gha-testing
-#       - gha-dev
-#       - dev
-#       - main
+  # GHA only using this for testing
+  # push:
+  #   branches:
+  #     # - gha-testing
+  #     - gha-dev
+  #     - dev
+  #     - main
   #
   # Run this workflow manually from the Actions tab or using the API
   #
   workflow_dispatch:
     inputs:
       ARM64:
+        description: "Optionally Run the arm64 job"
+        required: false
+        default: false
+      START_RUNNER:
         description: "Optionally Run the arm64 job"
         required: false
         default: false
@@ -62,7 +66,11 @@ jobs:
       matrix:
         registry: [mycirrus]
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
-        image_os: ['newrelic:nr-centos7-1.2', 'newrelic:nr-alpine3.4-1.1']
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
+        image_os:
+          - newrelic:nr-centos8-1.1
+          - newrelic:nr-centos7-1.2
+          - newrelic:nr-alpine3.4-1.1
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
         # php_ver: ['5.5', '5.6', '7.0']
@@ -107,14 +115,6 @@ jobs:
           echo "current directory is " $(pwd)
           ls -la php-build-scripts/
 
-      # - name: Build and Test
-      #   run: |
-      #     echo "current directory is " $(pwd)
-      #     ls -la
-      #     cd / && ls -la
-      #     ls -la opt/nr/
-      #     ls -la github/
-
       # GHA: This step shouldn't be necessary with the phpvm.bash
       - name: Add the "opt/nr" path, install packages
         run: |
@@ -144,32 +144,12 @@ jobs:
           echo "Calling release_build_gha.sh"
           ./.github/docker/linux/release_build_gha.sh
 
-      # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
-      #   if: ${{ matrix.image_os == 'newrelic:nr-alpine3.4-1.0' }}
-      #   # if: ${{ matrix.arch == 'x64' }}
-      #   run: |
-      #     cd "${GITHUB_WORKSPACE}"
-      #     set -x
-      #     echo "Calling phpvm.bash"
-      #     source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
-      #     echo "Where is phpize?"
-      #     find / -name phpize
-      #     whereis phpize
-      #     echo "Calling release_build.sh"
-      #     ./.github/docker/linux/release_build_alpine_testing.sh
-
       - name: Check content of releases directory
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
         # if: ${{ matrix.arch == 'x64' }}
         run: |
           tree releases/
           ls -laR releases/
-
-      # - name: Test call of release_build.sh
-      #   if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
-      #   run: |
-      #     echo "This is CentOS 8, calling release_build.sh"
-      #     ./.github/docker/linux/release_build.sh
 
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
@@ -203,13 +183,17 @@ jobs:
           # name: ${{ matrix.php_ver }}binaries
           # name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}binaries
           # path: releases
-          name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}binaries
-          path: releases/
+          name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
+          path: |
+            /bin/integration_runner
+            /agent/.libs/newrelic.so
           if-no-files-found: error
 
   # GHA: Need to a job to provision the arm64 runner
+  # GHA: Need to run command in instance to start runner (.$HOME/actions-runner/run.sh)
+  # GHA: Create secrets for all inputs to increase sec.
   start-runner:
-    if: ${{ github.event.inputs.ARM64 ==  true }}
+    if: ${{ github.event.inputs.ARM64 == true && github.event.inputs.START_RUNNER == true }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
@@ -227,18 +211,23 @@ jobs:
         uses: machulav/ec2-github-runner@v2
         with:
           mode: start
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ami-123
-          ec2-instance-type: t3.nano
-          subnet-id: subnet-123
-          security-group-id: sg-123
-          iam-role-name: my-role-name  # optional, requires additional permissions
+          github-token: ${{ secrets.ACTIONS_TOKEN }}
+          ec2-image-id: ${{ secrets.AWS_AMI_ID }}
+          ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }}
+          subnet-id: ${{ secrets.AWS_SUBNET }}
+          security-group-id: ${{ secrets.AWS_SEC_GROUP }}
+          # runner-home-dir: "$HOME/actions-runner"
+          # iam-role-name: my-role-name  # optional, requires additional permissions
           aws-resource-tags: > # optional, requires additional permissions
             [
-              {"Key": "Name", "Value": "ec2-github-runner"},
-              {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
+              {"Key": "Name", "Value": "kentonshade"},
+              {"Key": "owning_team", "Value": "PHPC"},
+              {"Key": "environment", "Value": "development"},
+              {"Key": "product", "Value": "agents"},
+              {"Key": "department, "Value": "product"}
             ]
 
+  # GHA: We need to check if runner online/started
   agent_release_arm64:
     # GHA: Do not tun this job if false
     if: ${{ github.event.inputs.ARM64 ==  true }}
@@ -344,32 +333,12 @@ jobs:
           echo "Calling release_build_gha.sh"
           ./.github/docker/linux/release_build_gha.sh
 
-      # - name: 'Test call phpvm.bash, then build-release.sh - Alpine'
-      #   if: ${{ matrix.image_os == 'newrelic:nr-alpine3.4-1.0' }}
-      #   # if: ${{ matrix.arch == 'x64' }}
-      #   run: |
-      #     cd "${GITHUB_WORKSPACE}"
-      #     set -x
-      #     echo "Calling phpvm.bash"
-      #     source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
-      #     echo "Where is phpize?"
-      #     find / -name phpize
-      #     whereis phpize
-      #     echo "Calling release_build.sh"
-      #     ./.github/docker/linux/release_build_alpine_testing.sh
-
       - name: Check content of releases directory
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
         # if: ${{ matrix.arch == 'x64' }}
         run: |
           tree releases/
           ls -laR releases/
-
-      # - name: Test call of release_build.sh
-      #   if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
-      #   run: |
-      #     echo "This is CentOS 8, calling release_build.sh"
-      #     ./.github/docker/linux/release_build.sh
 
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
@@ -403,59 +372,61 @@ jobs:
           # name: ${{ matrix.php_ver }}binaries
           # name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}binaries
           # path: releases
-          name: arm64-${{ matrix.php_ver }}-${{ matrix.arch }}binaries
-          path: releases/
+          name: arm64--${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
+          path: |
+            /bin/integration_runner
+            /agent/.libs/newrelic.so
           if-no-files-found: error
 
   # GHA renamed for better readability ⇓
   # GHA: We might have to refactor with conditionals for arm64
-  combine-artifacts:
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    name: Combine artifacts from matrix build
-    needs:
-      - agent_release_by_image
-      # - agent_release_arm64
-    steps:
-      # - name: Dump Env Context
-      #   run: echo env is ${{ toJSON(env) }}
+  # combine-artifacts:
+  #   if: ${{ always() }}
+  #   runs-on: ubuntu-latest
+  #   name: Combine artifacts from matrix build
+  #   needs:
+  #     - agent_release_by_image
+  #     # - agent_release_arm64
+  #   steps:
+  #     # - name: Dump Env Context
+  #     #   run: echo env is ${{ toJSON(env) }}
 
-      - name: Create directory
-        run: mkdir releases
+  #     - name: Create directory
+  #       run: mkdir releases
 
-      - name: Download to directory
-        uses: actions/download-artifact@v2
-        with:
-          path: releases
-      # - run: sudo apt install tree
+  #     - name: Download to directory
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         path: releases
+  #     # - run: sudo apt install tree
 
-      - run: |
-          tree releases/
-          cd releases/
-          mkdir alpine centos arm64
-          ls -la
-          # cp -R newrelic-nr-alpine*/* alpine/
-          # cp -R newrelic-nr-centos*/* centos/
-          # rm -rf newrelic-nr-alpine*/ newrelic-nr-centos*/
-          # cp -R newrelic-nr-arm64*/* arm64/
-          # tree releases/
+  #     - run: |
+  #         tree releases/
+  #         cd releases/
+  #         mkdir alpine centos arm64
+  #         ls -la
+  #         # cp -R newrelic-nr-alpine*/* alpine/
+  #         # cp -R newrelic-nr-centos*/* centos/
+  #         # rm -rf newrelic-nr-alpine*/ newrelic-nr-centos*/
+  #         # cp -R newrelic-nr-arm64*/* arm64/
+  #         # tree releases/
 
-      - name: Consolidate per OS
-        # if: ${{ always() }}
-        run: |
-          cd releases/
-          cp -R newrelic-nr-alpine*/* alpine/
-          cp -R newrelic-nr-centos*/* centos/
-          rm -rf newrelic-nr-alpine*/ newrelic-nr-centos*/
-          cd ../ && mv releases combined-releases
-          tree combined-releases/
+  #     - name: Consolidate per OS
+  #       # if: ${{ always() }}
+  #       run: |
+  #         cd releases/
+  #         cp -R newrelic-nr-alpine*/* alpine/
+  #         cp -R newrelic-nr-centos*/* centos/
+  #         rm -rf newrelic-nr-alpine*/ newrelic-nr-centos*/
+  #         cd ../ && mv releases combined-releases
+  #         tree combined-releases/
 
-      # GHA: Note the format of GitHub variable reference in contexts
-      # UNDERSCORE REPLACED WITH . SYNTAX
-      # Github "scope"
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: combined-releases-${{ github.sha }}
-          path: combined-releases/
-          if-no-files-found: error
+  #     # GHA: Note the format of GitHub variable reference in contexts
+  #     # UNDERSCORE REPLACED WITH . SYNTAX
+  #     # Github "scope"
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: combined-releases-${{ github.sha }}
+  #         path: combined-releases/
+  #         if-no-files-found: error
