@@ -68,7 +68,7 @@ jobs:
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image_os:
-          - newrelic:nr-centos8-1.1
+          # - newrelic:nr-centos8-1.1
           - newrelic:nr-centos7-1.2
           - newrelic:nr-alpine3.4-1.1
         os: [linux]
