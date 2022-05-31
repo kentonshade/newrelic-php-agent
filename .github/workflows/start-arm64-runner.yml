@@ -26,6 +26,10 @@ on:
         description: "Optionally Run the arm64 job"
         required: false
         default: false
+      START_RUNNER:
+        description: "Optionally start the arm64 runner"
+        required: false
+        default: false
       BUILD_NUMBER:
         description: "BUILD_NUMBER to pass to workflow"
         required: false

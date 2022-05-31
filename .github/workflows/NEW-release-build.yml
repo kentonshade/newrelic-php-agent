@@ -29,7 +29,7 @@ on:
         required: false
         default: false
       START_RUNNER:
-        description: "Optionally Run the arm64 job"
+        description: "Optionally start the arm64 runner"
         required: false
         default: false
       BUILD_NUMBER:
