@@ -245,9 +245,11 @@ jobs:
         run: |
           sudo find / -name libpcre.so.*
           sudo apt-get install libpcre3 libpcre3-dev
-          sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so /usr/lib/x86_64-linux-gnu/libpcre.so.1
+          # sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so /usr/lib/x86_64-linux-gnu/libpcre.so.1
           #swapping the two below so libpcre.so becomes the link
-          # sudo ln -s /usr/lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so 
+          # sudo ln -s /usr/lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
+          echo "list the so files"
+          ls -la /usr/lib/x86_64-linux-gnu/ | grep '*so*'
           sudo find / -name libpcre.so.*
 
 
