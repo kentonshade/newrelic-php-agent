@@ -37,8 +37,8 @@ on:
 
 jobs:
   # GHA: Need to a job to provision the arm64 runner
-  start-arm64-runner:
-    if: ${{ github.event.inputs.ARM64 ==  true }}
+  start-runner:
+    if: ${{ github.event.inputs.ARM64 == true && github.event.inputs.START_RUNNER == true }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
@@ -56,14 +56,18 @@ jobs:
         uses: machulav/ec2-github-runner@v2
         with:
           mode: start
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ami-123
-          ec2-instance-type: t3.nano
-          subnet-id: subnet-123
-          security-group-id: sg-123
-          iam-role-name: my-role-name  # optional, requires additional permissions
+          github-token: ${{ secrets.ACTIONS_TOKEN }}
+          ec2-image-id: ${{ secrets.AWS_AMI_ID }}
+          ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }}
+          subnet-id: ${{ secrets.AWS_SUBNET }}
+          security-group-id: ${{ secrets.AWS_SEC_GROUP }}
+          # runner-home-dir: "$HOME/actions-runner"
+          # iam-role-name: my-role-name  # optional, requires additional permissions
           aws-resource-tags: > # optional, requires additional permissions
             [
-              {"Key": "Name", "Value": "ec2-github-runner"},
-              {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
+              {"Key": "Name", "Value": "kentonshade"},
+              {"Key": "owning_team", "Value": "PHPC"},
+              {"Key": "environment", "Value": "development"},
+              {"Key": "product", "Value": "agents"},
+              {"Key": "department, "Value": "product"}
             ]
