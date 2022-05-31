@@ -42,7 +42,7 @@ on:
 jobs:
   # GHA: Need to a job to provision the arm64 runner
   start-runner:
-    if: ${{ github.event.inputs.ARM64 == true && github.event.inputs.START_RUNNER == true }}
+    # if: ${{ github.event.inputs.ARM64 == true && github.event.inputs.START_RUNNER == true }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
