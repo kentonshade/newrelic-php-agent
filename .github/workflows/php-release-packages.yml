@@ -251,7 +251,7 @@ jobs:
           # Creating new symlink
           sudo ln -s /usr/lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
           echo "list the so files"
-          sudo ls -la /usr/lib/x86_64-linux-gnu/ | grep "*so*"
+          sudo ls -la /usr/lib/x86_64-linux-gnu/
           sudo find / -name libpcre.so.*
 
 
