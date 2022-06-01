@@ -67,11 +67,11 @@ jobs:
           security-group-id: ${{ secrets.AWS_SEC_GROUP }}
           # runner-home-dir: "$HOME/actions-runner"
           # iam-role-name: my-role-name  # optional, requires additional permissions
-          aws-resource-tags: > # optional, requires additional permissions
-            [
-              {"Key": "Name", "Value": "kentonshade"},
-              {"Key": "owning_team", "Value": "PHPC"},
-              {"Key": "environment", "Value": "development"},
-              {"Key": "product", "Value": "agents"},
-              {"Key": "department, "Value": "product"}
-            ]
+          # aws-resource-tags: > # optional, requires additional permissions
+          #   [
+          #     {"Key": "Name", "Value": "kentonshade"},
+          #     {"Key": "owning_team", "Value": "PHPC"},
+          #     {"Key": "environment", "Value": "development"},
+          #     {"Key": "product", "Value": "agents"},
+          #     {"Key": "department, "Value": "product"}
+          #   ]
