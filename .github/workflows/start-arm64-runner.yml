@@ -61,7 +61,8 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.ACTIONS_TOKEN }}
-          ec2-image-id: ${{ secrets.AWS_AMI_ID }}
+          # ec2-image-id: ${{ secrets.AWS_AMI_ID }}
+          ec2-image-id: ami-0bccdbaa964f59624
           ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }}
           subnet-id: ${{ secrets.AWS_SUBNET }}
           security-group-id: ${{ secrets.AWS_SEC_GROUP }}

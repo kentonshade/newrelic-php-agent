@@ -245,11 +245,11 @@ jobs:
         run: |
           sudo find / -name libpcre.so.*
           sudo apt-get install libpcre3 libpcre3-dev
-          sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /usr/lib/x86_64-linux-gnu/libpcre.so.1
+          sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
           # remove old symlink
           sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
           # Creating new symlink
-          sudo ln -s /usr/lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
+          sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
           echo "list the so files"
           sudo ls -la /usr/lib/x86_64-linux-gnu/
           sudo find / -name libpcre.so.*
