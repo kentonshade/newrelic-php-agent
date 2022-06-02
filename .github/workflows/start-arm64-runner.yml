@@ -56,7 +56,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          aws-region: us-west-2
       - name: Start EC2 runner
         id: start-ec2-runner
         uses: machulav/ec2-github-runner@v2
@@ -68,13 +68,13 @@ jobs:
           ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }}
           subnet-id: ${{ secrets.AWS_SUBNET }}
           security-group-id: ${{ secrets.AWS_SEC_GROUP }}
-          # runner-home-dir: "$HOME/actions-runner"
+          runner-home-dir: "$HOME/actions-runner"
           # iam-role-name: my-role-name  # optional, requires additional permissions
-          # aws-resource-tags: > # optional, requires additional permissions
-          #   [
-          #     {"Key": "Name", "Value": "kentonshade"},
-          #     {"Key": "owning_team", "Value": "PHPC"},
-          #     {"Key": "environment", "Value": "development"},
-          #     {"Key": "product", "Value": "agents"},
-          #     {"Key": "department, "Value": "product"}
-          #   ]
+          aws-resource-tags: > # optional, requires additional permissions
+            [
+              {"Key": "Name", "Value": "kentonshade"},
+              {"Key": "owning_team", "Value": "PHPC"},
+              {"Key": "environment", "Value": "development"},
+              {"Key": "product", "Value": "agents"},
+              {"Key": "department", "Value": "product"}
+            ]
