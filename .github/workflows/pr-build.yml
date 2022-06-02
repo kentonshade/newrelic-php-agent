@@ -27,10 +27,12 @@ on:
       ARM64:
         description: "Optionally Run the arm64 job"
         required: false
+        type: boolean
         default: false
       START_RUNNER:
         description: "Optionally Run the arm64 job"
         required: false
+        type: boolean
         default: false
       BUILD_NUMBER:
         description: "BUILD_NUMBER to pass to workflow"
@@ -193,7 +195,7 @@ jobs:
   # GHA: Need to run command in instance to start runner (.$HOME/actions-runner/run.sh)
   # GHA: Create secrets for all inputs to increase sec.
   start-runner:
-    if: ${{ github.event.inputs.ARM64 == true && github.event.inputs.START_RUNNER == true }}
+    if: ${{ github.event.inputs.ARM64 == 'true' && github.event.inputs.START_RUNNER == 'true' }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
@@ -230,8 +232,8 @@ jobs:
   # GHA: We need to check if runner online/started
   agent_release_arm64:
     # GHA: Do not tun this job if false
-    if: ${{ github.event.inputs.ARM64 ==  true }}
-    needs: start-runner
+    if: ${{ github.event.inputs.ARM64 == 'true' }}
+    # needs: start-runner
     env:
       # GHA we need to add the various PHP versions supported to PHP_VER
       # Confirm that these are passed to the container(s)

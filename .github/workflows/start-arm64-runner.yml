@@ -25,10 +25,12 @@ on:
       ARM64:
         description: "Optionally Run the arm64 job"
         required: false
+        type: boolean
         default: false
       START_RUNNER:
         description: "Optionally start the arm64 runner"
         required: false
+        type: boolean
         default: false
       BUILD_NUMBER:
         description: "BUILD_NUMBER to pass to workflow"
@@ -42,7 +44,7 @@ on:
 jobs:
   # GHA: Need to a job to provision the arm64 runner
   start-runner:
-    # if: ${{ github.event.inputs.ARM64 == true && github.event.inputs.START_RUNNER == true }}
+    if: ${{ github.event.inputs.ARM64 == 'true' && github.event.inputs.START_RUNNER == 'true' }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
