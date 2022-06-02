@@ -229,7 +229,7 @@ jobs:
   agent_release_arm64:
     # GHA: Do not tun this job if false
     if: ${{ github.event.inputs.ARM64 ==  true }}
-    needs: start-runner
+    # needs: start-runner
     env:
       # GHA we need to add the various PHP versions supported to PHP_VER
       # Confirm that these are passed to the container(s)
