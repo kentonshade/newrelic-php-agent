@@ -30,7 +30,7 @@ on:
         type: boolean
         default: false
       START_RUNNER:
-        description: "Optionally Run the arm64 job"
+        description: "Optionally start the arm64 runner"
         required: false
         type: boolean
         default: false
