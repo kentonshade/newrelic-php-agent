@@ -268,8 +268,9 @@ jobs:
         run: |
           # echo "Can we run this command?"
           # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
-          echo "Check value of info"
-          sudo ls -la /var/lib/dpkg/info
+          # echo "Check value of info"
+          # sudo ls -la /var/lib/dpkg/info
+          sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
 
 
       # GHA: Checking /lib/x86_64-linux-gnu
