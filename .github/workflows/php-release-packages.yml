@@ -240,6 +240,13 @@ jobs:
         run: |
           sudo apt -y install devscripts build-essential lintian debhelper
 
+      # GHA: Checking /lib/x86_64-linux-gnu
+      - name: Checking /lib/x86_64-linux-gnu pre install
+        if: ${{ always() }}
+        run: |
+          echo "list the so files"
+          sudo ls -la /lib/x86_64-linux-gnu/
+
       # GHA: Checking pcre error
       - name: Build/Runner dependecies 2
         run: |
@@ -259,17 +266,18 @@ jobs:
       # https://man7.org/linux/man-pages/man1/dpkg-shlibdeps.1.html
       - name: PCRE Solutions testing
         run: |
-          echo "Can we run this command?"
-          dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+          # echo "Can we run this command?"
+          # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+          echo "Check value of info"
+          sudo cat /var/lib/dpkg/info
 
 
       # GHA: Checking /lib/x86_64-linux-gnu
-      - name: Checking /lib/x86_64-linux-gnu
+      - name: Checking /lib/x86_64-linux-gnu post install
         if: ${{ always() }}
         run: |
           echo "list the so files"
           sudo ls -la /lib/x86_64-linux-gnu/
-
 
       - name: Build Debian
         run: |
