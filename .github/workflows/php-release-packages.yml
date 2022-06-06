@@ -271,7 +271,11 @@ jobs:
           # echo "Check value of info"
           # sudo ls -la /var/lib/dpkg/info
           sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
+          tee -a debian/shlibs.local <<EOF
 
+          libpcre 1 libpcre1
+          libpcreposix 1 libpcre1
+          EOF
 
       # GHA: Checking /lib/x86_64-linux-gnu
       - name: Checking /lib/x86_64-linux-gnu post install
