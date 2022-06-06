@@ -271,6 +271,7 @@ jobs:
           # echo "Check value of info"
           # sudo ls -la /var/lib/dpkg/info
           sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
+          mkdir debian
           touch debian/shlibs.local
           tee -a debian/shlibs.local <<EOF
 
