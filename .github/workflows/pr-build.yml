@@ -187,8 +187,8 @@ jobs:
           # path: releases
           name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
           path: |
-            ./bin/integration_runner
-            ./agent/.libs/newrelic.so
+            /bin
+            /agent/.libs/newrelic.so
           if-no-files-found: error
 
   # GHA: Need to a job to provision the arm64 runner
@@ -322,7 +322,20 @@ jobs:
 
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
-      - name: 'Test call phpvm.bash, then release_build_gha.sh'
+      # - name: 'Test call phpvm.bash, then release_build_gha.sh'
+      #   # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' || matrix.image_os == 'newrelic:nr-centos7-1.1' }}
+      #   # if: ${{ matrix.arch == 'x64' }}
+      #   run: |
+      #     set -x
+      #     echo "Calling phpvm.bash"
+      #     source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
+      #     # echo "Where is phpize?"
+      #     # find / -name phpize
+      #     whereis phpize
+      #     echo "Calling release_build_gha.sh"
+      #     ./.github/docker/linux/release_build_gha.sh
+
+      - name: 'Testing pr_build.sh'
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' || matrix.image_os == 'newrelic:nr-centos7-1.1' }}
         # if: ${{ matrix.arch == 'x64' }}
         run: |
@@ -333,7 +346,8 @@ jobs:
           # find / -name phpize
           whereis phpize
           echo "Calling release_build_gha.sh"
-          ./.github/docker/linux/release_build_gha.sh
+          # ./.github/docker/linux/release_build_gha.sh
+          ./.github/docker/linux/pr_build.sh
 
       - name: Check content of releases directory
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
@@ -376,9 +390,47 @@ jobs:
           # path: releases
           name: arm64--${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
           path: |
-            ./bin/integration_runner
-            ./agent/.libs/newrelic.so
+            /bin
+            /agent/.libs/newrelic.so
           if-no-files-found: error
+
+  Integration-CentOS:
+    runs-on: ubuntu-latest
+    name: Integration tests for Integration-centos
+    steps:
+      - uses: actions/checkout@v2
+      # GHA: Grab the required artifacts and cp as appropriate
+      - name: Grab the required artifacts and cp as appropriate
+        if: ${{ always() }}
+        run: |
+          echo "use download artifact action"
+      # GHA: Run Make command
+      - name: Run Make command
+        if: ${{ always() }}
+        run: |
+          # make dev-integration-tests
+
+  Integration-Alpine:
+    runs-on: ubuntu-latest
+    container:  ## GHA: testing using private docker image
+      image: mycirrus/newrelic:nr-alpine3.4-1.1
+      credentials:
+        username: ${{ secrets.DOCKER_REPO_USER }}
+        password: ${{ secrets.DOCKER_USER_TOKEN }}
+    name: Integration tests for Integration-centos
+    steps:
+      - uses: actions/checkout@v2
+      # GHA: Grab the required artifacts and cp as appropriate
+      - name: Grab the required artifacts and cp as appropriate
+        if: ${{ always() }}
+        run: |
+          echo "use download artifact action"
+      # GHA: Run Make command
+      - name: Run Make command
+        if: ${{ always() }}
+        run: |
+          # make dev-integration-tests
+
 
   # GHA renamed for better readability ⇓
   # GHA: We might have to refactor with conditionals for arm64
