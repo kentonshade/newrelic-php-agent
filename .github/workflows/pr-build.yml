@@ -150,7 +150,7 @@ jobs:
         if: ${{ always() }}
         run: |
           ls -la ./bin/
-          ls -la ./agent/.lib/
+          sudo find ./ -name newrelic.so
 
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
@@ -366,7 +366,7 @@ jobs:
         if: ${{ always() }}
         run: |
           ls -la ./bin/
-          ls -la ./agent/.lib/
+          sudo find ./ -name newrelic.so
 
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
