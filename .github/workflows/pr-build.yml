@@ -146,7 +146,7 @@ jobs:
           ls -laR releases/
 
       # GHA: Check the contents of bin and agent/.lib/
-      - name: Check the contents of bin/ and agent/.lib/
+      - name: "Check the contents of bin/ and agent/.lib/"
         if: ${{ always() }}
         run: |
           ls -la ./bin/
