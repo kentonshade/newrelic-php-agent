@@ -409,7 +409,22 @@ jobs:
   Integration-CentOS:
     runs-on: ubuntu-latest
     needs: pr_build_by_os
-    name: Integration tests for Integration-centos
+    name: Integration tests for Integration-CentOS
+    env:
+      OS: ${{ matrix.image }}
+      PHP_VER: ${{ matrix.php_ver }}
+    strategy:
+      matrix:
+        # registry: [mycirrus]
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
+        image:
+          - nr-centos7-1.2
+          # - nr-centos8-1.1
+        os: [linux]
+        # php_ver: ['5.5', '7.0']
+        php_ver: ['7.0']
+        arch: [x64]
     steps:
       - uses: actions/checkout@v2
       # GHA: Grab the required artifacts and cp as appropriate
@@ -435,8 +450,16 @@ jobs:
       - name: Check the artifacts in an OS
         if: ${{ success() }}
         run: |
-          ls -la ./bin-so-artifacts/newrelic-nr-centos7-1.2-5.5-x64-for-int-tests/
-          ls -la ./bin-so-artifacts/newrelic-nr-centos7-1.2-7.0-x64-for-int-tests/
+          ls -la ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+
+      # GHA: Copy the artifacts
+      - name: Copy the artifacts
+        if: ${{ success() }}
+        run: |
+          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
+          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
+          tree ./bin/
+          tree ./agent
 
       # GHA: Run Make command
       - name: Run Make command
@@ -452,7 +475,7 @@ jobs:
       credentials:
         username: ${{ secrets.DOCKER_REPO_USER }}
         password: ${{ secrets.DOCKER_USER_TOKEN }}
-    name: Integration tests for Integration-centos
+    name: Integration tests for Integration-Alpine
     steps:
       - uses: actions/checkout@v2
       # GHA: Grab the required artifacts and cp as appropriate
