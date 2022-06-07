@@ -417,6 +417,13 @@ jobs:
           tree ./bin-so-artifacts
           ls -la ./bin-so-artifacts
 
+      # GHA: Check the artifacts in an OS
+      - name: Check the artifacts in an OS
+        if: ${{ success() }}
+        run: |
+          ls -la ./bin-so-artifacts/newrelic-nr-centos7-1.2-5.5-x64-for-int-tests/
+          ls -la ./bin-so-artifacts/newrelic-nr-centos7-1.2-7.0-x64-for-int-tests/
+
       # GHA: Run Make command
       - name: Run Make command
         if: ${{ always() }}
