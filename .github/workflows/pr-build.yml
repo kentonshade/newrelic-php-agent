@@ -459,13 +459,13 @@ jobs:
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
           tree ./bin/
-          tree ./agent
+          tree ./agent/.libs/
 
       # GHA: Run Make command
       - name: Run Make command
-        if: ${{ always() }}
+        if: ${{ success() }}
         run: |
-          # make dev-integration-tests
+          make dev-integration-tests
 
   Integration-Alpine:
     runs-on: ubuntu-latest
