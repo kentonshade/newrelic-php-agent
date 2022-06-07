@@ -339,7 +339,13 @@ jobs:
           whereis phpize
           echo "Calling release_build_gha.sh"
           # ./.github/docker/linux/release_build_gha.sh
-          ./.github/docker/linux/pr_build.sh
+          # ./.github/docker/linux/pr_build.sh
+
+      - name: Make commands in place of pr_build.sh
+        run: |
+          make -j10 all
+          make valgrind
+          make integration
 
       - name: Check content of releases directory
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
@@ -409,6 +415,7 @@ jobs:
         if: ${{ success() }}
         run: |
           tree ./bin-so-artifacts
+          ls -la ./bin-so-artifacts
 
       # GHA: Run Make command
       - name: Run Make command
@@ -444,6 +451,7 @@ jobs:
         if: ${{ success() }}
         run: |
           tree ./bin-so-artifacts
+          ls -la ./bin-so-artifacts
 
       # GHA: Run Make command
       - name: Run Make command
