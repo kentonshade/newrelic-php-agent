@@ -145,6 +145,13 @@ jobs:
           tree releases/
           ls -laR releases/
 
+      # GHA: Check the contents of bin and agent/.lib/
+      - name: Check the contents of bin/ and agent/.lib/
+        if: ${{ always() }}
+        run: |
+          ls -la ./bin/
+          ls -la ./agent/.lib/
+
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
       - name: Check environmental variables
