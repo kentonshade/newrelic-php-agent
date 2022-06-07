@@ -186,8 +186,8 @@ jobs:
           # path: releases
           name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
           path: |
-            /bin
-            /agent/.libs/newrelic.so
+            ./bin
+            ./agent/.libs/newrelic.so
           if-no-files-found: error
 
   # GHA: Need to a job to provision the arm64 runner
@@ -361,6 +361,13 @@ jobs:
           tree releases/
           ls -laR releases/
 
+      # GHA: Check the contents of bin and agent/.lib/
+      - name: "Check the contents of bin/ and agent/.lib/"
+        if: ${{ always() }}
+        run: |
+          ls -la ./bin/
+          ls -la ./agent/.lib/
+
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
       - name: Check environmental variables
@@ -395,8 +402,8 @@ jobs:
           # path: releases
           name: arm64--${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
           path: |
-            /bin
-            /agent/.libs/newrelic.so
+            ./bin
+            ./agent/.libs/newrelic.so
           if-no-files-found: error
 
   Integration-CentOS:
