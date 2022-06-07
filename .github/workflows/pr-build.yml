@@ -1,16 +1,12 @@
 #
-# This is the workflow to do a release build.
-# GHA: 04/07: This is actually replacing the php-release-agent job in jenkins.
-# We do not need the php-release-agent-checkout job.
+# This is the workflow to do a PR Build
 #
 
 ---
 
 name: 'NEW PR Build'
 
-#
-# Control when the action will run.
-#
+
 on:
   # GHA only using this for testing
   # push:
@@ -44,11 +40,7 @@ on:
         default: false
 
 jobs:
-
-  # GHA: it might be prudent to break thes jobs up per OS
-  # It might be a little convoluted to be checking for OS and then
-  # script as required in a single job.
-  agent_release_by_image:
+  pr_build_by_os:
     env:
       # GHA we need to add the various PHP versions supported to PHP_VER
       # Confirm that these are passed to the container(s)
@@ -396,6 +388,7 @@ jobs:
 
   Integration-CentOS:
     runs-on: ubuntu-latest
+    needs: pr_build_by_os
     name: Integration tests for Integration-centos
     steps:
       - uses: actions/checkout@v2
@@ -404,6 +397,19 @@ jobs:
         if: ${{ always() }}
         run: |
           echo "use download artifact action"
+
+      # GHA: Download the previosly generated bin and .so artifacts
+      - name: Download bin and .so to directory
+        uses: actions/download-artifact@v2
+        with:
+          path: bin-so-artifacts
+
+      # GHA: Check the artifacts
+      - name: Check the artifacts
+        if: ${{ success() }}
+        run: |
+          tree ./bin-so-artifacts
+
       # GHA: Run Make command
       - name: Run Make command
         if: ${{ always() }}
@@ -412,6 +418,7 @@ jobs:
 
   Integration-Alpine:
     runs-on: ubuntu-latest
+    needs: pr_build_by_os
     container:  ## GHA: testing using private docker image
       image: mycirrus/newrelic:nr-alpine3.4-1.1
       credentials:
@@ -425,6 +432,19 @@ jobs:
         if: ${{ always() }}
         run: |
           echo "use download artifact action"
+
+      # GHA: Download the previosly generated bin and .so artifacts
+      - name: Download bin and .so to directory
+        uses: actions/download-artifact@v2
+        with:
+          path: bin-so-artifacts
+
+      # GHA: Check the artifacts
+      - name: Check the artifacts
+        if: ${{ success() }}
+        run: |
+          tree ./bin-so-artifacts
+
       # GHA: Run Make command
       - name: Run Make command
         if: ${{ always() }}
