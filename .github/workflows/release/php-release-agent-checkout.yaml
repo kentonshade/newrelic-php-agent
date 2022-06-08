@@ -1,0 +1,106 @@
+---
+
+name: php-release-agent-checkout
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ gha-testing ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  # https://newrelic.atlassian.net/browse/GHA-147
+  # Need to add branch input values for the repos
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # container:  ## kds = testing using private docker image
+    #   image: kentonshade/mycirrus_1:ubuntu-focal-starter
+    #   credentials:
+    #      username: ${{ secrets.DOCKER_REPO_USER }}
+    #      password: ${{ secrets.DOCKER_USER_PASS }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE,
+      # so your job can access it
+      - name: Checkout PHP Agent Repo
+        uses: actions/checkout@v2
+        with:
+          ref: R9.20
+          ref: gha-dev
+
+      - name: Checkout build scripts repository
+        uses: actions/checkout@v2
+        with:
+          repository: newrelic/php-agent-internal
+          # Change ref temporarily for testing?
+          ref: R9.20
+          # GHA: Check for token
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: internal
+
+      # Checkout newrelic actions
+      - name: Checkout private actions repository
+        uses: actions/checkout@v2
+        with:
+          repository: newrelic/newrelic-actions
+          # ref: main
+          ref: main
+          token: ${{ secrets.API_CLI_TOKEN }}
+          path: newrelic-actions  # This might have to exist within ".github"
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      # Check for exposed values to tokenize
+      - name: Save the branch information for the php-release-gha job
+        run: |
+          # cp -rv internal/* .; rm -rf internal
+
+          # Jenkins doesn't copy .git directories as artifacts. We have to
+          # copy it to make sure it's archived with the artifacts.
+          # cp -rv .git visible.git
+
+          # Save the branch information for the php-release-gha job.
+          # echo off
+          # echo "${GIT_BRANCH#*/}" > branch.txt
+
+      # GHA: Do we use this method?
+      # Upload the "artifacts":
+      - name: "Upload combined content/code from both agent and internal agent"
+        id: ${{ github.workflow }}-repo-artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.workflow }}-repo-artifacts
+          path: |
+            **
+
+      # GHA: We need to trigger php-release-agent.yml
+      # Testing accessing the newrelic-actions repo
+      # Determine values we need to pass and then include in
+      # cakedf repo's workflow_dispatch configs
+      - name: Test the input to the workflow_trigger
+        uses: ./newrelic-actions/workflow_trigger_beta_v1
+        with:
+          called_repo: github.com/kentonshade/gha
+          access_token: ${{ secrets.API_CLI_TOKEN }}
+          called_workflow: test-composite-action.yaml
+          refresh_interval: 15
+          # Job ID shouldn't change?
+          job_to_monitor: 5159789677
+          field_1: GIT_COMMAND=status -sb
+          # field_3: GIT_COMMAND=--version
+
+
+
+
+
+

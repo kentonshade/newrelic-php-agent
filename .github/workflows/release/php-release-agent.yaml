@@ -1,0 +1,158 @@
+# GHA: Many artifacts required here:
+# php-release-agent-checkout
+# https://phpagent-build.pdx.vm.datanerd.us/job/php-release-agent/configure
+
+---
+
+name: php-release-agent
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ gha-testing ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    # There is a configuration matrix setting in the Jenkins job that refers to "labels"
+    # reflecting docker images, or specific EC2 instances required for the job.
+    runs-on: ubuntu-latest
+    # container:  ## kds = testing using private docker image
+    #   image: kentonshade/mycirrus_1:ubuntu-focal-starter
+    #   credentials:
+    #      username: ${{ secrets.DOCKER_REPO_USER }}
+    #      password: ${{ secrets.DOCKER_USER_PASS }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # STEP 1
+      # Copy artifacts from another project
+      # Do we need to do this, or can we simply checkout the project?
+      # For php-release-agent-checkout, we need the build that triggers this workflow/job
+      # Testing third party action for cross-workflow artifacts
+      # GHA: Confirm the ref for this action
+      - name: Download artifact from another workflow
+        uses: dawidd6/action-download-artifact@v2.14.1
+        with:
+          # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
+          # Required, if artifact is from a different repo
+          # github_token: ${{secrets.GITHUB_TOKEN}}
+          # Required, workflow file name or ID
+          workflow: NEW-release-build.yml
+          # Optional, the status or conclusion of a completed workflow to search for
+          # Can be one of a workflow conclusion:
+          #   "failure", "success", "neutral", "cancelled", "skipped", "timed_out", "action_required"
+          # Or a workflow status:
+          #   "completed", "in_progress", "queued"
+          # workflow_conclusion: success
+          # Optional, will get head commit SHA
+          # pr: ${{github.event.pull_request.number}}
+          # Optional, no need to specify if PR is
+          # commit: ${{github.event.pull_request.head.sha}}
+          # Optional, will use the branch
+          branch: gha-dev
+          # Optional, defaults to all types
+          # event: push
+          # Optional, will use specified workflow run
+          # run_id: 1122334455
+          # Optional, run number from the workflow
+          # run_number: 34
+          # Optional, uploaded artifact name,
+          # will download all artifacts if not specified
+          # and extract them in respective subdirectories
+          # https://github.com/actions/download-artifact#download-all-artifacts
+          name: php-release-agent-checkout-repo-artifacts
+          # Optional, directory where to extract artifact. Defaults to the artifact name (see `name` input)
+          path: artifacts
+          # Optional, defaults to current repo
+          repo: ${{github.repository}}
+          # Optional, check the workflow run whether it has an artifact
+          # then will get the last available artifact from previous workflow
+          # default false, just try to download from the last one
+          # check_artifacts: true
+
+      # Runs a single command using the runners shell
+      # There is a build.sh in a .hudson directory that is called here.
+      # GHA: This is the step being replaced by the 
+      - name: Execute build.sh
+        run: |
+          # cp -rv visible.git .git
+          # if [[ "$NODE_LABELS" == *"freebsd100-64-nrcamp"* ]]; then
+          #     PHPS="7.4 7.3 7.2 7.1 7.0 5.6 5.5" sh ./hudson/build.sh --optimize
+          # elif [[ "$NODE_LABELS" == *"freebsd13-64-buildscripts"* ]]; then
+          #     PHPS="8.1 8.0" sh ./hudson/build.sh --optimize
+          #     #sudo chmod -R 777 ./releases
+          # else
+          #   sh ./hudson/build.sh --optimize
+          # fi
+
+
+      # POST BUILD ACTIONS
+
+      # There are labels used in the Jenkins job associated with this workflow
+      # I believe those lables might be incorporated into a matrix strategy to create
+      # these artifacts.
+      # Upload the artifacts:
+      - name: Upload generated release artifacts
+        id: ${{ github.workflow }}-release-artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.workflow }}-release-artifacts
+          path: |
+            releases/**/*
+
+      # BUILD OTHER PROJECTS
+      # It might be prudent to creat these Jenkins "projects" as jobs within workflows...
+      # If the project is complex/convoluted, perhaps a workflow trigger (API) might be better
+
+      # php-release-packages
+      - name: Trigger php-release-packages
+        uses: ./newrelic-actions/workflow_trigger_beta_v1
+        with:
+          called_repo: github.com/kentonshade/gha
+          access_token: ${{ secrets.API_CLI_TOKEN }}
+          called_workflow: test-composite-action.yaml
+          refresh_interval: 15
+          # Job ID shouldn't change?
+          job_to_monitor: 5159789677
+          field_1: GIT_COMMAND=status -sb
+          # field_3: GIT_COMMAND=--version
+
+      # php-release-tarballs
+      - name: Trigger php-release-tarballs
+        uses: ./newrelic-actions/workflow_trigger_beta_v1
+        with:
+          called_repo: github.com/kentonshade/gha
+          access_token: ${{ secrets.API_CLI_TOKEN }}
+          called_workflow: test-composite-action.yaml
+          refresh_interval: 15
+          # Job ID shouldn't change?
+          job_to_monitor: 5159789677
+          field_1: GIT_COMMAND=status -sb
+          # field_3: GIT_COMMAND=--version
+
+      # Uses php-agent/php_agent
+      # This job/step requires:
+      ## Copy artifacts from php-release-agent-checkout (latest successful build)
+      ## Copy artifacts from php-release-agent (this workflow)
+
+      # Send email notification to project team: php-agent@newrelic.com
+      # Ask team what exactly they need emailed to them
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          pwd && ls -la
+          echo Add other actions to build,
+          echo test, and deploy your project.
+          lsb_release -a
+          ## apt list --installed

@@ -1,0 +1,47 @@
+  73  wget https://github.com/cli/cli/releases/download/v2.10.1/gh_2.10.1_linux_amd64.rpm
+   74  ls -la
+   75  sudo yum localinstall gh_2.10.1_linux_amd64.rpm
+   76  ls -la
+   77  rm gh_2.10.1_linux_amd64.rpm
+   78  wget https://github.com/cli/cli/releases/download/v2.10.1/gh_2.10.1_linux_arm64.rpm
+   79  sudo yum localinstall gh_2.10.1_linux_arm64.rpm
+   80  gh --version
+   81  gh --help
+   82  ls -la
+   83  mkdir actions-runner && cd actions-runner
+   84  ls -la
+   85  curl -o actions-runner-linux-arm64-2.291.1.tar.gz -L https://github.com/actions/runner/releases/download/v2.291.1/actions-runner-linux-arm64-2.291.1.tar.gz
+   86  echo "c4823bd8322f80cb24a311ef49273f0677ff938530248242de7df33800a22900  actions-runner-linux-arm64-2.291.1.tar.gz" | shasum -a 256 -c
+   87  sudo yum install shasum
+   88  sudo yum install perl-Digest-SHA -y
+   89  echo "c4823bd8322f80cb24a311ef49273f0677ff938530248242de7df33800a22900  actions-runner-linux-arm64-2.291.1.tar.gz" | shasum -a 256 -c
+   90  tar xzf ./actions-runner-linux-arm64-2.291.1.tar.gz
+   91  ls -la
+   92  ./config.sh --url https://github.com/kentonshade/newrelic-php-agent --token ABAIHJ2PATOY4C674NYACKTCQP5OO
+   93  yum search ICU
+   94  pacman --help
+   95  ./config.sh --help
+   96  sudo yum install pacman
+   97  cd ../
+   98  ls -la
+   99  wget https://github.com/unicode-org/icu/releases/download/release-68-1/icu4c-68_1-src.tgz
+  100  mkdir icubuild
+  101  cd icubuild/
+  102  tar -xzf ../icu4c-68_1-src.tgz
+  103  ls -la
+  104  cd icu/source/
+  105  sudo yum install gcc-c++
+  106  mkdir ~/libicu
+  107  ./configure --prefix=/home/hudson/libicu
+  108  make
+  109  make install
+  110  cd
+  111  ls -la
+  112  vim .bash_profile
+  113  source .bash_profile
+  114  cd actions-runner/
+  115  ls -la
+  116  ./config.sh --url https://github.com/kentonshade/newrelic-php-agent --token ABAIHJ2PATOY4C674NYACKTCQP5OO
+  117  ./run.sh
+  118  history
+  119  history > commands-for-runner

@@ -1,10 +1,14 @@
+# GHA: Many artifacts required here:
+# php-release-agent-checkout
+---
+
 name: php-release-agent
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ gha-testing ]
+    branches: [gha-testing]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -14,6 +18,8 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
+    # There is a configuration matrix setting in the Jenkins job that refers to "labels"
+    # reflecting docker images, or specific EC2 instances required for the job.
     runs-on: ubuntu-latest
     # container:  ## kds = testing using private docker image
     #   image: kentonshade/mycirrus_1:ubuntu-focal-starter
@@ -26,9 +32,46 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      # STEP 1
+      # Copy artifacts from another project
+      # Do we need to do this, or can we simply checkout the project?
+      # For php-release-agent-checkout, we need the build that triggers this workflow/job
+
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # There is a build.sh in a .hudson directory that is called here.
+      - name: execute build.sh
+        run: |
+          # cp -rv visible.git .git
+          # ./hudson/build.sh --optimize
+
+      # POST BUILD ACTIONS
+
+      # There are labels used in the Jenkins job associated with this workflow
+      # I believe those lables might be incorporated into a matrix strategy to create
+      # these artifacts.
+      # Upload the artifacts:
+      - name: Upload generated release artifacts
+        id: php-release-agent-release-artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.workflow }}-release-artifacts
+          path: |
+            releases/**/*
+
+      # BUILD OTHER PROJECTS
+      # It might be prudent to creat these Jenkins "projects" as jobs within workflows...
+      # If the project is complex/convoluted, perhaps a workflow trigger (API) might be better
+
+      # php-release-packages
+
+      # php-release-tarballs
+      # Uses php-agent/php_agent
+      # This job/step requires:
+      ## Copy artifacts from php-release-agent-checkout (latest successful build)
+      ## Copy artifacts from php-release-agent (this workflow)
+
+      # Send email notification to project team: php-agent@newrelic.com
+      # Ask team what exactly they need emailed to them
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
@@ -38,3 +81,4 @@ jobs:
           echo test, and deploy your project.
           lsb_release -a
           ## apt list --installed
+          

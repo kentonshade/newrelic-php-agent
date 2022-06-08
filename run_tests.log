@@ -1,0 +1,708 @@
+cd agent; phpize --clean && phpize
+Cleaning..
+Configuring for:
+PHP Api Version:         20151012
+Zend Module Api No:      20151012
+Zend Extension Api No:   320151012
+make -C vendor all
+make[1]: Entering directory '/php-agent/vendor'
+cd protobuf-c && ./autogen.sh
+libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, 'build-aux'.
+libtoolize: copying file 'build-aux/ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIRS, 'm4'.
+libtoolize: copying file 'm4/libtool.m4'
+libtoolize: copying file 'm4/ltoptions.m4'
+libtoolize: copying file 'm4/ltsugar.m4'
+libtoolize: copying file 'm4/ltversion.m4'
+libtoolize: copying file 'm4/lt~obsolete.m4'
+cd protobuf && ./autogen.sh
+libtoolize: putting auxiliary files in '.'.
+libtoolize: copying file './ltmain.sh'
+libtoolize: putting macros in AC_CONFIG_MACRO_DIRS, 'm4'.
+libtoolize: copying file 'm4/libtool.m4'
+libtoolize: copying file 'm4/ltoptions.m4'
+libtoolize: copying file 'm4/ltsugar.m4'
+libtoolize: copying file 'm4/ltversion.m4'
+libtoolize: copying file 'm4/lt~obsolete.m4'
+cd protobuf && ./configure --prefix=`pwd`/../local --enable-static=yes --enable-shared=no --with-pic
+checking whether to enable maintainer-specific portions of Makefiles... yes
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking target system type... x86_64-pc-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether UID '1000' is supported by ustar format... yes
+checking whether GID '1000' is supported by ustar format... yes
+checking how to create a ustar tar archive... gnutar
+checking whether make supports nested variables... (cached) yes
+checking for gcc... cc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether cc accepts -g... yes
+checking for cc option to accept ISO C89... none needed
+checking whether cc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of cc... gcc3
+checking for g++... g++
+checking whether we are using the GNU C++ compiler... yes
+checking whether g++ accepts -g... yes
+checking dependency style of g++... gcc3
+checking how to run the C preprocessor... cc -E
+checking for gcc... gcc
+checking whether we are using the GNU C compiler... (cached) yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... (cached) none needed
+checking whether gcc understands -c and -o together... (cached) yes
+checking dependency style of gcc... (cached) gcc3
+checking how to run the C preprocessor... gcc -E
+checking how to run the C++ preprocessor... g++ -E
+checking for g++... g++
+checking whether we are using the GNU C++ compiler... (cached) yes
+checking whether g++ accepts -g... yes
+checking dependency style of g++... (cached) gcc3
+checking how to run the C++ preprocessor... g++ -E
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking minix/config.h usability... no
+checking minix/config.h presence... no
+checking for minix/config.h... no
+checking whether it is safe to define __EXTENSIONS__... yes
+checking the archiver (ar) interface... ar
+checking for gcc... gcc
+checking whether we are using the GNU Objective C compiler... no
+checking whether gcc accepts -g... no
+checking dependency style of gcc... gcc3
+checking C++ compiler flags...... use default: -O2  -g -std=c++11 -DNDEBUG
+checking whether __SUNPRO_CC is declared... no
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by cc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from cc object... ok
+checking for sysroot... no
+checking for a working dd... /usr/bin/dd
+checking how to truncate binary pipes... /usr/bin/dd bs=4096 count=1
+checking for mt... no
+checking if : is a manifest tool... no
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if cc supports -fno-rtti -fno-exceptions... no
+checking for cc option to produce PIC... -fPIC -DPIC
+checking if cc PIC flag -fPIC -DPIC works... yes
+checking if cc static flag -static works... no
+checking if cc supports -c -o file.o... yes
+checking if cc supports -c -o file.o... (cached) yes
+checking whether the cc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking how to run the C++ preprocessor... g++ -E
+checking for ld used by g++... /usr/bin/ld -m elf_x86_64
+checking if the linker (/usr/bin/ld -m elf_x86_64) is GNU ld... yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking for g++ option to produce PIC... -fPIC -DPIC
+checking if g++ PIC flag -fPIC -DPIC works... yes
+checking if g++ static flag -static works... no
+checking if g++ supports -c -o file.o... yes
+checking if g++ supports -c -o file.o... (cached) yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether the linker supports version scripts... yes
+checking for ANSI C header files... (cached) yes
+checking fcntl.h usability... yes
+checking fcntl.h presence... yes
+checking for fcntl.h... yes
+checking for inttypes.h... (cached) yes
+checking limits.h usability... yes
+checking limits.h presence... yes
+checking for limits.h... yes
+checking for stdlib.h... (cached) yes
+checking for unistd.h... (cached) yes
+checking for working memcmp... yes
+checking for working strtod... yes
+checking for ftruncate... yes
+checking for memset... yes
+checking for mkdir... yes
+checking for strchr... yes
+checking for strerror... yes
+checking for strtol... yes
+checking zlib version... ok (1.2.0.4 or later)
+checking for library containing zlibVersion... -lz
+checking whether g++ supports C++11 features by default... yes
+checking whether -latomic is needed... no
+checking whether cc is Clang... no
+checking whether pthreads work with -pthread... yes
+checking for joinable pthread attribute... PTHREAD_CREATE_JOINABLE
+checking whether more special flags are required for pthreads... no
+checking for PTHREAD_PRIO_INHERIT... yes
+checking the location of hash_map... <unordered_map>
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating src/Makefile
+config.status: creating benchmarks/Makefile
+config.status: creating conformance/Makefile
+config.status: creating protobuf.pc
+config.status: creating protobuf-lite.pc
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+=== configuring in third_party/googletest (/php-agent/vendor/protobuf/third_party/googletest)
+make -C protobuf install
+make[2]: Entering directory '/php-agent/vendor/protobuf'
+Making install in .
+make[3]: Entering directory '/php-agent/vendor/protobuf'
+make[4]: Entering directory '/php-agent/vendor/protobuf'
+make[4]: Nothing to be done for 'install-exec-am'.
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/lib/pkgconfig'
+ /usr/bin/install -c -m 644 protobuf.pc protobuf-lite.pc '/php-agent/vendor/protobuf/../local/lib/pkgconfig'
+make[4]: Leaving directory '/php-agent/vendor/protobuf'
+make[3]: Leaving directory '/php-agent/vendor/protobuf'
+Making install in src
+make[3]: Entering directory '/php-agent/vendor/protobuf/src'
+  CXX      google/protobuf/compiler/main.o
+  CXX      google/protobuf/stubs/bytestream.lo
+  CXX      google/protobuf/stubs/common.lo
+  CXX      google/protobuf/stubs/int128.lo
+  CXX      google/protobuf/io/io_win32.lo
+  CXX      google/protobuf/stubs/status.lo
+  CXX      google/protobuf/stubs/statusor.lo
+  CXX      google/protobuf/stubs/stringpiece.lo
+  CXX      google/protobuf/stubs/stringprintf.lo
+  CXX      google/protobuf/stubs/structurally_valid.lo
+  CXX      google/protobuf/stubs/strutil.lo
+  CXX      google/protobuf/stubs/time.lo
+  CXX      google/protobuf/any_lite.lo
+  CXX      google/protobuf/arena.lo
+  CXX      google/protobuf/extension_set.lo
+  CXX      google/protobuf/generated_enum_util.lo
+  CXX      google/protobuf/generated_message_util.lo
+  CXX      google/protobuf/generated_message_table_driven_lite.lo
+  CXX      google/protobuf/implicit_weak_message.lo
+  CXX      google/protobuf/message_lite.lo
+  CXX      google/protobuf/parse_context.lo
+  CXX      google/protobuf/repeated_field.lo
+  CXX      google/protobuf/wire_format_lite.lo
+  CXX      google/protobuf/io/coded_stream.lo
+  CXX      google/protobuf/io/strtod.lo
+  CXX      google/protobuf/io/zero_copy_stream.lo
+  CXX      google/protobuf/io/zero_copy_stream_impl.lo
+  CXX      google/protobuf/io/zero_copy_stream_impl_lite.lo
+  CXX      google/protobuf/any.pb.lo
+  CXX      google/protobuf/api.pb.lo
+  CXX      google/protobuf/any.lo
+  CXX      google/protobuf/descriptor.lo
+  CXX      google/protobuf/descriptor_database.lo
+  CXX      google/protobuf/descriptor.pb.lo
+  CXX      google/protobuf/duration.pb.lo
+  CXX      google/protobuf/dynamic_message.lo
+  CXX      google/protobuf/empty.pb.lo
+  CXX      google/protobuf/extension_set_heavy.lo
+  CXX      google/protobuf/field_mask.pb.lo
+  CXX      google/protobuf/generated_message_reflection.lo
+  CXX      google/protobuf/generated_message_table_driven.lo
+  CXX      google/protobuf/map_field.lo
+  CXX      google/protobuf/message.lo
+  CXX      google/protobuf/reflection_ops.lo
+  CXX      google/protobuf/service.lo
+  CXX      google/protobuf/source_context.pb.lo
+  CXX      google/protobuf/struct.pb.lo
+  CXX      google/protobuf/stubs/substitute.lo
+  CXX      google/protobuf/text_format.lo
+  CXX      google/protobuf/timestamp.pb.lo
+  CXX      google/protobuf/type.pb.lo
+  CXX      google/protobuf/unknown_field_set.lo
+  CXX      google/protobuf/wire_format.lo
+  CXX      google/protobuf/wrappers.pb.lo
+  CXX      google/protobuf/io/gzip_stream.lo
+  CXX      google/protobuf/io/printer.lo
+  CXX      google/protobuf/io/tokenizer.lo
+  CXX      google/protobuf/compiler/importer.lo
+  CXX      google/protobuf/compiler/parser.lo
+  CXX      google/protobuf/util/delimited_message_util.lo
+  CXX      google/protobuf/util/field_comparator.lo
+  CXX      google/protobuf/util/field_mask_util.lo
+  CXX      google/protobuf/util/internal/datapiece.lo
+  CXX      google/protobuf/util/internal/default_value_objectwriter.lo
+  CXX      google/protobuf/util/internal/error_listener.lo
+  CXX      google/protobuf/util/internal/field_mask_utility.lo
+  CXX      google/protobuf/util/internal/json_escaping.lo
+  CXX      google/protobuf/util/internal/json_objectwriter.lo
+  CXX      google/protobuf/util/internal/json_stream_parser.lo
+  CXX      google/protobuf/util/internal/object_writer.lo
+  CXX      google/protobuf/util/internal/protostream_objectsource.lo
+  CXX      google/protobuf/util/internal/protostream_objectwriter.lo
+  CXX      google/protobuf/util/internal/proto_writer.lo
+  CXX      google/protobuf/util/internal/type_info.lo
+  CXX      google/protobuf/util/internal/type_info_test_helper.lo
+  CXX      google/protobuf/util/internal/utility.lo
+  CXX      google/protobuf/util/json_util.lo
+  CXX      google/protobuf/util/message_differencer.lo
+  CXX      google/protobuf/util/time_util.lo
+  CXX      google/protobuf/util/type_resolver_util.lo
+  CXXLD    libprotobuf.la
+  CXX      google/protobuf/compiler/code_generator.lo
+  CXX      google/protobuf/compiler/command_line_interface.lo
+  CXX      google/protobuf/compiler/plugin.lo
+  CXX      google/protobuf/compiler/plugin.pb.lo
+  CXX      google/protobuf/compiler/subprocess.lo
+  CXX      google/protobuf/compiler/zip_writer.lo
+  CXX      google/protobuf/compiler/cpp/cpp_enum.lo
+  CXX      google/protobuf/compiler/cpp/cpp_enum_field.lo
+  CXX      google/protobuf/compiler/cpp/cpp_extension.lo
+  CXX      google/protobuf/compiler/cpp/cpp_field.lo
+  CXX      google/protobuf/compiler/cpp/cpp_file.lo
+  CXX      google/protobuf/compiler/cpp/cpp_generator.lo
+  CXX      google/protobuf/compiler/cpp/cpp_helpers.lo
+  CXX      google/protobuf/compiler/cpp/cpp_map_field.lo
+  CXX      google/protobuf/compiler/cpp/cpp_message.lo
+  CXX      google/protobuf/compiler/cpp/cpp_message_field.lo
+  CXX      google/protobuf/compiler/cpp/cpp_padding_optimizer.lo
+  CXX      google/protobuf/compiler/cpp/cpp_primitive_field.lo
+  CXX      google/protobuf/compiler/cpp/cpp_service.lo
+  CXX      google/protobuf/compiler/cpp/cpp_string_field.lo
+  CXX      google/protobuf/compiler/java/java_context.lo
+  CXX      google/protobuf/compiler/java/java_enum.lo
+  CXX      google/protobuf/compiler/java/java_enum_lite.lo
+  CXX      google/protobuf/compiler/java/java_enum_field.lo
+  CXX      google/protobuf/compiler/java/java_enum_field_lite.lo
+  CXX      google/protobuf/compiler/java/java_extension.lo
+  CXX      google/protobuf/compiler/java/java_extension_lite.lo
+  CXX      google/protobuf/compiler/java/java_field.lo
+  CXX      google/protobuf/compiler/java/java_file.lo
+  CXX      google/protobuf/compiler/java/java_generator.lo
+  CXX      google/protobuf/compiler/java/java_generator_factory.lo
+  CXX      google/protobuf/compiler/java/java_helpers.lo
+  CXX      google/protobuf/compiler/java/java_map_field.lo
+  CXX      google/protobuf/compiler/java/java_map_field_lite.lo
+  CXX      google/protobuf/compiler/java/java_message.lo
+  CXX      google/protobuf/compiler/java/java_message_lite.lo
+  CXX      google/protobuf/compiler/java/java_message_builder.lo
+  CXX      google/protobuf/compiler/java/java_message_builder_lite.lo
+  CXX      google/protobuf/compiler/java/java_message_field.lo
+  CXX      google/protobuf/compiler/java/java_message_field_lite.lo
+  CXX      google/protobuf/compiler/java/java_name_resolver.lo
+  CXX      google/protobuf/compiler/java/java_primitive_field.lo
+  CXX      google/protobuf/compiler/java/java_primitive_field_lite.lo
+  CXX      google/protobuf/compiler/java/java_shared_code_generator.lo
+  CXX      google/protobuf/compiler/java/java_service.lo
+  CXX      google/protobuf/compiler/java/java_string_field.lo
+  CXX      google/protobuf/compiler/java/java_string_field_lite.lo
+  CXX      google/protobuf/compiler/java/java_doc_comment.lo
+  CXX      google/protobuf/compiler/js/js_generator.lo
+  CXX      google/protobuf/compiler/js/well_known_types_embed.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_enum.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_enum_field.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_extension.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_field.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_file.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_generator.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_helpers.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_map_field.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_message.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_message_field.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_oneof.lo
+  CXX      google/protobuf/compiler/objectivec/objectivec_primitive_field.lo
+  CXX      google/protobuf/compiler/php/php_generator.lo
+  CXX      google/protobuf/compiler/python/python_generator.lo
+  CXX      google/protobuf/compiler/ruby/ruby_generator.lo
+  CXX      google/protobuf/compiler/csharp/csharp_doc_comment.lo
+  CXX      google/protobuf/compiler/csharp/csharp_enum.lo
+  CXX      google/protobuf/compiler/csharp/csharp_enum_field.lo
+  CXX      google/protobuf/compiler/csharp/csharp_field_base.lo
+  CXX      google/protobuf/compiler/csharp/csharp_generator.lo
+  CXX      google/protobuf/compiler/csharp/csharp_helpers.lo
+  CXX      google/protobuf/compiler/csharp/csharp_map_field.lo
+  CXX      google/protobuf/compiler/csharp/csharp_message.lo
+  CXX      google/protobuf/compiler/csharp/csharp_message_field.lo
+  CXX      google/protobuf/compiler/csharp/csharp_primitive_field.lo
+  CXX      google/protobuf/compiler/csharp/csharp_reflection_class.lo
+  CXX      google/protobuf/compiler/csharp/csharp_repeated_enum_field.lo
+  CXX      google/protobuf/compiler/csharp/csharp_repeated_message_field.lo
+  CXX      google/protobuf/compiler/csharp/csharp_repeated_primitive_field.lo
+  CXX      google/protobuf/compiler/csharp/csharp_source_generator_base.lo
+  CXX      google/protobuf/compiler/csharp/csharp_wrapper_field.lo
+  CXXLD    libprotoc.la
+  CXXLD    protoc
+  CXXLD    libprotobuf-lite.la
+make[4]: Entering directory '/php-agent/vendor/protobuf/src'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/lib'
+ /bin/sh ../libtool   --mode=install /usr/bin/install -c   libprotobuf-lite.la libprotobuf.la libprotoc.la '/php-agent/vendor/protobuf/../local/lib'
+libtool: install: /usr/bin/install -c .libs/libprotobuf-lite.lai /php-agent/vendor/protobuf/../local/lib/libprotobuf-lite.la
+libtool: install: /usr/bin/install -c .libs/libprotobuf.lai /php-agent/vendor/protobuf/../local/lib/libprotobuf.la
+libtool: install: /usr/bin/install -c .libs/libprotoc.lai /php-agent/vendor/protobuf/../local/lib/libprotoc.la
+libtool: install: /usr/bin/install -c .libs/libprotobuf-lite.a /php-agent/vendor/protobuf/../local/lib/libprotobuf-lite.a
+libtool: install: chmod 644 /php-agent/vendor/protobuf/../local/lib/libprotobuf-lite.a
+libtool: install: ranlib /php-agent/vendor/protobuf/../local/lib/libprotobuf-lite.a
+libtool: install: /usr/bin/install -c .libs/libprotobuf.a /php-agent/vendor/protobuf/../local/lib/libprotobuf.a
+libtool: install: chmod 644 /php-agent/vendor/protobuf/../local/lib/libprotobuf.a
+libtool: install: ranlib /php-agent/vendor/protobuf/../local/lib/libprotobuf.a
+libtool: install: /usr/bin/install -c .libs/libprotoc.a /php-agent/vendor/protobuf/../local/lib/libprotoc.a
+libtool: install: chmod 644 /php-agent/vendor/protobuf/../local/lib/libprotoc.a
+libtool: install: ranlib /php-agent/vendor/protobuf/../local/lib/libprotoc.a
+libtool: finish: PATH="/opt/nr/php/7.0/bin:/opt/nr/php/7.0/bin:/home/newrelic/.local/bin:/home/newrelic/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin" ldconfig -n /php-agent/vendor/protobuf/../local/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /php-agent/vendor/protobuf/../local/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/bin'
+  /bin/sh ../libtool   --mode=install /usr/bin/install -c protoc '/php-agent/vendor/protobuf/../local/bin'
+libtool: install: /usr/bin/install -c protoc /php-agent/vendor/protobuf/../local/bin/protoc
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf'
+ /usr/bin/install -c -m 644  google/protobuf/descriptor.proto google/protobuf/any.proto google/protobuf/api.proto google/protobuf/duration.proto google/protobuf/empty.proto google/protobuf/field_mask.proto google/protobuf/source_context.proto google/protobuf/struct.proto google/protobuf/timestamp.proto google/protobuf/type.proto google/protobuf/wrappers.proto '/php-agent/vendor/protobuf/../local/include/google/protobuf'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/plugin.proto '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf'
+ /usr/bin/install -c -m 644  google/protobuf/any.pb.h google/protobuf/api.pb.h google/protobuf/any.h google/protobuf/arena.h google/protobuf/arena_impl.h google/protobuf/arenastring.h google/protobuf/descriptor_database.h google/protobuf/descriptor.h google/protobuf/descriptor.pb.h google/protobuf/duration.pb.h google/protobuf/dynamic_message.h google/protobuf/empty.pb.h google/protobuf/extension_set.h google/protobuf/extension_set_inl.h google/protobuf/field_mask.pb.h google/protobuf/generated_enum_reflection.h google/protobuf/generated_enum_util.h google/protobuf/generated_message_reflection.h google/protobuf/generated_message_table_driven.h google/protobuf/generated_message_util.h google/protobuf/has_bits.h google/protobuf/implicit_weak_message.h google/protobuf/inlined_string_field.h google/protobuf/map_entry.h google/protobuf/map_entry_lite.h google/protobuf/map_field.h google/protobuf/map_field_inl.h google/protobuf/map_field_lite.h google/protobuf/map.h google/protobuf/map_type_handler.h google/protobuf/message.h google/protobuf/message_lite.h google/protobuf/metadata.h google/protobuf/metadata_lite.h google/protobuf/parse_context.h google/protobuf/port.h google/protobuf/port_def.inc google/protobuf/port_undef.inc google/protobuf/reflection.h google/protobuf/reflection_ops.h '/php-agent/vendor/protobuf/../local/include/google/protobuf'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/java'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/java/java_generator.h google/protobuf/compiler/java/java_names.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/java'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/cpp'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/cpp/cpp_generator.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/cpp'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/python'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/python/python_generator.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/python'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/js'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/js/js_generator.h google/protobuf/compiler/js/well_known_types_embed.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/js'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf'
+ /usr/bin/install -c -m 644  google/protobuf/repeated_field.h google/protobuf/service.h google/protobuf/source_context.pb.h google/protobuf/struct.pb.h google/protobuf/text_format.h google/protobuf/timestamp.pb.h google/protobuf/type.pb.h google/protobuf/unknown_field_set.h google/protobuf/wire_format.h google/protobuf/wire_format_lite.h google/protobuf/wrappers.pb.h '/php-agent/vendor/protobuf/../local/include/google/protobuf'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/stubs'
+ /usr/bin/install -c -m 644  google/protobuf/stubs/callback.h google/protobuf/stubs/bytestream.h google/protobuf/stubs/casts.h google/protobuf/stubs/common.h google/protobuf/stubs/fastmem.h google/protobuf/stubs/hash.h google/protobuf/stubs/logging.h google/protobuf/stubs/macros.h google/protobuf/stubs/map_util.h google/protobuf/stubs/mutex.h google/protobuf/stubs/once.h google/protobuf/stubs/platform_macros.h google/protobuf/stubs/port.h google/protobuf/stubs/status.h google/protobuf/stubs/stl_util.h google/protobuf/stubs/stringpiece.h google/protobuf/stubs/strutil.h google/protobuf/stubs/template_util.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/stubs'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/util'
+ /usr/bin/install -c -m 644  google/protobuf/util/type_resolver.h google/protobuf/util/delimited_message_util.h google/protobuf/util/field_comparator.h google/protobuf/util/field_mask_util.h google/protobuf/util/json_util.h google/protobuf/util/time_util.h google/protobuf/util/type_resolver_util.h google/protobuf/util/message_differencer.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/util'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/php'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/php/php_generator.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/php'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/code_generator.h google/protobuf/compiler/command_line_interface.h google/protobuf/compiler/importer.h google/protobuf/compiler/parser.h google/protobuf/compiler/plugin.h google/protobuf/compiler/plugin.pb.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/ruby'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/ruby/ruby_generator.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/ruby'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/io'
+ /usr/bin/install -c -m 644  google/protobuf/io/io_win32.h google/protobuf/io/coded_stream.h google/protobuf/io/gzip_stream.h google/protobuf/io/printer.h google/protobuf/io/strtod.h google/protobuf/io/tokenizer.h google/protobuf/io/zero_copy_stream.h google/protobuf/io/zero_copy_stream_impl.h google/protobuf/io/zero_copy_stream_impl_lite.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/io'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/csharp'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/csharp/csharp_generator.h google/protobuf/compiler/csharp/csharp_names.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/csharp'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/objectivec'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/objectivec/objectivec_generator.h google/protobuf/compiler/objectivec/objectivec_helpers.h '/php-agent/vendor/protobuf/../local/include/google/protobuf/compiler/objectivec'
+make[4]: Leaving directory '/php-agent/vendor/protobuf/src'
+make[3]: Leaving directory '/php-agent/vendor/protobuf/src'
+make[2]: Leaving directory '/php-agent/vendor/protobuf'
+cd protobuf-c && PKG_CONFIG_PATH=../local/lib/pkgconfig PROTOC=../local/bin/protoc ./configure --prefix=`pwd`/../local --enable-static=yes --enable-shared=no --disable-dependency-tracking --with-pic
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether make supports the include directive... yes (GNU style)
+checking for gcc... cc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether cc accepts -g... yes
+checking for cc option to accept ISO C89... none needed
+checking whether cc understands -c and -o together... yes
+checking dependency style of cc... none
+checking for cc option to accept ISO C99... none needed
+checking for cc option to accept ISO Standard C... (cached) none needed
+checking for g++... g++
+checking whether we are using the GNU C++ compiler... yes
+checking whether g++ accepts -g... yes
+checking dependency style of g++... none
+checking whether ln -s works... yes
+checking how to run the C preprocessor... cc -E
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking minix/config.h usability... no
+checking minix/config.h presence... no
+checking for minix/config.h... no
+checking whether it is safe to define __EXTENSIONS__... yes
+checking for special C compiler options needed for large files... no
+checking for _FILE_OFFSET_BITS value needed for large files... no
+checking whether make supports nested variables... (cached) yes
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by cc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking the maximum length of command line arguments... 1572864
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from cc object... ok
+checking for sysroot... no
+checking for a working dd... /usr/bin/dd
+checking how to truncate binary pipes... /usr/bin/dd bs=4096 count=1
+checking for mt... no
+checking if : is a manifest tool... no
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if cc supports -fno-rtti -fno-exceptions... no
+checking for cc option to produce PIC... -fPIC -DPIC
+checking if cc PIC flag -fPIC -DPIC works... yes
+checking if cc static flag -static works... no
+checking if cc supports -c -o file.o... yes
+checking if cc supports -c -o file.o... (cached) yes
+checking whether the cc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking how to run the C++ preprocessor... g++ -E
+checking for ld used by g++... /usr/bin/ld -m elf_x86_64
+checking if the linker (/usr/bin/ld -m elf_x86_64) is GNU ld... yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking for g++ option to produce PIC... -fPIC -DPIC
+checking if g++ PIC flag -fPIC -DPIC works... yes
+checking if g++ static flag -static works... no
+checking if g++ supports -c -o file.o... yes
+checking if g++ supports -c -o file.o... (cached) yes
+checking whether the g++ linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether C compiler accepts "-Wc99-c11-compat"... yes
+checking whether C compiler accepts "-Werror=incompatible-pointer-types"... yes
+checking whether C compiler accepts "-Werror=int-conversion"... yes
+checking whether C compiler accepts "-Wnull-dereference"... yes
+checking for doxygen... no
+checking for pkg-config... /usr/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+checking whether g++ supports C++11 features with -std=c++11... yes
+checking for protobuf... yes
+checking google/protobuf/compiler/command_line_interface.h usability... yes
+checking google/protobuf/compiler/command_line_interface.h presence... yes
+checking for google/protobuf/compiler/command_line_interface.h... yes
+checking for protoc... /php-agent/vendor/protobuf/../local/bin/protoc
+checking if LD -Wl,--version-script works... yes
+checking whether self tests are run under valgrind... no
+checking whether to build with code coverage support... no
+checking whether byte ordering is bigendian... no
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating protobuf-c/libprotobuf-c.pc
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+
+    protobuf-c 1.3.3
+
+        CC:                     cc
+        CFLAGS:                 -m64 -O0 -g3 -DENABLE_TESTING_API
+        CXX:                    g++ -std=c++11
+        CXXFLAGS:               -g -O2
+        LDFLAGS:                -m64 -O0 -g3
+        LIBS:                   
+
+        prefix:                 /php-agent/vendor/protobuf-c/../local
+        sysconfdir:             ${prefix}/etc
+        libdir:                 ${exec_prefix}/lib
+        includedir:             ${prefix}/include
+        pkgconfigdir:           ${libdir}/pkgconfig
+
+        bigendian:              no
+        protobuf version:       libprotoc 3.13.0
+
+make -C protobuf-c install
+make[2]: Entering directory '/php-agent/vendor/protobuf-c'
+  CXX      protoc-c/protoc_gen_c-c_bytes_field.o
+  CXX      protoc-c/protoc_gen_c-c_enum.o
+  CXX      protoc-c/protoc_gen_c-c_enum_field.o
+  CXX      protoc-c/protoc_gen_c-c_extension.o
+  CXX      protoc-c/protoc_gen_c-c_field.o
+  CXX      protoc-c/protoc_gen_c-c_file.o
+  CXX      protoc-c/protoc_gen_c-c_generator.o
+  CXX      protoc-c/protoc_gen_c-c_helpers.o
+  CXX      protoc-c/protoc_gen_c-c_message.o
+  CXX      protoc-c/protoc_gen_c-c_message_field.o
+  CXX      protoc-c/protoc_gen_c-c_primitive_field.o
+  CXX      protoc-c/protoc_gen_c-c_service.o
+  CXX      protoc-c/protoc_gen_c-c_string_field.o
+  CXX      protoc-c/protoc_gen_c-main.o
+  CXXLD    protoc-c/protoc-gen-c
+  GEN      t/test.pb-c.c
+  GEN      t/test-full.pb-c.c
+  GEN      t/test-optimized.pb-c.c
+  GEN      t/test-full.pb.cc
+  CXX      t/generated-code2/cxx_generate_packed_data-cxx-generate-packed-data.o
+  CXX      t/generated_code2_cxx_generate_packed_data-test-full.pb.o
+  CXXLD    t/generated-code2/cxx-generate-packed-data
+  GEN      t/generated-code2/test-full-cxx-output.inc
+  GEN      t/test-proto3.pb-c.c
+  GEN      t/issue220/issue220.pb-c.c
+  GEN      t/issue251/issue251.pb-c.c
+  GEN      t/issue330/issue330.pb-c.c
+  GEN      t/issue375/issue375.pb-c.c
+make  install-am
+make[3]: Entering directory '/php-agent/vendor/protobuf-c'
+  CC       protobuf-c/protobuf-c.lo
+  CCLD     protobuf-c/libprotobuf-c.la
+make[4]: Entering directory '/php-agent/vendor/protobuf-c'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf-c/../local/lib'
+ /bin/sh ./libtool   --mode=install /usr/bin/install -c   protobuf-c/libprotobuf-c.la '/php-agent/vendor/protobuf-c/../local/lib'
+libtool: install: /usr/bin/install -c protobuf-c/.libs/libprotobuf-c.lai /php-agent/vendor/protobuf-c/../local/lib/libprotobuf-c.la
+libtool: install: /usr/bin/install -c protobuf-c/.libs/libprotobuf-c.a /php-agent/vendor/protobuf-c/../local/lib/libprotobuf-c.a
+libtool: install: chmod 644 /php-agent/vendor/protobuf-c/../local/lib/libprotobuf-c.a
+libtool: install: ranlib /php-agent/vendor/protobuf-c/../local/lib/libprotobuf-c.a
+libtool: finish: PATH="/opt/nr/php/7.0/bin:/opt/nr/php/7.0/bin:/home/newrelic/.local/bin:/home/newrelic/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin" ldconfig -n /php-agent/vendor/protobuf-c/../local/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /php-agent/vendor/protobuf-c/../local/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf-c/../local/bin'
+  /bin/sh ./libtool   --mode=install /usr/bin/install -c protoc-c/protoc-gen-c '/php-agent/vendor/protobuf-c/../local/bin'
+libtool: install: /usr/bin/install -c protoc-c/protoc-gen-c /php-agent/vendor/protobuf-c/../local/bin/protoc-gen-c
+make  install-exec-hook
+make[5]: Entering directory '/php-agent/vendor/protobuf-c'
+rm -f /php-agent/vendor/protobuf-c/../local/bin/protoc-c
+ln -s protoc-gen-c /php-agent/vendor/protobuf-c/../local/bin/protoc-c
+make[5]: Leaving directory '/php-agent/vendor/protobuf-c'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf-c/../local/include'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf-c/../local/include/protobuf-c'
+ /usr/bin/install -c -m 644  protobuf-c/protobuf-c.h '/php-agent/vendor/protobuf-c/../local/include/protobuf-c'
+ /usr/bin/mkdir -p '/php-agent/vendor/protobuf-c/../local/lib/pkgconfig'
+ /usr/bin/install -c -m 644 protobuf-c/libprotobuf-c.pc '/php-agent/vendor/protobuf-c/../local/lib/pkgconfig'
+make  install-data-hook
+make[5]: Entering directory '/php-agent/vendor/protobuf-c'
+/usr/bin/mkdir -p /php-agent/vendor/protobuf-c/../local/include/google/protobuf-c
+cd /php-agent/vendor/protobuf-c/../local/include/google/protobuf-c && rm -f protobuf-c.h
+cd /php-agent/vendor/protobuf-c/../local/include/google/protobuf-c && ln -s ../../protobuf-c/protobuf-c.h protobuf-c.h
+make[5]: Leaving directory '/php-agent/vendor/protobuf-c'
+make[4]: Leaving directory '/php-agent/vendor/protobuf-c'
+make[3]: Leaving directory '/php-agent/vendor/protobuf-c'
+make[2]: Leaving directory '/php-agent/vendor/protobuf-c'
+make[1]: Leaving directory '/php-agent/vendor'
+make -C axiom
+make[1]: Entering directory '/php-agent/axiom'
+/php-agent/vendor/local/bin/protoc-c --c_out=. v1.proto
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -Wno-cast-qual -c v1.pb-c.c -o v1.pb-c.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c cmd_appinfo_transmit.c -o cmd_appinfo_transmit.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c cmd_span_batch_transmit.c -o cmd_span_batch_transmit.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c cmd_txndata_transmit.c -o cmd_txndata_transmit.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_agent.c -o nr_agent.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_analytics_events.c -o nr_analytics_events.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_app.c -o nr_app.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_app_harvest.c -o nr_app_harvest.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_attributes.c -o nr_attributes.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_banner.c -o nr_banner.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_configstrings.c -o nr_configstrings.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_custom_events.c -o nr_custom_events.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_daemon_spawn.c -o nr_daemon_spawn.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_datastore.c -o nr_datastore.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_datastore_instance.c -o nr_datastore_instance.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_distributed_trace.c -o nr_distributed_trace.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_errors.c -o nr_errors.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_exclusive_time.c -o nr_exclusive_time.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_explain.c -o nr_explain.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_file_naming.c -o nr_file_naming.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_guid.c -o nr_guid.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_header.c -o nr_header.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_mysqli_metadata.c -o nr_mysqli_metadata.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_postgres.c -o nr_postgres.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_rules.c -o nr_rules.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_rum.c -o nr_rum.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment.c -o nr_segment.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment_children.c -o nr_segment_children.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment_datastore.c -o nr_segment_datastore.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment_external.c -o nr_segment_external.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment_private.c -o nr_segment_private.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment_terms.c -o nr_segment_terms.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment_traces.c -o nr_segment_traces.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_segment_tree.c -o nr_segment_tree.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_slowsqls.c -o nr_slowsqls.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_span_encoding.c -o nr_span_encoding.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_span_event.c -o nr_span_event.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_span_queue.c -o nr_span_queue.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_synthetics.c -o nr_synthetics.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_txn.c -o nr_txn.o
+cc -DNR_SYSTEM_LINUX=1 -DHAVE_ALLOCA_H=1 -DHAVE_BACKTRACE=1 -DHAVE_DEV_FD=1 -DHAVE_PROC_SELF_FD=1 -DHAVE_PTHREAD_MUTEX_ERRORCHECK=1 -DNR_VERSION=<<<<<<< HEAD 9.18.1 ======= 9.19.0 >>>>>>> gha-dev.0 -DNR_COMMIT=943d4945f661  -std=gnu99 -fPIC -DPIC -pthread -Wall -Werror -Wextra -Wbad-function-cast -Wcast-qual -Wdeclaration-after-statement -Wformat -Wformat-security -Wimplicit-function-declaration -Wmissing-declarations -Wmissing-prototypes -Wno-write-strings -Wpointer-arith -Wshadow -Wstrict-prototypes -Wswitch-enum  -I/php-agent/vendor/local/include -m64 -O0 -g3 -DENABLE_TESTING_API -MMD -MP -c nr_version.c -o nr_version.o
+make[1]: Leaving directory '/php-agent/axiom'

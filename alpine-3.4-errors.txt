@@ -1,0 +1,92 @@
+php 7.1
+arch x64
+cd agent; [ -f Makefile ] && make clean; phpize --clean
+make -C axiom clean
+rm -f bin/client bin/daemon bin/integration_runner bin/stressor
+rm -rf releases/debian releases/*.deb
+find . -name \*.gcda | xargs rm -f
+make -C vendor clean
+rm -rf pkg/*
+make[1]: Entering directory '/php-agent/axiom'
+rm -rf releases/redhat releases/*.rpm
+Cleaning..
+make[1]: Entering directory '/php-agent/vendor'
+cd protobuf && git clean -fdx
+cd protobuf-c && git clean -fdx
+rm -rf releases/newrelic-php5-*.tar.gz
+Removing aclocal.m4
+Removing autom4te.cache/
+Removing build-aux/
+Removing config.h.in
+Removing configure
+Removing aclocal.m4
+rm -f *.o *.d libaxiom.a nr_config.h *.pb-c.[ch]
+Removing autom4te.cache/
+Removing configure
+Removing third_party/googletest/
+rm -rf local
+rm -f *.gcov *.gcno *.gcda
+make[1]: Leaving directory '/php-agent/vendor'
+rm -rf .deps
+make -C tests clean
+make[2]: Entering directory '/php-agent/axiom/tests'
+find: ./vendor/local: No such file or directory
+rm -f *.gcov *.gcno *.gcda
+rm -f libtlib.a *.d *.o *.valgrind.log test_agent test_analytics_events test_apdex test_app test_app_harvest test_attributes test_base64 test_buffer test_cmd_appinfo test_cmd_span_batch test_cmd_txndata test_configstrings test_custom_events test_datastore test_datastore_instance test_daemon_spawn test_distributed_trace test_errors test_exclusive_time test_explain test_file_naming test_flatbuffers test_guid test_hash test_hashmap test_header test_json test_labels test_logging test_math test_memory test_metrics test_minmax_heap test_mysqli_metadata test_network test_number_converter test_obfuscate test_object test_postgres test_random test_regex test_reply test_rules test_rum test_sampling test_segment test_segment_children test_segment_datastore test_segment_external test_segment_private test_segment_terms test_segment_traces test_segment_tree test_serialize test_set test_signals test_slab test_slowsqls test_sort test_span_encoding test_span_event test_span_queue test_sql test_stack test_string_pool test_strings test_synthetics test_system test_text test_threads test_time test_txn test_url test_vector
+rm -rf .deps *.dSYM
+make[2]: Leaving directory '/php-agent/axiom/tests'
+make[1]: Leaving directory '/php-agent/axiom'
+find . -name \*coverage-report*.html | xargs rm -f
+find . -name \*coverage-report*.xml | xargs rm -f
+rm -rf releases
+rm -f agent/newrelic.map agent/LicenseData/license_errors.txt
+cd agent; phpize --clean && phpize
+make -C vendor all
+mkdir releases
+mkdir releases/linux-musl
+make[1]: Entering directory '/php-agent/vendor'
+cd protobuf-c && ./autogen.sh
+cd protobuf && ./autogen.sh
+Cleaning..
+mkdir -p local
++ mkdir -p third_party/googletest/m4
+mkdir releases/linux-musl/agent
++ autoreconf -f -i -Wall,no-obsolete
+mkdir releases/linux-musl/agent/x64
+Configuring for:
+PHP Api Version:         20160303
+Zend Module Api No:      20160303
+Zend Extension Api No:   320160303
+autoreconf: Entering directory `.'
+autoreconf: configure.ac: not using Gettext
+autoreconf: running: aclocal --force -I m4 ${ACLOCAL_FLAGS}
+autoreconf: configure.ac: tracing
+autoreconf: configure.ac: creating directory build-aux
+autoreconf: configure.ac: not using Libtool
+autoreconf: running: /usr/bin/autoconf --force
+autoreconf: running: /usr/bin/autoheader --force
+configure.ac:109: error: possibly undefined macro: AC_PROG_LIBTOOL
+      If this token and others are legitimate, please use m4_pattern_allow.
+      See the Autoconf documentation.
+autoreconf: /usr/bin/autoconf failed with exit status: 1
+Makefile:31: recipe for target 'protobuf/configure' failed
+make[1]: *** [protobuf/configure] Error 1
+make[1]: *** Waiting for unfinished jobs....
+autoreconf: running: automake --add-missing --copy --force-missing
+Unescaped left brace in regex is deprecated, passed through in regex; marked by <-- HERE in m/\${ <-- HERE ([^ \t=:+{}]+)}/ at /usr/bin/automake line 3936.
+configure.ac:14: installing 'build-aux/compile'
+configure.ac:13: installing 'build-aux/install-sh'
+configure.ac:13: installing 'build-aux/missing'
+Makefile.am:4: error: Libtool library used but 'LIBTOOL' is undefined
+Makefile.am:4:   The usual way to define 'LIBTOOL' is to add 'LT_INIT'
+Makefile.am:4:   to 'configure.ac' and run 'aclocal' and 'autoconf' again.
+Makefile.am:4:   If 'LT_INIT' is in 'configure.ac', make sure
+Makefile.am:4:   its definition is in aclocal's search path.
+Makefile.am: installing 'build-aux/depcomp'
+parallel-tests: installing 'build-aux/test-driver'
+autoreconf: automake failed with exit status: 1
+Makefile:51: recipe for target 'protobuf-c/configure' failed
+make[1]: *** [protobuf-c/configure] Error 1
+make[1]: Leaving directory '/php-agent/vendor'
+Makefile:410: recipe for target 'vendor' failed
+make: *** [vendor] Error 2

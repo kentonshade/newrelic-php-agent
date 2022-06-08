@@ -170,6 +170,8 @@ func merge(a, b map[string]string) map[string]string {
 
 func catRequest(w http.ResponseWriter, r *http.Request) {
 	catFile := r.URL.Query().Get("file")
+	dtEnabled := r.URL.Query().Get("dt_enabled");
+	catEnabled := r.URL.Query().Get("cat_enabled");
 	if "" == catFile {
 		http.Error(w, "cat failure: no file provided", http.StatusBadRequest)
 		return
@@ -178,6 +180,23 @@ func catRequest(w http.ResponseWriter, r *http.Request) {
 	env := merge(ctx.Env, nil)
 	settings := merge(ctx.Settings, nil)
 	settings["newrelic.appname"] = "ignore"
+	if ("false" == dtEnabled) {
+	    settings["newrelic.distributed_tracing_enabled"] = "false";
+	} else if ("true" == dtEnabled) {
+		settings["newrelic.distributed_tracing_enabled"] = "true";
+	} else {
+		http.Error(w, "cat request: invalid value of dt_enabled - expected 'true' or 'false', got '" + dtEnabled +"'.", http.StatusBadRequest)
+		return
+	}
+
+	if ("false" == catEnabled) {
+	    settings["newrelic.cross_application_tracer.enabled"] = "false";
+	} else if ("true" == catEnabled) {
+		settings["newrelic.cross_application_tracer.enabled"] = "true";
+	} else {
+		http.Error(w, "cat request: invalid value of cat_enabled - expected 'true' or 'false', got '" + catEnabled +"'.", http.StatusBadRequest)
+		return
+	}
 
 	tx, err := integration.CgiTx(integration.ScriptFile(catFile), env, settings, r.Header, ctx)
 	if nil != err {
@@ -556,10 +575,10 @@ func discoverTests(pattern string, searchPaths []string) []string {
 	return testFiles
 }
 
-func injectIntoConnectReply(reply []byte, newRunID, crossProcessId string) []byte {
+func injectIntoConnectReply(reply collector.RPMResponse, newRunID, crossProcessId string) []byte {
 	var x map[string]interface{}
 
-	json.Unmarshal(reply, &x)
+	json.Unmarshal(reply.Body, &x)
 
 	x["agent_run_id"] = newRunID
 	x["cross_process_id"] = crossProcessId
@@ -571,7 +590,7 @@ func injectIntoConnectReply(reply []byte, newRunID, crossProcessId string) []byt
 type IntegrationDataHandler struct {
 	sync.Mutex                                       // Protects harvests
 	harvests            map[string]*newrelic.Harvest // Keyed by tc.Name (which is used as AgentRunID)
-	reply               []byte                       // Constant after creation
+	reply               collector.RPMResponse        // Constant after creation
 	rawSecurityPolicies []byte                       // policies from connection attempt, needed for AppInfo reply
 }
 
@@ -581,7 +600,7 @@ func (h *IntegrationDataHandler) IncomingTxnData(id newrelic.AgentRunID, sample 
 
 	harvest := h.harvests[string(id)]
 	if nil == harvest {
-		harvest = newrelic.NewHarvest(time.Now(), collector.NewHarvestLimits())
+		harvest = newrelic.NewHarvest(time.Now(), collector.NewHarvestLimits(nil))
 		// Save a little memory by reducing the event pools.
 		harvest.TxnEvents = newrelic.NewTxnEvents(50)
 		harvest.CustomEvents = newrelic.NewCustomEvents(50)
@@ -632,11 +651,12 @@ func startDaemon(network, address string, securityToken string, securityPolicies
 	client, _ := newrelic.NewClient(&newrelic.ClientConfig{})
 	connectPayload := TestApp.ConnectPayload(utilization.Gather(
 		utilization.Config{
-			DetectAWS:    true,
-			DetectAzure:  true,
-			DetectGCP:    true,
-			DetectPCF:    true,
-			DetectDocker: true,
+			DetectAWS:        true,
+			DetectAzure:      true,
+			DetectGCP:        true,
+			DetectPCF:        true,
+			DetectDocker:     true,
+			DetectKubernetes: true,
 		}))
 
 	policies := newrelic.AgentPolicies{}
