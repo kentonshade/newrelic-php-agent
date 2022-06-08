@@ -407,7 +407,8 @@ jobs:
           if-no-files-found: error
 
   Integration-CentOS:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     needs: pr_build_by_os
     name: Integration tests for Integration-CentOS
     env:
@@ -420,7 +421,7 @@ jobs:
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image:
           - nr-centos7-1.2
-          # - nr-centos8-1.1
+          - nr-centos8-1.1
         os: [linux]
         # php_ver: ['5.5', '7.0']
         php_ver: ['7.0']
