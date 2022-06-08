@@ -407,8 +407,8 @@ jobs:
           if-no-files-found: error
 
   Integration-CentOS:
-    # runs-on: ubuntu-latest
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    # runs-on: ubuntu-18.04
     needs: pr_build_by_os
     name: Integration tests for Integration-CentOS
     env:
