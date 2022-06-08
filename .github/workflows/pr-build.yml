@@ -453,7 +453,7 @@ jobs:
         run: |
           ls -la ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
 
-      # GHA: Copy the artifacts
+      # GHA: Copy the artifacts and change perms
       - name: Copy the artifacts
         if: ${{ success() }}
         run: |
@@ -461,6 +461,7 @@ jobs:
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
           tree ./bin/
           tree ./agent/.libs/
+          chmod +x -R ./bin
 
       # GHA: Run Make command
       - name: Run Make command
