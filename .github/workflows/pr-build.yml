@@ -474,6 +474,7 @@ jobs:
       - name: Run Make command
         if: ${{ success() }}
         run: |
+          make clean
           make dev-integration-tests
 
   Integration-Alpine:
@@ -547,7 +548,8 @@ jobs:
       - name: Run Make command
         if: ${{ success() }}
         run: |
-          # make dev-integration-tests
+          make clean
+          make dev-integration-tests
 
 
   # GHA renamed for better readability ⇓
