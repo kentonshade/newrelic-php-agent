@@ -50,6 +50,7 @@ jobs:
       OS: ${{ matrix.os }}
       image_name: ${{ matrix.os }}:${{ matrix.php_ver }}${{ matrix.arch }}
       IMAGE_OS: ${{ matrix.image_os }}
+      SECRETS_MK: ${{ secrets.SECRETS_MK }}
     runs-on: ubuntu-latest
     container:  ## GHA: testing using private docker image
       image: ${{ matrix.registry }}/${{ matrix.image_os }}
@@ -122,6 +123,12 @@ jobs:
           echo "AGENT_VERSION="${GITHUB_RUN_NUMBER}"" >> $GITHUB_ENV
           echo "GIT_COMMIT="${GITHUB_SHA}"" >> $GITHUB_ENV
           echo "BUILD_NUMBER="${GITHUB_RUN_NUMBER}"" >> $GITHUB_ENV
+
+      # GHA: Create secrets.mk
+      - name: Create secrets.mk
+        if: ${{ success() }}
+        run: |
+          echo "${SECRETS_MK}" > make/secrets.mk
 
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
@@ -240,6 +247,7 @@ jobs:
       ARCH: ${{ matrix.arch }}
       BUILD_TYPE: release
       OS: ${{ matrix.os }}
+      SECRETS_MK: ${{ secrets.SECRETS_MK }}
       # image_name: ${{ matrix.os }}:${{ matrix.php_ver }}${{ matrix.arch }}
       # IMAGE_OS: ${{ matrix.image_os }}
     runs-on: self-hosted
@@ -318,6 +326,12 @@ jobs:
           echo "AGENT_VERSION="${GITHUB_RUN_NUMBER}"" >> $GITHUB_ENV
           echo "GIT_COMMIT="${GITHUB_SHA}"" >> $GITHUB_ENV
           echo "BUILD_NUMBER="${GITHUB_RUN_NUMBER}"" >> $GITHUB_ENV
+
+      # GHA: Create secrets.mk
+      - name: Create secrets.mk
+        if: ${{ success() }}
+        run: |
+          echo "${SECRETS_MK}" > make/secrets.mk
 
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
@@ -471,7 +485,14 @@ jobs:
           echo "${SECRETS_MK}" > make/secrets.mk
 
       # GHA: Run Make command
-      - name: Run Make command
+      # - name: Run Make command
+      #   if: ${{ success() }}
+      #   run: |
+      #     make clean
+      #     make dev-integration-tests
+
+      # GHA: Run Make command
+      - name: Run Make commands
         if: ${{ success() }}
         run: |
           make clean
@@ -545,11 +566,13 @@ jobs:
           echo "${SECRETS_MK}" > make/secrets.mk
 
       # GHA: Run Make command
-      - name: Run Make command
+      - name: Run Make commands
         if: ${{ success() }}
         run: |
           make clean
-          make dev-integration-tests
+          make daemon_tests
+          make valgrind
+          make integration
 
 
   # GHA renamed for better readability ⇓
