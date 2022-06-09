@@ -485,6 +485,21 @@ jobs:
         username: ${{ secrets.DOCKER_REPO_USER }}
         password: ${{ secrets.DOCKER_USER_TOKEN }}
     name: Integration tests for Integration-Alpine
+    env:
+      OS: ${{ matrix.image }}
+      PHP_VER: ${{ matrix.php_ver }}
+      SECRETS_MK: ${{ secrets.SECRETS_MK }}
+    strategy:
+      matrix:
+        # registry: [mycirrus]
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
+        image:
+          - nr-alpine3.4-1.1
+        os: [linux]
+        # php_ver: ['5.5', '7.0']
+        php_ver: ['7.0']
+        arch: [x64]
     steps:
       - uses: actions/checkout@v2
       # GHA: Grab the required artifacts and cp as appropriate
@@ -506,9 +521,31 @@ jobs:
           tree ./bin-so-artifacts
           ls -la ./bin-so-artifacts
 
+      # GHA: Check the artifacts in an OS
+      - name: Check the artifacts in an OS
+        if: ${{ success() }}
+        run: |
+          ls -la ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+
+      # GHA: Copy the artifacts and change perms
+      - name: Copy the artifacts
+        if: ${{ success() }}
+        run: |
+          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
+          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
+          tree ./bin/
+          tree ./agent/.libs/
+          chmod +x -R ./bin
+
+      # GHA: Create secrets.mk
+      - name: Create secrets.mk
+        if: ${{ success() }}
+        run: |
+          echo "${SECRETS_MK}" > make/secrets.mk
+
       # GHA: Run Make command
       - name: Run Make command
-        if: ${{ always() }}
+        if: ${{ success() }}
         run: |
           # make dev-integration-tests
 
