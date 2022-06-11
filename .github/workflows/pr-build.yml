@@ -495,7 +495,6 @@ jobs:
       - name: Run Make commands
         if: ${{ success() }}
         run: |
-          # make clean
           make dev-integration-tests
 
   Integration-Alpine:
