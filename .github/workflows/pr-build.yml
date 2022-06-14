@@ -504,6 +504,7 @@ jobs:
         if: ${{ success() }}
         run: |
           # ldd agent/modules/newrelic.so
+          ls /var/lib/dpkg/info | grep 'libpcre'
           ldd ./agent/.libs/newrelic.so
           ldconfig -p | grep libpcre
           sudo ln -s libpcre.so.3 libpcre.so.1
