@@ -499,22 +499,31 @@ jobs:
           cd /usr/lib/x86_64-linux-gnu/
           sudo cp libpcre.so libpcre.so.1
 
+      ## GHA Troubleshooting pcre issues
+
       # GHA: PCRE issues
-      - name: libpcre issues 2
+      - name: List contents of /var/lib/dpkg/info
         if: ${{ success() }}
         run: |
-          # ldd agent/modules/newrelic.so
           ls /var/lib/dpkg/info | grep 'libpcre'
-          ldd ./agent/.libs/newrelic.so
-          ldconfig -p | grep libpcre
-          sudo ln -s libpcre.so.3 libpcre.so.1
 
-      # GHA: Run Make command
-      # - name: Run Make command
-      #   if: ${{ success() }}
-      #   run: |
-      #     make clean
-      #     make dev-integration-tests
+      # GHA: PCRE issues
+      - name: List dynamic dependecies
+        if: ${{ success() }}
+        run: |
+          ldd ./agent/.libs/newrelic.so
+
+      # GHA: PCRE issues
+      - name: check header and file names of the libraries
+        if: ${{ success() }}
+        run: |
+          ldconfig -p | grep libpcre
+
+      # GHA: PCRE issues
+      - name: Create libpcre.so.1 symlink
+        if: ${{ success() }}
+        run: |
+          sudo ln -s libpcre.so.3 libpcre.so.1
 
       # GHA: Run Make command
       - name: Run Make commands
