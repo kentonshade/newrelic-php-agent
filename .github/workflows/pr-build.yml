@@ -503,7 +503,8 @@ jobs:
       - name: libpcre issues 2
         if: ${{ success() }}
         run: |
-          ldd agent/modules/newrelic.so
+          # ldd agent/modules/newrelic.so
+          ldd ./agent/.libs/newrelic.so
           ldconfig -p | grep libpcre
           sudo ln -s libpcre.so.3 libpcre.so.1
 
