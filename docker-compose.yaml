@@ -70,10 +70,10 @@ services:
       REDIS_HOST: redisdb
 
       PS1: "New Relic > "
-      NEWRELIC_COLLECTOR_HOST : ${NEW_RELIC_COLLECTOR_HOST:-collector.newrelic.com}
+      NEWRELIC_COLLECTOR_HOST: ${NEW_RELIC_COLLECTOR_HOST:-collector.newrelic.com}
       NEWRELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
     volumes:
-       - ${PWD}:/usr/src/myapp
+      - ${PWD}:/usr/src/myapp
     working_dir: /usr/src/myapp
     stdin_open: true
     tty: true

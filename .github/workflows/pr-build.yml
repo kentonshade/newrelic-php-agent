@@ -478,6 +478,14 @@ jobs:
           tree ./agent/.libs/
           chmod +x -R ./bin
 
+      # Check ENV variables
+      # GHA: Check for IMAGE_OS value per matix run
+      - name: Check environmental variables
+        if: ${{ always() }}
+        run: |
+          printenv | sort -f
+          echo "PWD is equal to ${PWD}"
+
       # GHA: Create secrets.mk
       - name: Create secrets.mk
         if: ${{ success() }}
