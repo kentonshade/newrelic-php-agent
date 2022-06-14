@@ -492,6 +492,13 @@ jobs:
         run: |
           echo "${SECRETS_MK}" > make/secrets.mk
 
+      # GHA: PCRE issues
+      - name: libpcre issues
+        if: ${{ success() }}
+        run: |
+          cd /usr/lib/x86_64-linux-gnu/
+          sudo cp libpcre.so libpcre.so.1
+
       # GHA: Run Make command
       # - name: Run Make command
       #   if: ${{ success() }}
