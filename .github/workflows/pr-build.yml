@@ -523,7 +523,7 @@ jobs:
       - name: Create libpcre.so.1 symlink
         if: ${{ success() }}
         run: |
-          sudo ln -s libpcre.so.3 libpcre.so.1
+          sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
 
       # GHA: Run Make command
       - name: Run Make commands
