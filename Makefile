@@ -436,7 +436,7 @@ dev-unit-tests:
 
 dev-integration-tests:
 	docker-compose up --build --remove-orphans -d
-	docker exec -i --privileged agent bash -c "sh files/set_path.sh ; ./bin/integration_runner -agent ./agent/.libs/newrelic.so"
+	docker exec -i --privileged agent bash -c "sh files/set_path.sh ; /usr/src/myapp/bin/integration_runner -agent /usr/src/myapp/agent/.libs/newrelic.so"
 	# 	docker exec -it agent bash -c "sh files/set_path.sh ; ./bin/integration_runner -agent ./agent/.libs/newrelic.so"
 
 dev-all:
