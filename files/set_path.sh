@@ -28,5 +28,5 @@ export PATH
 #
 # Set LD_LIBRARY_PATH
 #
-LD_LIBRARY_PATH=/usr/local/lib
+LD_LIBRARY_PATH=/lib/x86_64-linux-gnu
 export LD_LIBRARY_PATH
