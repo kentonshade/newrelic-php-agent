@@ -1,40 +1,83 @@
 name: php-bigchange-tarballs
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ gha-testing ]
+  # workflow_run:
+  #   workflows: ['NEW release_CI (php-release-agent)']
+  #   branches:
+  #     - gha-dev
+  #     - dev
+  #     - main
+  #   types:  ## Review if this is the comperehensive types available
+  #     - completed
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  # GHa Need to determine OS to use.  Container?  GH Runner?
+  php-bigchange-tarballs:
     runs-on: ubuntu-latest
-    # container:  ## kds = testing using private docker image
-    #   image: kentonshade/mycirrus_1:ubuntu-focal-starter
-    #   credentials:
-    #      username: ${{ secrets.DOCKER_REPO_USER }}
-    #      password: ${{ secrets.DOCKER_USER_PASS }}
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    env:
+      GROUP: 'mycirrus'
+      IMAGE: 'newrelic:nr-centos6-1.2'
+    container:  ## GHA: testing using private docker image
+      image: mycirrus/newrelic:nr-centos8-1.1
+      credentials:
+        username: ${{ secrets.DOCKER_REPO_USER }}
+        password: ${{ secrets.DOCKER_USER_TOKEN }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # GHA: Required to return latest release run
+      # We will need to install gh for this container
+      - name: Get dependent workflow ID
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
+          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+
+      - name: Download combined-artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: NEW-release-build.yml
+          branch: gha-dev
+          run_id: ${{ env.RUN_ID }}
+          path: combined-artifacts
+          repo: ${{github.repository}}
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Check our directories
         run: |
-          pwd && ls -la
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          lsb_release -a
-          ## apt list --installed
+          tree combined-artifacts/
+
+      # Get the directories ready for buid-redhat.sh
+      - name: Consolidate releases
+        run: |
+          mkdir releases
+          cp -R combined-artifacts/combined-releases-*/alpine/* releases/
+          cp -R combined-artifacts/combined-releases-*/centos/* releases/
+          tree releases/
+
+      # Get the directories ready for buid-redhat.sh
+      - name: Change gpg
+        run: |
+          mv /usr/bin/gpg /usr/bin/gpg.bak
+          sudo ln -s /usr/bin/gpg1 /usr/bin/gpg
+          gpg --version
+
+      - name: Call package.sh
+        run: |
+          echo "Calling build-redhat.sh"
+          # ./packaging/package.sh
+
+      # Check for new content in releases
+      - name: Check for new content in releases
+        run: |
+          tree releases/
