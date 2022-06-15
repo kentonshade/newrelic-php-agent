@@ -77,7 +77,8 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   unzip \
   wget \
-  zip && apt-get clean
+  zip \
+  tree && apt-get clean
 
 #
 # If the debian version is jessie or stretch, we need to install go manually;
