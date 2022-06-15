@@ -527,7 +527,7 @@ jobs:
 
       # GHA: Run Make command
       - name: Run Make commands
-        if: ${{ success() }}
+        if: ${{ always() }}
         run: |
           make dev-integration-tests
 
