@@ -520,6 +520,19 @@ jobs:
           ldconfig -p | grep libpcre
 
       # GHA: PCRE issues
+      - name: Check libs
+        if: ${{ success() }}
+        run: |
+          ldconfig -p | grep libpcre
+          ls -la /lib/x86_64-linux-gnu/ | grep 'libpcre'
+
+      # GHA: PCRE issues
+      - name: Check lib path 
+        if: ${{ success() }}
+        run: |
+          echo "${LD_LIBRARY_PATH}"
+
+      # GHA: PCRE issues
       - name: Create libpcre.so.1 symlink
         if: ${{ success() }}
         run: |
