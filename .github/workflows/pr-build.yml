@@ -527,7 +527,7 @@ jobs:
           ls -la /lib/x86_64-linux-gnu/ | grep 'libpcre'
 
       # GHA: PCRE issues
-      - name: Check lib path 
+      - name: Check lib path
         if: ${{ success() }}
         run: |
           echo "${LD_LIBRARY_PATH}"
@@ -542,6 +542,8 @@ jobs:
       - name: Run Make commands
         if: ${{ always() }}
         run: |
+          # ./files/set_path.sh
+          make clean
           make dev-integration-tests
 
   Integration-Alpine:

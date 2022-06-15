@@ -22,6 +22,7 @@ RUN sed -Ei '/.*partner/! s/^# (deb-src .*)/\1/g' /etc/apt/sources.list
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
+RUN apt-get install -y apt-utils
 RUN apt-get install -y build-essential
 
 #
