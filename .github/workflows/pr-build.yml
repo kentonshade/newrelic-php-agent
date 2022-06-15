@@ -472,8 +472,7 @@ jobs:
       - name: Copy the artifacts
         if: ${{ success() }}
         run: |
-          pwd
-          ls -la
+          mkdir -p bin
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin/* ./bin
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent/* ./agent
           tree bin/
