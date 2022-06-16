@@ -315,6 +315,12 @@ jobs:
           # libpcreposix 1 libpcre1
           # EOF
 
+      # GHA: Ignore missing dependenvy info
+      - name: Ignore missing dependenvy info
+        if: ${{ always() }}
+        run: |
+          dpkg-shlibdeps --ignore-missing-info
+
       # GHA: Checking /lib/x86_64-linux-gnu
       - name: Checking /lib/x86_64-linux-gnu post install
         if: ${{ always() }}
