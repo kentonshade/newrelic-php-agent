@@ -238,7 +238,34 @@ jobs:
 
       - name: Build/Runner dependecies
         run: |
-          sudo apt -y install devscripts build-essential lintian debhelper
+          sudo apt -y install devscripts build-essential lintian debhelper libpcre3 libpcre3-dev
+
+      ## GHA Troubleshooting pcre issues
+
+      # GHA: PCRE issues
+      - name: List contents of /var/lib/dpkg/info
+        if: ${{ success() }}
+        run: |
+          ls /var/lib/dpkg/info | grep 'libpcre'
+
+      # GHA: PCRE issues
+      - name: List dynamic dependecies
+        if: ${{ success() }}
+        run: |
+          ldd ./agent/.libs/newrelic.so
+
+      # GHA: PCRE issues
+      - name: check header and file names of the libraries
+        if: ${{ success() }}
+        run: |
+          ldconfig -p | grep libpcre
+
+      # GHA: PCRE issues
+      - name: Check libs
+        if: ${{ success() }}
+        run: |
+          ldconfig -p | grep libpcre
+          ls -la /lib/x86_64-linux-gnu/ | grep 'libpcre'
 
       # GHA: Checking /lib/x86_64-linux-gnu
       - name: Checking /lib/x86_64-linux-gnu pre install
@@ -252,7 +279,6 @@ jobs:
         run: |
           sudo find / -name libpcre.so.*
           ldconfig -p | grep libpcre
-          sudo apt-get install libpcre3 libpcre3-dev
           sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
           # remove old symlink
           sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
@@ -261,6 +287,13 @@ jobs:
           echo "list the so files"
           sudo ls -la /usr/lib/x86_64-linux-gnu/
           sudo find / -name libpcre.so.*
+
+      # GHA: Clear the ldconifg cache
+      - name: Clear the ldconifg cache
+        if: ${{ always() }}
+        run: |
+          sudo rm /etc/ld.so.cache
+          ldconfig
 
       # GHA: Solutions testing based on
       # https://stackoverflow.com/questions/11238134/dpkg-shlibdeps-error-no-dependency-information-found-for
@@ -271,15 +304,16 @@ jobs:
           # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
           # echo "Check value of info"
           # sudo ls -la /var/lib/dpkg/info
-          sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
-          tree /var/lib/dpkg/info/
-          mkdir debian
-          touch debian/shlibs.local
-          tee -a debian/shlibs.local <<EOF
+          dpkg-shlibdeps --help
+          # sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
+          # tree /var/lib/dpkg/info/
+          # mkdir debian
+          # touch debian/shlibs.local
+          # tee -a debian/shlibs.local <<EOF
 
-          libpcre 1 libpcre1
-          libpcreposix 1 libpcre1
-          EOF
+          # libpcre 1 libpcre1
+          # libpcreposix 1 libpcre1
+          # EOF
 
       # GHA: Checking /lib/x86_64-linux-gnu
       - name: Checking /lib/x86_64-linux-gnu post install
