@@ -544,7 +544,7 @@ jobs:
         if: ${{ always() }}
         run: |
           # ./files/set_path.sh
-          make clean
+          # make clean
           make dev-integration-tests
 
   Integration-Alpine:
