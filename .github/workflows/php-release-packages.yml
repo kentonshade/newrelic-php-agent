@@ -249,10 +249,10 @@ jobs:
           ls /var/lib/dpkg/info | grep 'libpcre'
 
       # GHA: PCRE issues
-      - name: List dynamic dependecies
-        if: ${{ success() }}
-        run: |
-          ldd ./agent/.libs/newrelic.so
+      # - name: List dynamic dependecies
+      #   if: ${{ success() }}
+      #   run: |
+      #     ldd ./agent/.libs/newrelic.so
 
       # GHA: PCRE issues
       - name: check header and file names of the libraries
@@ -293,7 +293,7 @@ jobs:
         if: ${{ always() }}
         run: |
           sudo rm /etc/ld.so.cache
-          ldconfig
+          sudo ldconfig
 
       # GHA: Solutions testing based on
       # https://stackoverflow.com/questions/11238134/dpkg-shlibdeps-error-no-dependency-information-found-for
