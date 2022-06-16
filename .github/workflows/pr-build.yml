@@ -473,8 +473,8 @@ jobs:
         if: ${{ success() }}
         run: |
           mkdir -p bin
-          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin/* ./bin
-          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent/* ./agent
+          cp -R bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin/* ./bin
+          cp -R bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent/* ./agent
           tree bin/
           tree agent/.libs/
           chmod +x -R ./bin
