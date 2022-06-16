@@ -466,7 +466,7 @@ jobs:
       - name: Check the artifacts
         if: ${{ success() }}
         run: |
-          tree ./bin-so-artifacts
+          tree -a ./bin-so-artifacts
           ls -la ./bin-so-artifacts
 
       # GHA: Check the artifacts in an OS
@@ -474,6 +474,7 @@ jobs:
         if: ${{ success() }}
         run: |
           ls -la ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+          tree -a ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
 
       # GHA: Copy the artifacts and change perms
       - name: Copy the artifacts
@@ -482,8 +483,8 @@ jobs:
           mkdir -p bin
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
-          tree ./bin
-          tree ./agent/.libs/
+          tree -a ./bin
+          tree -a ./agent/.libs/
           chmod +x -R ./bin
 
       # Check ENV variables
