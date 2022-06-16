@@ -455,6 +455,13 @@ jobs:
         with:
           path: bin-so-artifacts
 
+      # GHA: Check workspace
+      - name: Check workspace and contents
+        if: ${{ success() }}
+        run: |
+          pwd
+          ls -la
+
       # GHA: Check the artifacts
       - name: Check the artifacts
         if: ${{ success() }}
@@ -473,10 +480,10 @@ jobs:
         if: ${{ success() }}
         run: |
           mkdir -p bin
-          cp -R bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin/* ./bin
-          cp -R bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent/* ./agent
-          tree bin/
-          tree agent/.libs/
+          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
+          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
+          tree ./bin
+          tree ./agent/.libs/
           chmod +x -R ./bin
 
       # Check ENV variables
@@ -534,10 +541,10 @@ jobs:
           echo "${LD_LIBRARY_PATH}"
 
       # GHA: PCRE issues
-      - name: Create libpcre.so.1 symlink
-        if: ${{ success() }}
-        run: |
-          sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
+      # - name: Create libpcre.so.1 symlink
+      #   if: ${{ success() }}
+      #   run: |
+      #     sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
 
       # GHA: Run Make command
       - name: Run Make commands
