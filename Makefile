@@ -436,8 +436,8 @@ dev-unit-tests:
 
 dev-integration-tests:
 	docker-compose up --build --remove-orphans -d
-	docker exec -i --privileged agent bash -c "echo our current path is $(pwd) && ls -la && tree -a bin && tree -a agent"
-	docker exec -i --privileged agent bash -c "sh files/set_path.sh && bin/integration_runner -agent agent/.libs/newrelic.so"
+	docker exec -i --privileged agent bash -c "echo our current path is $(pwd) && pwd && ls -la && tree -a bin && tree -a agent"
+	docker exec -i --privileged agent bash -c "sh files/set_path.sh ; ./bin/integration_runner -agent ./agent/.libs/newrelic.so"
 	# 	docker exec -it agent bash -c "sh files/set_path.sh ; ./bin/integration_runner -agent ./agent/.libs/newrelic.so"
 
 dev-all:
