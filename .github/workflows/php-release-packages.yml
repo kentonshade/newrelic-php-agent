@@ -317,10 +317,10 @@ jobs:
           # EOF
 
       # GHA: Ignore missing dependenvy info
-      - name: Ignore missing dependenvy info
-        if: ${{ always() }}
-        run: |
-          dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
+      # - name: Ignore missing dependenvy info
+      #   if: ${{ always() }}
+      #   run: |
+      #     dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
 
       # GHA: Checking /lib/x86_64-linux-gnu
       - name: Checking /lib/x86_64-linux-gnu post install
