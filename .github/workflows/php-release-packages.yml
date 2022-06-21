@@ -59,7 +59,8 @@ jobs:
       - name: Download combined-artifacts
         # uses: dawidd6/action-download-artifact@v2.14.1
         # GHA: Testing new version of action
-        uses: dawidd6/action-download-artifact@v2
+        # GHA: release below is due to the errors seen in the latest.
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
           # Required, if artifact is from a different repo
