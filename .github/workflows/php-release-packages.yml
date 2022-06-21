@@ -333,6 +333,13 @@ jobs:
           echo "Calling build-debian.sh"
           ./packaging/build-debian.sh
 
+      # GHA: Testing dpkg-shlibdeps after calling the build-debain.sh script
+      # GHA: Ignore missing dependenvy info
+      - name: Ignore missing dependenvy info
+        if: ${{ always() }}
+        run: |
+          dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
+
       # - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
       #   if: ${{ failure() }}
       #   run: |
