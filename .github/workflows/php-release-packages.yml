@@ -136,7 +136,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
           branch: gha-dev
@@ -216,7 +216,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
           branch: gha-dev
@@ -373,7 +373,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifactsv2
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
           branch: gha-dev
