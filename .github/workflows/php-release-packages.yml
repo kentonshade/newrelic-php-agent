@@ -280,8 +280,8 @@ jobs:
         run: |
           sudo find / -name libpcre.so.*
           ldconfig -p | grep libpcre
-          # sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
-          sudo ln -s /usr/local/aws-sam-cli/1.52.0/dist/libpcre.so.1 /lib/x86_64-linux-gnu/libpcre.so.1
+          sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
+          # sudo ln -s /usr/local/aws-sam-cli/1.52.0/dist/libpcre.so.1 /lib/x86_64-linux-gnu/libpcre.so.1
           # remove old symlink
           sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
           # Creating new symlink
@@ -290,12 +290,6 @@ jobs:
           sudo ls -la /usr/lib/x86_64-linux-gnu/
           sudo find / -name libpcre.so.*
 
-      # GHA: Clear the ldconifg cache
-      - name: Clear the ldconifg cache
-        if: ${{ always() }}
-        run: |
-          sudo rm /etc/ld.so.cache
-          sudo ldconfig
 
       # GHA: Solutions testing based on
       # https://stackoverflow.com/questions/11238134/dpkg-shlibdeps-error-no-dependency-information-found-for
@@ -309,13 +303,23 @@ jobs:
           dpkg-shlibdeps --help
           # sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
           # tree /var/lib/dpkg/info/
-          # mkdir debian
-          # touch debian/shlibs.local
-          # tee -a debian/shlibs.local <<EOF
+          mkdir debian
+          touch debian/shlibs.local
 
-          # libpcre 1 libpcre1
-          # libpcreposix 1 libpcre1
-          # EOF
+          tee -a debian/shlibs.local <<EOF
+
+          libpcre 1 libpcre1
+          libpcreposix 1 libpcre1
+          EOF
+
+          dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
+
+       # GHA: Clear the ldconifg cache
+      - name: Clear the ldconifg cache
+        if: ${{ always() }}
+        run: |
+          sudo rm /etc/ld.so.cache
+          sudo ldconfig
 
       # GHA: Ignore missing dependenvy info
       # - name: Ignore missing dependenvy info
@@ -337,10 +341,10 @@ jobs:
 
       # GHA: Testing dpkg-shlibdeps after calling the build-debain.sh script
       # GHA: Ignore missing dependenvy info
-      - name: Ignore missing dependenvy info
-        if: ${{ always() }}
-        run: |
-          dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
+      # - name: Ignore missing dependenvy info
+      #   if: ${{ always() }}
+      #   run: |
+      #     dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
 
       # - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
       #   if: ${{ failure() }}
