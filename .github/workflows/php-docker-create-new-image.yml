@@ -40,7 +40,7 @@ jobs:
       - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
         uses: actions/checkout@v2
         with:
-          repository: newrelic/newrelic-php-daemon-docker
+          repository: kentonshade/newrelic-php-daemon-docker
           ref: master
           # GHA Confirm we can (this works), and should use this token for this
           # purpose
