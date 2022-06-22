@@ -19,6 +19,19 @@ on:
         required: true
         default: ''
         type: string
+  # GHA: Facilitating reusable workflow in case required
+  workflow_call:
+    inputs:
+      VERSION:
+        description: "PHP Agent version"
+        required: true
+        default: ''
+        type: string
+      VERSION_SHORT:
+        description: "The short version. If the full version is 10.1.0.589 then the short version is 10.1.0"
+        required: true
+        default: ''
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -46,6 +59,12 @@ jobs:
           # purpose
           token: ${{ secrets.API_CLI_TOKEN }}
           # path: <path>
+
+      # GHA testing only - removing directories
+      # GHA: REMOVE THIS STEP PRIOR TO MERGING
+      - name: GHA testing only - removing directories
+        run: |
+          rm -rf 9.21*
 
       # Call update-docker-image.bash
       # GHA testing the script
