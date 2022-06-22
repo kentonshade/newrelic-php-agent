@@ -312,8 +312,6 @@ jobs:
           libpcreposix 1 libpcre1
           EOF
 
-          dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
-
        # GHA: Clear the ldconifg cache
       - name: Clear the ldconifg cache
         if: ${{ always() }}
