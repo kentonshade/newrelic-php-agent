@@ -334,6 +334,11 @@ jobs:
           echo "list the so files"
           sudo ls -la /lib/x86_64-linux-gnu/
 
+      - name: Call set_path.sh
+        run: |
+          echo "Calling set_path.sh"
+          ./files/set_path.sh
+
       - name: Build Debian
         run: |
           echo "Calling build-debian.sh"
@@ -355,7 +360,7 @@ jobs:
       # Check for new content in releases
       - name: Check for new content in releases
         run: |
-          tree releases/
+          tree -a releases/
 
 
   # GHA: This job requires Ubuntu runner
