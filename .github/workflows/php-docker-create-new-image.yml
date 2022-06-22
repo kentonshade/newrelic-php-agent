@@ -44,7 +44,7 @@ jobs:
           ref: master
           # GHA Confirm we can (this works), and should use this token for this
           # purpose
-          token: ${{ secrets.NODE_AGENT_GH_TOKEN }}
+          token: ${{ secrets.API_CLI_TOKEN }}
           # path: <path>
 
       # Call update-docker-image.bash
