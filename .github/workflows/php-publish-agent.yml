@@ -28,6 +28,7 @@ on:
         description: "Required - the action version to publish"
         required: true
         default: ''
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -47,7 +48,7 @@ jobs:
       - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
         uses: actions/checkout@v2
         with:
-          repository: newrelic/php-agent-php_deployment.git
+          repository: newrelic/php-agent-php_deployment
           ref: master
           # GHA Confirm we can (this works), and should use this token for this
           # purpose
