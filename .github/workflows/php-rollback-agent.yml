@@ -32,13 +32,10 @@ on:
         default: ''
         type: string
       REPO:
-        description: "Required -- the repository to modify."
+        description: "Required -- the repository to modify. Either testing, or production"
         required: true
-        default: ''
-        type: choice
-        options:
-        - testing
-        - production
+        default: 'testing'
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
