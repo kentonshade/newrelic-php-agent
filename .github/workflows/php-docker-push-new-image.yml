@@ -68,9 +68,10 @@ jobs:
       #   run: |
       #     rm -rf 9.21*
 
-      # Call update-docker-image.bash
+      # Call push-docker-image.bash
       # GHA testing the script
-      - name: Call update-docker-image.bash
+      # GHA: potentially refact this script to do it the "GHA" way
+      - name: Call push-docker-image.bash
         run: |
           chmod +x ./tools/push-docker-image.bash
           # ./tools/push-docker-image.bash ${VERSION_SHORT}
