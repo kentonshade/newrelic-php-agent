@@ -52,8 +52,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - uses: actions/checkout@v2
 
-      - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
-        uses: actions/checkout@v2
+      - name: Checkout PHP Daemon Docker Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
+        uses: actions/checkout@v3
         with:
           repository: kentonshade/newrelic-php-daemon-docker
           ref: gha-dev
