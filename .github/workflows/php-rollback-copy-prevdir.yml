@@ -58,7 +58,7 @@ on:
 jobs:
   # Calling required Reusable workkflow
   php-rollback-emptydir-dryrun:
-    uses: ./.github/workflows/php-rollback-emptydir-dryrun.yml@main
+    uses: ./.github/workflows/php-rollback-emptydir-dryrun.yml
     with:
       # EX_DIR: ''
       VERSION: ${{ inputs.VERSION }}
