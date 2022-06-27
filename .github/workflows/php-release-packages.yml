@@ -104,7 +104,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Check our directories
         run: |
-          tree combined-artifacts/
+          tree -a combined-artifacts/
 
   # GHA: This job requires the previous job and a Centos runner
   # Let's containerize but need to determine CentOS conntainer
@@ -147,7 +147,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Check our directories
         run: |
-          tree combined-artifacts/
+          tree -a combined-artifacts/
 
       # Get the directories ready for buid-redhat.sh
       - name: Consolidate releases
@@ -155,7 +155,7 @@ jobs:
           mkdir releases
           # cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
-          tree releases/
+          tree -a releases/
 
       # Script required the tct extension
       - name: Asset renaming as required
@@ -167,7 +167,8 @@ jobs:
         run: |
           yum install -y screen
 
-      # Get the directories ready for buid-redhat.sh
+      # Change gpg version as required
+      # GHA: gpg version added to CentOS8 image
       - name: Change gpg
         run: |
           mv /usr/bin/gpg /usr/bin/gpg.bak
@@ -182,7 +183,7 @@ jobs:
       # Check for new content in releases
       - name: Check for new content in releases
         run: |
-          tree releases/
+          tree -a releases/
 
 
   # GHA: This job requires Ubuntu runner
@@ -227,7 +228,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Check our directories
         run: |
-          tree combined-artifacts/
+          tree -a combined-artifacts/
 
       # Get the directories ready for buid-redhat.sh
       - name: Consolidate releases
@@ -392,7 +393,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Check our directories
         run: |
-          tree combined-artifacts/
+          tree -a combined-artifacts/
 
       # Get the directories ready for buid-redhat.sh
       - name: Consolidate releases
@@ -400,7 +401,7 @@ jobs:
           mkdir releases
           cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
-          tree releases/
+          tree -a releases/
 
       # Script required the tct extension
       - name: Asset renaming as required
@@ -415,7 +416,7 @@ jobs:
       # Check for new content in releases
       - name: Check for new content in releases
         run: |
-          tree releases/
+          tree -a releases/
 
       # GHA: Note the format of GitHub variable reference in contexts
       # UNDERSCORE REPLACED WITH . SYNTAX

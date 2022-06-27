@@ -1,20 +1,76 @@
+# WARNING: do not run before running the dryrun job!!
+# Rollback a PHP agent release from testing or production.
+# This step is a run after the dryrun on the empty dir.
+# It is this step from the rollback procedure:
+# Copy the previous release's build products into the release directory
+# After step 3, the release directory was left empty. Let's fix that.
+# You'll need to use the aws s3 tool to very carefully copy the build products from the previous release into that directory. Note that you will need to use the previous release's version number in these commands.
+# First, do so as a dry run by running the dryrun job and you should have verified the below:
+# aws s3 --dryrun --profile $PROFILE_NAME cp --recursive --exclude "*" --include "newrelic-*.tar.gz" s3://nr-downloads-main/php_agent/archive/<FULL_AGENT_VERSION_NUMBER>/ s3://nr-downloads-main/php_agent/release/
+# You should see something like this:
+# (dryrun) copy: s3://nr-downloads-main/php_agent/archive/8.7.0.242/newrelic-php5-8.7.0.242-freebsd.tar.gz to s3://nr-downloads-main/php_agent/release/newrelic-php5-8.7.0.242-freebsd.tar.gz
+# (dryrun) copy: s3://nr-downloads-main/php_agent/archive/8.7.0.242/newrelic-php5-8.7.0.242-linux-musl.tar.gz to s3://nr-downloads-main/php_agent/release/newrelic-php5-8.7.0.242-linux-musl.tar.gz
+# (dryrun) copy: s3://nr-downloads-main/php_agent/archive/8.7.0.242/newrelic-php5-8.7.0.242-linux.tar.gz to s3://nr-downloads-main/php_agent/release/newrelic-php5-8.7.0.242-linux.tar.gz
+# (dryrun) copy: s3://nr-downloads-main/php_agent/archive/8.7.0.242/newrelic-php5-8.7.0.242-osx.tar.gz to s3://nr-downloads-main/php_agent/release/newrelic-php5-8.7.0.242-osx.tar.gz
+# Only if the dryrun job was successful, run this job:
+# aws s3 --profile $PROFILE_NAME cp --recursive --exclude "*" --include "newrelic-*.tar.gz" s3://nr-downloads-main/php_agent/archive/<FULL_AGENT_VERSION_NUMBER>/ s3://nr-downloads-main/php_agent/release/
+
+---
 name: php-rollback-copy-prevdir
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ gha-testing ]
+  # push:
+  #   branches: [ gha-testing ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      VERSION:
+        description: "Required -- the agent version to rollback."
+        required: true
+        default: ''
+        type: string
+      REPO:
+        description: "Required -- the repository to modify."
+        required: true
+        default: ''
+        type: choice
+        options:
+        - testing
+        - production
+  # GHA: Facilitating reusable workflow in case required
+  workflow_call:
+    inputs:
+      VERSION:
+        description: "Required -- the agent version to rollback."
+        required: true
+        default: ''
+        type: string
+      REPO:
+        description: "Required -- the repository to modify. Either testing, or production"
+        required: true
+        default: 'testing'
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # Calling required Reusable workkflow
+  php-rollback-emptydir-dryrun:
+    uses: ./.github/workflows/php-rollback-emptydir-dryrun.yml@main
+    with:
+      # EX_DIR: ''
+      VERSION: ${{ inputs.VERSION }}
+      REPO: ${{ inputs.REPO }}
+    secrets: inherit
+
+  php-rollback-copy-prevdir:
     # The type of runner that the job will run on
+    needs: php-rollback-emptydir-dryrun
     runs-on: ubuntu-latest
+    # env:
+    #   DOCKER_HUB_PAT: ${{ secrets.DOCKER_HUB_PAT }}
     # container:  ## kds = testing using private docker image
     #   image: kentonshade/mycirrus_1:ubuntu-focal-starter
     #   credentials:
@@ -24,17 +80,30 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      # - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
+        uses: actions/checkout@v3
+        with:
+          repository: newrelic/php-agent-php_deployment
+          ref: master
+          token: ${{ secrets.API_CLI_TOKEN }}
+          # path: <path>
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # GHA: set AWS credentials
+      # GHA: Check updates to this action
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Copy the previous directory
+      - name: Copy the previous directory
         run: |
-          pwd && ls -la
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          lsb_release -a
-          ## apt list --installed
+          echo "running the AWS command"
+          # aws s3 cp --recursive --exclude "*" \
+          # --include "newrelic-*.tar.gz" \
+          # s3://nr-downloads-main/php_agent/archive/$VERSION/ \
+          # s3://nr-downloads-main/php_agent/release/

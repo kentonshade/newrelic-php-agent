@@ -1,7 +1,8 @@
 ---
 
-# GHA: Requires checkout of php_deployemtn
+# GHA: Requires checkout of php_deploymest
 # Jenkins: https://phpagent-build.pdx.vm.datanerd.us/job/php-publish-agent/configure
+# Jira: https://issues.newrelic.com/browse/NR-6483
 
 name: php-publish-agent
 
@@ -33,7 +34,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  php-publish-agent:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # container:  ## kds = testing using private docker image
@@ -68,9 +69,11 @@ jobs:
           gh auth status
           # Below check for correct workflow ID
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+
+      # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
         if: ${{ github.event.inputs.ACTION ==  "bigchange-2-testing" }}
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           # GHA: Will we be able to use php-release-packages?
           workflow: php-bigchange-packages.yml
@@ -90,6 +93,8 @@ jobs:
           gh auth status
           # Below check for correct workflow ID
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+
+      # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
         if: ${{ github.event.inputs.ACTION ==  "bigchange-2-testing" }}
         uses: dawidd6/action-download-artifact@v2
@@ -116,14 +121,15 @@ jobs:
           # Below check for correct workflow ID
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
+      # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
         if: ${{ github.event.inputs.ACTION ==  "master-2-testing" }}
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: php-bigchange-packages.yml
           branch: gha-dev
           run_id: ${{ env.RUN_ID }}
-          path: combined-artifacts
+          path: incoming
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
 
@@ -139,14 +145,15 @@ jobs:
           # Below check for correct workflow ID
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
+      # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
         if: ${{ github.event.inputs.ACTION ==  "release-2-testing" }}
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: php-bigchange-packages.yml
           branch: gha-dev
           run_id: ${{ env.RUN_ID }}
-          path: combined-artifacts
+          path: incoming
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
 
@@ -162,30 +169,33 @@ jobs:
           # Below check for correct workflow ID
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
+      # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
         if: ${{ github.event.inputs.ACTION ==  "bigchange-2-testing" }}
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: php-bigchange-packages.yml
           branch: gha-dev
           run_id: ${{ env.RUN_ID }}
-          path: combined-artifacts
+          path: incoming
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
 
+      # GHA: set AWS credentials
+      # GHA: Check updates to this action
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
 
-
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # Call deploy.bash (create incoming, etc.)
+      # GHA This path doesn't exist - "--prefix=/opt/nr-downloads"
+      - name: Call deploy.bash
         run: |
-          pwd && ls -la
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          lsb_release -a
-
+          ls -la "${GITHUB_WORKSPACE}"
+          # ./deploy-php.bash --prefix=/opt/nr-downloads \
+          # --incoming-dir="${GITHUB_WORKSPACE}/incoming" \
+          # --no-download "$ACTION" "$VERSION

@@ -39,7 +39,7 @@ on:
         required: false
         default: ""
       BIGCHANGE:
-        description: "BUILD_NUMBER to pass to workflow"
+        description: "Run this workflow as BIGCHANGE"
         required: false
         default: false
 
