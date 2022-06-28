@@ -1,10 +1,12 @@
+# Checkout the agent and trigger the php-bigchange-agent job.
+---
 name: php-bigchange-agent-checkout
 
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ gha-testing ]
+  # push:
+  #   branches: [ gha-testing ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -12,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  php-bigchange-agent-checkout:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # container:  ## kds = testing using private docker image
@@ -24,17 +26,45 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout PHP Agent Repo
+        uses: actions/checkout@v3
+        with:
+          # ref: ${{ github.event.client_payload.ref }}
+          ref: daemon_updates
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Checkout PHP Internal
+        uses: actions/checkout@v3
+        with:
+          repository: newrelic/php-agent-internal
+          # Chaging ref temporarily for testing
+          # ref: master
+          ref: master
+          # GHA: Check for token
+          token: ${{ secrets.API_CLI_TOKEN }}
+          path: internal
+
+      # Copy directory content and include .git files
+      # GHA We need to set $GIT_BRANCH
+      - name: Copy directory content and include .git files
+        run: |
+          echo "Copy directory content and include .git files"
+          cp -rv internal/* .; rm -rf internal
+          # Jenkins doesn't copy .git directories as artifacts. We have to
+          # copy it to make sure it's archived with the artifacts.
+          cp -rv .git visible.git
+          echo off
+          echo "${GITHUB_REF_NAME#*/}" > branch.txt
+
+      # Check branch.txt
+      - name: Check branch.txt
+        run: |
+          cat branch.txt
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           pwd && ls -la
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          lsb_release -a
+          # echo Add other actions to build,
+          # echo test, and deploy your project.
+          # lsb_release -a
           ## apt list --installed

@@ -190,8 +190,8 @@ jobs:
   # We will require the artifacts from new release build
   build-debian:
     runs-on: ubuntu-latest
-    # container:  ## GHA: testing using private docker image
-    #   image: ubuntu:14.04
+    container:  ## GHA: testing using private docker image
+      image: ubuntu:14.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
@@ -281,37 +281,37 @@ jobs:
         run: |
           sudo find / -name libpcre.so.*
           ldconfig -p | grep libpcre
-          sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
-          # sudo ln -s /usr/local/aws-sam-cli/1.52.0/dist/libpcre.so.1 /lib/x86_64-linux-gnu/libpcre.so.1
-          # remove old symlink
-          sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
-          # Creating new symlink
-          sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
-          echo "list the so files"
-          sudo ls -la /usr/lib/x86_64-linux-gnu/
-          sudo find / -name libpcre.so.*
+          # sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
+          # # sudo ln -s /usr/local/aws-sam-cli/1.52.0/dist/libpcre.so.1 /lib/x86_64-linux-gnu/libpcre.so.1
+          # # remove old symlink
+          # sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
+          # # Creating new symlink
+          # sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
+          # echo "list the so files"
+          # sudo ls -la /usr/lib/x86_64-linux-gnu/
+          # sudo find / -name libpcre.so.*
 
 
       # GHA: Solutions testing based on
       # https://stackoverflow.com/questions/11238134/dpkg-shlibdeps-error-no-dependency-information-found-for
       # https://man7.org/linux/man-pages/man1/dpkg-shlibdeps.1.html
-      - name: PCRE Solutions testing
-        run: |
-          # echo "Can we run this command?"
-          # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
-          # echo "Check value of info"
-          # sudo ls -la /var/lib/dpkg/info
-          dpkg-shlibdeps --help
-          # sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
-          # tree /var/lib/dpkg/info/
-          mkdir debian
-          touch debian/shlibs.local
+      # - name: PCRE Solutions testing
+      #   run: |
+      #     # echo "Can we run this command?"
+      #     # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+      #     # echo "Check value of info"
+      #     # sudo ls -la /var/lib/dpkg/info
+      #     dpkg-shlibdeps --help
+      #     # sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
+      #     # tree /var/lib/dpkg/info/
+      #     mkdir debian
+      #     touch debian/shlibs.local
 
-          tee -a debian/shlibs.local <<EOF
+      #     tee -a debian/shlibs.local <<EOF
 
-          libpcre 1 libpcre1
-          libpcreposix 1 libpcre1
-          EOF
+      #     libpcre 1 libpcre1
+      #     libpcreposix 1 libpcre1
+      #     EOF
 
        # GHA: Clear the ldconifg cache
       - name: Clear the ldconifg cache
@@ -345,11 +345,11 @@ jobs:
 
       # GHA: Testing dpkg-shlibdeps after calling the build-debain.sh script
       # GHA: Ignore missing dependenvy info
-      - name: Ignore missing dependenvy info
-        if: ${{ always() }}
-        run: |
-          dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
-          ./packaging/build-debian.sh
+      # - name: Ignore missing dependenvy info
+      #   if: ${{ always() }}
+      #   run: |
+      #     dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
+      #     ./packaging/build-debian.sh
 
       # - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
       #   if: ${{ failure() }}
