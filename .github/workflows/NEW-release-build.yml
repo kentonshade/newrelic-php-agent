@@ -459,5 +459,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: runner-clone
-          path: runner.apt-clone.tag.gz
+          path: runner.apt-clone.tar.gz
           if-no-files-found: error
