@@ -81,7 +81,7 @@ jobs:
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
-        if: ${{ inputs.ACTION == "bigchange-2-testing" }}
+        if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           # GHA: Will we be able to use php-release-packages?
@@ -105,7 +105,7 @@ jobs:
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
-        if: ${{ inputs.ACTION == "bigchange-2-testing" }}
+        if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
         uses: dawidd6/action-download-artifact@v2
         with:
           # GHA: Can we use php-release-packages.yml, as php-release-tarballs consolidated?
@@ -132,7 +132,7 @@ jobs:
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
-        if: ${{ inputs.ACTION == "master-2-testing" }}
+        if: ${{ inputs.ACTION == 'master-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: php-bigchange-packages.yml
@@ -156,7 +156,7 @@ jobs:
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
-        if: ${{ inputs.ACTION == "release-2-testing" }}
+        if: ${{ inputs.ACTION == 'release-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: php-bigchange-packages.yml
@@ -180,7 +180,7 @@ jobs:
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
-        if: ${{ inputs.ACTION == "bigchange-2-testing" }}
+        if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: php-bigchange-packages.yml
