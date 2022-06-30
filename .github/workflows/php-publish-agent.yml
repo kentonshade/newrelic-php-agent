@@ -56,6 +56,15 @@ jobs:
           token: ${{ secrets.NODE_AGENT_GH_TOKEN }}
           # path: <path>
 
+      # Grab the PHP downloads
+      - name: Get PHP downloads
+        # env:
+        #   ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          time wget --no-parent -r https://download.newrelic.com/php_agent/ -P /opt/nr-downloads
+          ls -la /opt/nr-downloads
+
       # GHA: Required to return latest release run
       # We will need to install gh for this container
       # GHA These two following steps have to be conbfigured for different workflows
@@ -198,4 +207,4 @@ jobs:
           ls -la "${GITHUB_WORKSPACE}"
           # ./deploy-php.bash --prefix=/opt/nr-downloads \
           # --incoming-dir="${GITHUB_WORKSPACE}/incoming" \
-          # --no-download "$ACTION" "$VERSION
+          # --no-download "$ACTION" "$VERSION"
