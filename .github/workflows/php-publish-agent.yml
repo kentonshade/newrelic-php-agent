@@ -3,6 +3,7 @@
 # GHA: Requires checkout of php_deploymest
 # Jenkins: https://phpagent-build.pdx.vm.datanerd.us/job/php-publish-agent/configure
 # Jira: https://issues.newrelic.com/browse/NR-6483
+## There is NO testing-2-production config in the current Jenkins job
 
 name: php-publish-agent
 
@@ -77,7 +78,7 @@ jobs:
           echo "${ACCESS_TOKEN}" | gh auth login --with-token
           gh auth status
           # Below check for correct workflow ID
-          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+          echo "RUN_ID=$(gh run list -w 24616877 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
@@ -86,7 +87,7 @@ jobs:
         with:
           # GHA: Will we be able to use php-release-packages?
           workflow: php-bigchange-packages.yml
-          branch: gha-dev
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: incoming
           # GHA: This should always be from the agent repo, but confirm
@@ -101,7 +102,7 @@ jobs:
           echo "${ACCESS_TOKEN}" | gh auth login --with-token
           gh auth status
           # Below check for correct workflow ID
-          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+          echo "RUN_ID=$(gh run list -w 24616878 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
@@ -110,7 +111,7 @@ jobs:
         with:
           # GHA: Can we use php-release-packages.yml, as php-release-tarballs consolidated?
           workflow: php-bigchange-tarballs.yml
-          branch: gha-dev
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: incoming
           # GHA: This should always be from the agent repo, but confirm
@@ -120,27 +121,27 @@ jobs:
       # Check for master-2-testing
       # GHA THERE ARE NO PHP-MASTER-PACKAGES, NOR PHP-MASTER-TARBALLS JOBS
       # ARE THESE ARTIFACTS REQUIRED?
-      - name: Get dependent workflow ID
-        env:
-          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ always() }}
-        run: |
-          echo "${ACCESS_TOKEN}" | gh auth login --with-token
-          gh auth status
-          # Below check for correct workflow ID
-          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+      # - name: Get dependent workflow ID
+      #   env:
+      #     ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   if: ${{ always() }}
+      #   run: |
+      #     echo "${ACCESS_TOKEN}" | gh auth login --with-token
+      #     gh auth status
+      #     # Below check for correct workflow ID
+      #     echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
-      # GHA: temp ref used for davidd6 due to issue with latest
-      - name: Download combined-artifacts
-        if: ${{ inputs.ACTION == 'master-2-testing' }}
-        uses: dawidd6/action-download-artifact@v2.21.0
-        with:
-          workflow: php-bigchange-packages.yml
-          branch: gha-dev
-          run_id: ${{ env.RUN_ID }}
-          path: incoming
-          # GHA: This should always be from the agent repo, but confirm
-          repo: ${{github.repository}}
+      # # GHA: temp ref used for davidd6 due to issue with latest
+      # - name: Download combined-artifacts
+      #   if: ${{ inputs.ACTION == 'master-2-testing' }}
+      #   uses: dawidd6/action-download-artifact@v2.21.0
+      #   with:
+      #     workflow: php-bigchange-packages.yml
+      #     branch: gha-dev
+      #     run_id: ${{ env.RUN_ID }}
+      #     path: incoming
+      #     # GHA: This should always be from the agent repo, but confirm
+      #     repo: ${{github.repository}}
 
 
       # Check for release-2-testing
@@ -152,22 +153,21 @@ jobs:
           echo "${ACCESS_TOKEN}" | gh auth login --with-token
           gh auth status
           # Below check for correct workflow ID
-          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+          echo "RUN_ID=$(gh run list -w 24182732 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
         if: ${{ inputs.ACTION == 'release-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
-          workflow: php-bigchange-packages.yml
-          branch: gha-dev
+          workflow: php-release-packages.yml
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: incoming
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
 
-
-      # Check for bigchange-2-testing
+      # Check for release-2-testing
       - name: Get dependent workflow ID
         env:
           ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -176,15 +176,15 @@ jobs:
           echo "${ACCESS_TOKEN}" | gh auth login --with-token
           gh auth status
           # Below check for correct workflow ID
-          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+          echo "RUN_ID=$(gh run list -w 24616878 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts
-        if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
+        if: ${{ inputs.ACTION == 'release-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
-          workflow: php-bigchange-packages.yml
-          branch: gha-dev
+          workflow: php-release-tarballs.yml
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: incoming
           # GHA: This should always be from the agent repo, but confirm
