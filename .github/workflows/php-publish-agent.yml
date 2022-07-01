@@ -21,10 +21,10 @@ on:
         default: ''
         type: choice
         options:
-        - release-2-testing
-        - testing-2-production
-        - bigchange-2-testing
-        - master-2-testing
+          - release-2-testing
+          - testing-2-production
+          - bigchange-2-testing
+          - master-2-testing
       VERSION:
         description: "Required - the action version to publish"
         required: true
@@ -53,7 +53,7 @@ jobs:
           ref: master
           # GHA Confirm we can (this works), and should use this token for this
           # purpose
-          token: ${{ secrets.NODE_AGENT_GH_TOKEN }}
+          token: ${{ secrets.API_CLI_TOKEN }}
           # path: <path>
 
       # Grab the PHP downloads
@@ -62,7 +62,7 @@ jobs:
         #   ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ always() }}
         run: |
-          time wget --no-parent -r https://download.newrelic.com/php_agent/ -P /opt/nr-downloads
+          time wget --no-parent -r -nv -nH https://download.newrelic.com/php_agent/ -P /opt/nr-downloads
           ls -la /opt/nr-downloads
 
       # GHA: Required to return latest release run
