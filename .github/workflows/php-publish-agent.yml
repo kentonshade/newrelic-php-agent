@@ -63,13 +63,34 @@ jobs:
           # path: <path>
 
       # Grab the PHP downloads
-      - name: Get PHP downloads
-        # env:
-        #   ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ always() }}
+      # GHA not needed as we will download from aws S3
+      # - name: Get PHP downloads
+      #   # env:
+      #   #   ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   if: ${{ always() }}
+      #   run: |
+      #     time wget --no-parent -r -nv -nH https://download.newrelic.com/php_agent/ -P /opt/nr-downloads
+      #     ls -la /opt/nr-downloads
+
+      # GHA: set AWS credentials
+      # GHA: Check updates to this action
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Download S3 bucket path to nr-downloads
+      - name: aws cp to local dir.
         run: |
-          time wget --no-parent -r -nv -nH https://download.newrelic.com/php_agent/ -P /opt/nr-downloads
-          ls -la /opt/nr-downloads
+          mkdir -p ./nr-downloads
+          aws s3 cp s3://nr-downloads-private/75ac22b116 ./nr-downloads/ --recursive
+
+      # Check nr-downloads contents
+      - name: Check nr-downloads contents
+        run: |
+          ls -la ./nr-downloads
 
       # GHA: Required to return latest release run
       # We will need to install gh for this container
@@ -194,16 +215,6 @@ jobs:
           path: incoming
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
-
-      # GHA: set AWS credentials
-      # GHA: Check updates to this action
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
 
       # Call deploy.bash (create incoming, etc.)
       # GHA This path doesn't exist - "--prefix=/opt/nr-downloads"
