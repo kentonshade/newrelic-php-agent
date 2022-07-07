@@ -208,6 +208,7 @@ jobs:
 
       # Set DEPLOY_HOME, source common.bash
       # This should probably go to the top?
+      # Need to set DEPLOY_HOME for subsequent steps.
       - name: Set DEPLOY_HOME, source common.bash
         if: ${{ always() }}
         id: set-deploy-home
@@ -234,10 +235,13 @@ jobs:
 
           # shellcheck source=lib/common.bash
           source "$DEPLOY_HOME/lib/common.bash"
+          echo ::set-output name=DEPLOY_HOME::"${DEPLOY_HOME}"
 
       # Call s3-pull.bash
       - name: Call s3-pull.bash
         if: ${{ always() }}
+        env:
+          DEPLOY_HOME: ${{ steps.set-deploy-home.outputs.DEPLOY_HOME}}
         id: call-s3-pull-bash
         run: |
           echo "current path is $(pwd)"
@@ -246,6 +250,8 @@ jobs:
       # Call s3-push.bash
       - name: Call s3-push.bash
         if: ${{ always() }}
+        env:
+          DEPLOY_HOME: ${{ steps.set-deploy-home.outputs.DEPLOY_HOME}}
         id: call-s3-push-bash
         run: |
           ./libexec/s3-push.bash --help
