@@ -62,16 +62,6 @@ jobs:
           token: ${{ secrets.API_CLI_TOKEN }}
           # path: <path>
 
-      # Grab the PHP downloads
-      # GHA not needed as we will download from aws S3
-      # - name: Get PHP downloads
-      #   # env:
-      #   #   ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   if: ${{ always() }}
-      #   run: |
-      #     time wget --no-parent -r -nv -nH https://download.newrelic.com/php_agent/ -P /opt/nr-downloads
-      #     ls -la /opt/nr-downloads
-
       # GHA: set AWS credentials
       # GHA: Check updates to this action
       - name: Configure AWS Credentials
@@ -216,8 +206,24 @@ jobs:
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
 
+      # Call s3-pull.bash
+      - name: Call s3-pull.bash
+        if: ${{ always() }}
+        id: call-s3-pull-bash
+        run: |
+          ./libexec/s3-pull.bash --help
+
+      # Call s3-push.bash
+      - name: Call s3-push.bash
+        if: ${{ always() }}
+        id: call-s3-push-bash
+        run: |
+          ./libexec/s3-push.bash --help
+
       # Call deploy.bash (create incoming, etc.)
       # GHA This path doesn't exist - "--prefix=/opt/nr-downloads"
+      # GHA we may not need this as I'm including the push-pull scripts above
+      # I believe we're already doing eberything else the script provides?
       - name: Call deploy.bash
         run: |
           ls -la "${GITHUB_WORKSPACE}"
