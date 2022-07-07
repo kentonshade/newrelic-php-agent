@@ -32,7 +32,7 @@ on:
         default: ''
         type: string
       REPO:
-        description: "Repo from which we retrive workflow runs"
+        description: "Repo from which we retrieve workflow runs"
         required: true
         default: 'kentonshade/newrelic-php-agent'
         type: string
@@ -205,6 +205,32 @@ jobs:
           path: incoming
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
+
+      # Set DEPLOY_HOME, source common.bash
+      - name: Set DEPLOY_HOME, source common.bash
+        if: ${{ always() }}
+        id: set-deploy-home
+        run: |
+          # Determine our location in the filesystem.
+          # See: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+          pushd . > /dev/null
+            DEPLOY_HOME=${BASH_SOURCE[0]}
+
+            if [[ -h $DEPLOY_HOME ]]; then
+              while [[ -h $DEPLOY_HOME ]]; do
+                cd "$(dirname "$DEPLOY_HOME")"
+                DEPLOY_HOME=$(readlink "$DEPLOY_HOME")
+              done
+            fi
+
+            cd "$(dirname "$DEPLOY_HOME")" > /dev/null
+            DEPLOY_HOME=$(pwd)
+          popd > /dev/null
+
+          export DEPLOY_HOME
+
+          # shellcheck source=lib/common.bash
+          source "$DEPLOY_HOME/lib/common.bash"
 
       # Call s3-pull.bash
       - name: Call s3-pull.bash
