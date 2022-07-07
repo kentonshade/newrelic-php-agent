@@ -207,25 +207,28 @@ jobs:
           repo: ${{github.repository}}
 
       # Set DEPLOY_HOME, source common.bash
+      # This should probably go to the top?
       - name: Set DEPLOY_HOME, source common.bash
         if: ${{ always() }}
         id: set-deploy-home
         run: |
           # Determine our location in the filesystem.
           # See: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
-          pushd . > /dev/null
-            DEPLOY_HOME=${BASH_SOURCE[0]}
+          echo "current path is $(pwd)"
+          DEPLOY_HOME=$(pwd)
+          # pushd . > /dev/null
+          #   DEPLOY_HOME=${BASH_SOURCE[0]}
 
-            if [[ -h $DEPLOY_HOME ]]; then
-              while [[ -h $DEPLOY_HOME ]]; do
-                cd "$(dirname "$DEPLOY_HOME")"
-                DEPLOY_HOME=$(readlink "$DEPLOY_HOME")
-              done
-            fi
+          #   if [[ -h $DEPLOY_HOME ]]; then
+          #     while [[ -h $DEPLOY_HOME ]]; do
+          #       cd "$(dirname "$DEPLOY_HOME")"
+          #       DEPLOY_HOME=$(readlink "$DEPLOY_HOME")
+          #     done
+          #   fi
 
-            cd "$(dirname "$DEPLOY_HOME")" > /dev/null
-            DEPLOY_HOME=$(pwd)
-          popd > /dev/null
+          #   cd "$(dirname "$DEPLOY_HOME")" > /dev/null
+          #   DEPLOY_HOME=$(pwd)
+          # popd > /dev/null
 
           export DEPLOY_HOME
 
@@ -237,6 +240,7 @@ jobs:
         if: ${{ always() }}
         id: call-s3-pull-bash
         run: |
+          echo "current path is $(pwd)"
           ./libexec/s3-pull.bash --help
 
       # Call s3-push.bash
