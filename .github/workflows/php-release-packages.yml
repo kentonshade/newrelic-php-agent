@@ -241,7 +241,7 @@ jobs:
 
       - name: Build/Runner dependecies
         run: |
-          sudo apt -y install devscripts build-essential lintian debhelper xz gzip
+          sudo apt -y install devscripts build-essential lintian debhelper gzip
 
       ## GHA Troubleshooting pcre issues
 
