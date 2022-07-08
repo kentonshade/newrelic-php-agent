@@ -329,7 +329,7 @@ jobs:
 
       # GHA: PCRE issues
       - name: Check libs
-        if: ${{ success() }}
+        if: ${{ always() }}
         run: |
           ldd agent/.libs/newrelic.so
 
