@@ -443,22 +443,3 @@ jobs:
           name: combined-releases-${{ github.sha }}
           path: combined-releases/
           if-no-files-found: error
-
-  # GHA: apt clone
-  apt-clone:
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    name: Run apt clone for package migration
-    steps:
-      - name: Run apt clone
-        run: |
-          sudo apt update
-          sudo apt -y install apt-clone
-          sudo apt-clone clone runner
-          ls -la
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: runner-clone
-          path: runner.apt-clone.tar.gz
-          if-no-files-found: error

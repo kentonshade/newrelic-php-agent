@@ -1,6 +1,7 @@
 ---
 # GHA: Jenkins job:
 # https://phpagent-build.pdx.vm.datanerd.us/job/php-release-packages/configure
+# https://issues.newrelic.com/browse/NR-6476
 # GHA (04/07): This job downloads artifacts generated from the new
 # release build workflow (confirm with Amber)
 # We need download the artifacts generated per OS (CentOS, Alpine, AND arm64)
@@ -238,17 +239,17 @@ jobs:
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
 
-      - name: Build/Runner dependecies
-        run: |
-          sudo apt -y install devscripts build-essential lintian debhelper libpcre3 libpcre3-dev
+      # - name: Build/Runner dependecies
+      #   run: |
+      #     sudo apt -y install devscripts build-essential lintian debhelper libpcre3 libpcre3-dev
 
       ## GHA Troubleshooting pcre issues
 
       # GHA: PCRE issues
-      - name: List contents of /var/lib/dpkg/info
-        if: ${{ success() }}
-        run: |
-          ls /var/lib/dpkg/info | grep 'libpcre'
+      # - name: List contents of /var/lib/dpkg/info
+      #   if: ${{ success() }}
+      #   run: |
+      #     ls /var/lib/dpkg/info | grep 'libpcre'
 
       # GHA: PCRE issues
       # - name: List dynamic dependecies
@@ -257,58 +258,51 @@ jobs:
       #     ldd ./agent/.libs/newrelic.so
 
       # GHA: PCRE issues
-      - name: check header and file names of the libraries
-        if: ${{ success() }}
-        run: |
-          ldconfig -p | grep libpcre
-
-      # GHA: PCRE issues
-      - name: Check libs
-        if: ${{ success() }}
-        run: |
-          ldconfig -p | grep libpcre
-          ls -la /lib/x86_64-linux-gnu/ | grep 'libpcre'
+      # - name: check header and file names of the libraries
+      #   if: ${{ success() }}
+      #   run: |
+      #     ldconfig -p | grep libpcre
 
       # GHA: Checking pcre error
-      - name: Build/Runner dependecies 2
-        run: |
-          sudo find / -name libpcre.so.*
-          ldconfig -p | grep libpcre
-          sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
-          # remove old symlink
-          sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
-          # Creating new symlink
-          sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
-          echo "list the so files"
-          sudo ls -la /usr/lib/x86_64-linux-gnu/
-          sudo find / -name libpcre.so.*
+      # - name: Build/Runner dependecies 2
+      #   run: |
+      #     sudo find / -name libpcre.so.*
+      #     ldconfig -p | grep libpcre
+      #     sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
+      #     # remove old symlink
+      #     sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
+      #     # Creating new symlink
+      #     sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
+      #     echo "list the so files"
+      #     sudo ls -la /usr/lib/x86_64-linux-gnu/
+      #     sudo find / -name libpcre.so.*
 
 
       # GHA: Solutions testing based on
       # https://stackoverflow.com/questions/11238134/dpkg-shlibdeps-error-no-dependency-information-found-for
       # https://man7.org/linux/man-pages/man1/dpkg-shlibdeps.1.html
-      - name: PCRE Solutions testing
-        run: |
-          # echo "Can we run this command?"
-          # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
-          # echo "Check value of info"
-          # sudo ls -la /var/lib/dpkg/info
-          # dpkg-shlibdeps --help
-          # sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
-          # tree /var/lib/dpkg/info/
-          mkdir debian
-          touch debian/rules
+      # - name: PCRE Solutions testing
+      #   run: |
+      #     # echo "Can we run this command?"
+      #     # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+      #     # echo "Check value of info"
+      #     # sudo ls -la /var/lib/dpkg/info
+      #     # dpkg-shlibdeps --help
+      #     # sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
+      #     # tree /var/lib/dpkg/info/
+      #     mkdir debian
+      #     touch debian/rules
 
-          tee -a debian/rules <<EOF
-          dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
-          EOF
+      #     tee -a debian/rules <<EOF
+      #     dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+      #     EOF
 
-       # GHA: Clear the ldconifg cache
-      - name: Clear the ldconifg cache
-        if: ${{ always() }}
-        run: |
-          sudo rm /etc/ld.so.cache
-          sudo ldconfig
+      # GHA: Clear the ldconifg cache
+      # - name: Clear the ldconifg cache
+      #   if: ${{ always() }}
+      #   run: |
+      #     sudo rm /etc/ld.so.cache
+      #     sudo ldconfig
 
       # GHA: Ignore missing dependenvy info
       # - name: Ignore missing dependenvy info
@@ -317,11 +311,11 @@ jobs:
       #     dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
 
       # GHA: Checking /lib/x86_64-linux-gnu
-      - name: Checking /lib/x86_64-linux-gnu post install
-        if: ${{ always() }}
-        run: |
-          echo "list the so files"
-          sudo ls -la /lib/x86_64-linux-gnu/
+      # - name: Checking /lib/x86_64-linux-gnu post install
+      #   if: ${{ always() }}
+      #   run: |
+      #     echo "list the so files"
+      #     sudo ls -la /lib/x86_64-linux-gnu/
 
       - name: Call set_path.sh
         run: |
@@ -332,6 +326,12 @@ jobs:
         run: |
           echo "Calling build-debian.sh"
           ./packaging/build-debian.sh
+
+      # GHA: PCRE issues
+      - name: Check libs
+        if: ${{ success() }}
+        run: |
+          ldd agent/.libs/newrelic.so
 
       # GHA: Testing dpkg-shlibdeps after calling the build-debain.sh script
       # GHA: Ignore missing dependenvy info
