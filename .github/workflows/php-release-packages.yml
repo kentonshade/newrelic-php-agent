@@ -190,7 +190,7 @@ jobs:
   # GHA: This job requires Ubuntu runner
   # We will require the artifacts from new release build
   build-debian:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     # container:  ## GHA: testing using private docker image
     #   image: ubuntu:14.04
     steps:
@@ -241,7 +241,7 @@ jobs:
 
       - name: Build/Runner dependecies
         run: |
-          sudo apt -y install devscripts build-essential lintian debhelper
+          sudo apt -y install devscripts build-essential lintian debhelper xz gzip
 
       ## GHA Troubleshooting pcre issues
 
