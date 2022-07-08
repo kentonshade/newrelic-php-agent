@@ -239,9 +239,9 @@ jobs:
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
 
-      # - name: Build/Runner dependecies
-      #   run: |
-      #     sudo apt -y install devscripts build-essential lintian debhelper libpcre3 libpcre3-dev
+      - name: Build/Runner dependecies
+        run: |
+          sudo apt -y install devscripts build-essential lintian debhelper
 
       ## GHA Troubleshooting pcre issues
 
@@ -317,10 +317,10 @@ jobs:
       #     echo "list the so files"
       #     sudo ls -la /lib/x86_64-linux-gnu/
 
-      - name: Call set_path.sh
-        run: |
-          echo "Calling set_path.sh"
-          ./files/set_path.sh
+      # - name: Call set_path.sh
+      #   run: |
+      #     echo "Calling set_path.sh"
+      #     ./files/set_path.sh
 
       - name: Build Debian
         run: |
