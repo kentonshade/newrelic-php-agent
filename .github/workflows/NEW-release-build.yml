@@ -2,6 +2,7 @@
 # This is the workflow to do a release build.
 # GHA: 04/07: This is actually replacing the php-release-agent job in jenkins.
 # We do not need the php-release-agent-checkout job.
+# https://issues.newrelic.com/browse/NR-6477
 #
 
 ---
@@ -70,8 +71,8 @@ jobs:
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image_os:
-          # - newrelic:nr-centos8-1.1
-          - newrelic:nr-centos7-1.2
+          - newrelic:nr-centos8-1.1-pcre
+          - newrelic:nr-centos7-1.2-pcre
           - newrelic:nr-alpine3.4-1.1
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
