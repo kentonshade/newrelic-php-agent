@@ -34,7 +34,7 @@ nr-agent:
 	dh_installdeb -pnewrelic-php5
 	dh_gencontrol -pnewrelic-php5
 	dh_md5sums -pnewrelic-php5
-	dh_builddeb -pnewrelic-php5 -- -Zgzip
+	dh_builddeb -pnewrelic-php5 -- -Zbzip2
 
 nr-daemon:
 	dh_testroot -pnewrelic-daemon
@@ -62,7 +62,7 @@ nr-daemon:
 	dh_installdeb -pnewrelic-daemon
 	dh_gencontrol -pnewrelic-daemon
 	dh_md5sums -pnewrelic-daemon
-	dh_builddeb -pnewrelic-daemon -- -Zgzip
+	dh_builddeb -pnewrelic-daemon -- -Zbzip2
 
 binary-indep:
 	dh_testroot -pnewrelic-php5-common
@@ -94,7 +94,7 @@ binary-indep:
 	dh_installdeb -pnewrelic-php5-common
 	dh_gencontrol -pnewrelic-php5-common
 	dh_md5sums -pnewrelic-php5-common
-	dh_builddeb -pnewrelic-php5-common -- -Zgzip
+	dh_builddeb -pnewrelic-php5-common -- -Zbzip2
 
 binary: binary-arch binary-indep
 
