@@ -165,7 +165,7 @@ jobs:
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree -a releases/
 
-      # Script required the tct extension
+      # Script required the txt extension
       - name: Asset renaming as required
         run: |
           mv releases/linux/LICENSE releases/linux/LICENSE.txt
@@ -257,6 +257,11 @@ jobs:
           # cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
+
+      # Script required the txt extension
+      - name: Asset renaming as required
+        run: |
+          mv releases/linux/LICENSE releases/linux/LICENSE.txt
 
       - name: Build/Runner dependecies
         run: |
