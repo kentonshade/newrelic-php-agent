@@ -24,11 +24,12 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    REPO:
-      description: "Repo from which we retrieve workflow runs"
-      required: true
-      default: 'kentonshade/newrelic-php-agent'
-      type: string
+    inputs:
+      REPO:
+        description: "Repo from which we retrieve workflow runs"
+        required: true
+        default: 'kentonshade/newrelic-php-agent'
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
