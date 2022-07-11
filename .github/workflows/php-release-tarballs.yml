@@ -2,6 +2,7 @@
 
 # GHA: Jenkins job:
 # https://phpagent-build.pdx.vm.datanerd.us/job/php-release-tarballs/configure
+# https://issues.newrelic.com/browse/NR-6481
 # This is WIP.
 
 name: php-release-tarballs
@@ -29,6 +30,8 @@ jobs:
     env:
       GROUP: 'mycirrus'
       IMAGE: 'newrelic:nr-centos6-1.2'
+      # GHA required for package.sh, but we need to verify/acceptance criteria
+      JOB_NAME: 'php-release-tarballs'
     container:  ## GHA: testing using private docker image
       image: mycirrus/newrelic:nr-centos8-1.1
       credentials:
@@ -36,7 +39,7 @@ jobs:
         password: ${{ secrets.DOCKER_USER_TOKEN }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # GHA: Required to return latest release run
       # We will need to install gh for this container
@@ -61,7 +64,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Check our directories
         run: |
-          tree combined-artifacts/
+          tree -a combined-artifacts/
 
       # Get the directories ready for buid-redhat.sh
       - name: Consolidate releases
@@ -69,7 +72,7 @@ jobs:
           mkdir releases
           cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
-          tree releases/
+          tree -a releases/
 
       # Get the directories ready for buid-redhat.sh
       - name: Change gpg
@@ -86,4 +89,4 @@ jobs:
       # Check for new content in releases
       - name: Check for new content in releases
         run: |
-          tree releases/
+          tree -a releases/

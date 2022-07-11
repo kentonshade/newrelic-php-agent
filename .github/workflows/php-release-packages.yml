@@ -351,12 +351,6 @@ jobs:
           echo "Calling build-debian.sh"
           ./packaging/build-debian.sh
 
-      # GHA: PCRE issues
-      - name: Check libs
-        if: ${{ always() }}
-        run: |
-          ldd agent/.libs/newrelic.so
-
       # GHA: Testing dpkg-shlibdeps after calling the build-debain.sh script
       # GHA: Ignore missing dependenvy info
       # - name: Ignore missing dependenvy info
