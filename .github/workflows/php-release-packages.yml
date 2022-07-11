@@ -23,6 +23,7 @@ on:
       - completed
 
   # Allows you to run this workflow manually from the Actions tab
+  # GHA This is seemingly ineffective when workflow_run is triggered (inouts available)
   workflow_dispatch:
     inputs:
       REPO:
@@ -197,6 +198,8 @@ jobs:
   # We will require the artifacts from new release build
   build-debian:
     runs-on: ubuntu-latest
+    env:
+      REPO: ${{ inputs.REPO || 'kentonshade/newrelic-php-agent' }}
     # container:  ## GHA: testing using private docker image
     #   image: ubuntu:14.04
     steps:
@@ -207,7 +210,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: newrelic/php-agent-internal
-          ref: master
+          ref: gha-dev
           # GHA Confirm we can (this works), and should use this token for this
           # purpose
           token: ${{ secrets.API_CLI_TOKEN }}
@@ -231,7 +234,7 @@ jobs:
         run: |
           echo "${ACCESS_TOKEN}" | gh auth login --with-token
           gh auth status
-          echo "RUN_ID=$(gh run list -w 20074295 -R ${{ inputs.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
+          echo "RUN_ID=$(gh run list -w 20074295 -R ${{ env.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifacts
         uses: dawidd6/action-download-artifact@v2.21.0
@@ -240,7 +243,7 @@ jobs:
           branch: gha-dev
           run_id: ${{ env.RUN_ID }}
           path: combined-artifacts
-          repo: ${{ inputs.REPO }}
+          repo: ${{ env.REPO }}
 
       # Runs a set of commands using the runners shell
       - name: Check our directories
