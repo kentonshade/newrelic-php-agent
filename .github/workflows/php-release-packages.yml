@@ -86,7 +86,7 @@ jobs:
           # Optional, no need to specify if PR is
           # commit: ${{github.event.pull_request.head.sha}}
           # Optional, will use the branch
-          branch: gha-dev
+          branch: main
           # Optional, defaults to all types
           # event: push
           ## GHA: testing static values below
@@ -147,7 +147,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
-          branch: gha-dev
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: combined-artifacts
           repo: ${{github.repository}}
@@ -216,17 +216,7 @@ jobs:
           token: ${{ secrets.API_CLI_TOKEN }}
           # path: <path>
 
-      # - name: Need gh cli and updated git
-      #   run: |
-      #     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-      #     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-      #     sudo apt update
-      #     sudo apt-get -y --force-yes install gh git tree
-      #     gh --version
-      #     git --version
-
       # GHA: Required to return latest release run
-      # We will need to install gh for this container
       - name: Get dependent workflow ID
         env:
           ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -240,7 +230,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
-          branch: gha-dev
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: combined-artifacts
           repo: ${{ env.REPO }}
@@ -256,7 +246,7 @@ jobs:
           mkdir releases
           # cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
-          tree releases/
+          tree -a releases/
 
       # Script required the txt extension
       - name: Asset renaming as required
@@ -267,103 +257,10 @@ jobs:
         run: |
           sudo apt -y install devscripts build-essential lintian debhelper gzip
 
-      ## GHA Troubleshooting pcre issues
-
-      # GHA: PCRE issues
-      # - name: List contents of /var/lib/dpkg/info
-      #   if: ${{ success() }}
-      #   run: |
-      #     ls /var/lib/dpkg/info | grep 'libpcre'
-
-      # GHA: PCRE issues
-      # - name: List dynamic dependecies
-      #   if: ${{ success() }}
-      #   run: |
-      #     ldd ./agent/.libs/newrelic.so
-
-      # GHA: PCRE issues
-      # - name: check header and file names of the libraries
-      #   if: ${{ success() }}
-      #   run: |
-      #     ldconfig -p | grep libpcre
-
-      # GHA: Checking pcre error
-      # - name: Build/Runner dependecies 2
-      #   run: |
-      #     sudo find / -name libpcre.so.*
-      #     ldconfig -p | grep libpcre
-      #     sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
-      #     # remove old symlink
-      #     sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
-      #     # Creating new symlink
-      #     sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
-      #     echo "list the so files"
-      #     sudo ls -la /usr/lib/x86_64-linux-gnu/
-      #     sudo find / -name libpcre.so.*
-
-
-      # GHA: Solutions testing based on
-      # https://stackoverflow.com/questions/11238134/dpkg-shlibdeps-error-no-dependency-information-found-for
-      # https://man7.org/linux/man-pages/man1/dpkg-shlibdeps.1.html
-      # - name: PCRE Solutions testing
-      #   run: |
-      #     # echo "Can we run this command?"
-      #     # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
-      #     # echo "Check value of info"
-      #     # sudo ls -la /var/lib/dpkg/info
-      #     # dpkg-shlibdeps --help
-      #     # sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
-      #     # tree /var/lib/dpkg/info/
-      #     mkdir debian
-      #     touch debian/rules
-
-      #     tee -a debian/rules <<EOF
-      #     dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
-      #     EOF
-
-      # GHA: Clear the ldconifg cache
-      # - name: Clear the ldconifg cache
-      #   if: ${{ always() }}
-      #   run: |
-      #     sudo rm /etc/ld.so.cache
-      #     sudo ldconfig
-
-      # GHA: Ignore missing dependenvy info
-      # - name: Ignore missing dependenvy info
-      #   if: ${{ always() }}
-      #   run: |
-      #     dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
-
-      # GHA: Checking /lib/x86_64-linux-gnu
-      # - name: Checking /lib/x86_64-linux-gnu post install
-      #   if: ${{ always() }}
-      #   run: |
-      #     echo "list the so files"
-      #     sudo ls -la /lib/x86_64-linux-gnu/
-
-      # - name: Call set_path.sh
-      #   run: |
-      #     echo "Calling set_path.sh"
-      #     ./files/set_path.sh
-
       - name: Build Debian
         run: |
           echo "Calling build-debian.sh"
           ./packaging/build-debian.sh
-
-      # GHA: Testing dpkg-shlibdeps after calling the build-debain.sh script
-      # GHA: Ignore missing dependenvy info
-      # - name: Ignore missing dependenvy info
-      #   if: ${{ always() }}
-      #   run: |
-      #     dpkg-shlibdeps --ignore-missing-info /lib/x86_64-linux-gnu/libpcre.so.1
-      #     ./packaging/build-debian.sh
-
-      # - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
-      #   if: ${{ failure() }}
-      #   run: |
-      #     sudo apt install \
-      #     -y $(dpkg-checkbuilddeps 2>&1 | sed -e 's/dpkg-checkbuilddeps:\serror:\sUnmet build dependencies: //g' -e  's/[\(][^)]*[\)] //g')
 
       # Check for new content in releases
       - name: Check for new content in releases
@@ -377,7 +274,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # GHA: Required to return latest release run
       # We will need to install gh for this container
@@ -394,7 +291,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
-          branch: gha-dev
+          branch: gmain
           run_id: ${{ env.RUN_ID }}
           path: combined-artifacts
           repo: ${{github.repository}}

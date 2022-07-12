@@ -154,7 +154,7 @@ jobs:
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
         # if: ${{ matrix.arch == 'x64' }}
         run: |
-          tree releases/
+          tree -a releases/
           ls -laR releases/
 
       # GHA: Check the contents of bin and agent/.lib/
@@ -321,6 +321,8 @@ jobs:
           echo "/opt/nr/php/${PHP_VER}/bin" >> $GITHUB_PATH
           echo "/opt/nr/php/${PHP_VER}/bin/phpize" >> $GITHUB_PATH
           echo "/opt/nr/php/${PHP_VER}/bin/php-config" >> $GITHUB_PATH
+          echo "Adding pcre path"
+          echo "/opt/nr/pcre/8.40/bin" >> $GITHUB_PATH
 
       # Add ENV variables required
       - name: Add ENV variables required in makefile
