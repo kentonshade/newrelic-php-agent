@@ -204,17 +204,18 @@ jobs:
     #   image: ubuntu:14.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
-        uses: actions/checkout@v3
-        with:
-          repository: newrelic/php-agent-internal
-          ref: gha-dev
-          # GHA Confirm we can (this works), and should use this token for this
-          # purpose
-          token: ${{ secrets.API_CLI_TOKEN }}
-          # path: <path>
+      # GHA removing this repo for now as it requires refactoring
+      # - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: newrelic/php-agent-internal
+      #     ref: gha-dev
+      #     # GHA Confirm we can (this works), and should use this token for this
+      #     # purpose
+      #     token: ${{ secrets.API_CLI_TOKEN }}
+      #     # path: <path>
 
       # GHA: Required to return latest release run
       - name: Get dependent workflow ID

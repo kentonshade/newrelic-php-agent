@@ -1,10 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 
-#
-# Copyright 2022 New Relic Corporation. All rights reserved.
-#
-
-#
 #
 # Usage: build-redhat.sh [--arch-dependent-only]
 #

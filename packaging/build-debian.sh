@@ -1,9 +1,4 @@
-#!/bin/bash
-
-#
-# Copyright 2022 New Relic Corporation. All rights reserved.
-#
-#
+#!/bin/sh
 
 #
 # Usage: build-debian.sh [--arch-dependent-only]

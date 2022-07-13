@@ -24,8 +24,8 @@ def expected_config_path():
     distro_paths = {
         "bionic": "/etc/php/7.2",
         "debian-stable": "/etc/php/7.3",
-        "debian-testing": "/etc/php/7.3",
         "focal": "/etc/php/7.4",
+        "sid": "/etc/php/8.0",
         "trusty": "/etc/php5/",
         "xenial": "/etc/php/7.0"
     }
@@ -85,6 +85,8 @@ if __name__ == "__main__":
 
     if sys.argv[1] == "trusty":
         apt.install("php5-cli")
+    elif sys.argv[1] == "sid":
+        apt.install("php8.0-cli")
     else:
         apt.install("php-cli")
 

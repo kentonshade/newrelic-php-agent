@@ -18,6 +18,12 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      REPO:
+        description: "Repo from which we retrieve workflow runs"
+        required: true
+        default: 'kentonshade/newrelic-php-agent'
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -27,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       ## GHA: We will download all artifacts and then remove what is not needed
       ##
@@ -54,7 +60,7 @@ jobs:
       - name: Download combined-artifacts
         # uses: dawidd6/action-download-artifact@v2.14.1
         # GHA: Testing new version of action
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
           # Required, if artifact is from a different repo
@@ -130,7 +136,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
           branch: gha-dev
@@ -183,23 +189,25 @@ jobs:
   # We will require the artifacts from new release build
   build-debian:
     runs-on: ubuntu-latest
+    env:
+      REPO: ${{ inputs.REPO || 'kentonshade/newrelic-php-agent' }}
     # container:  ## GHA: testing using private docker image
     #   image: ubuntu:14.04
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Need gh cli and updated git
-        run: |
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt update
-          sudo apt-get -y --force-yes install gh git tree
-          gh --version
-          git --version
+      # - name: Checkout PHP Deployment Repo   ## NOT POSSIBLE as of 05/13/2021 from GHE
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: newrelic/php-agent-internal
+      #     ref: gha-dev
+      #     # GHA Confirm we can (this works), and should use this token for this
+      #     # purpose
+      #     token: ${{ secrets.API_CLI_TOKEN }}
+      #     # path: <path>
 
       # GHA: Required to return latest release run
-      # We will need to install gh for this container
       - name: Get dependent workflow ID
         env:
           ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -207,21 +215,21 @@ jobs:
         run: |
           echo "${ACCESS_TOKEN}" | gh auth login --with-token
           gh auth status
-          echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
+          echo "RUN_ID=$(gh run list -w 20074295 -R ${{ env.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
-          branch: gha-dev
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: combined-artifacts
-          repo: ${{github.repository}}
+          repo: ${{ env.REPO }}
 
       # Runs a set of commands using the runners shell
       - name: Check our directories
         run: |
-          tree combined-artifacts/
+          tree -a combined-artifacts/
 
       # Get the directories ready for buid-redhat.sh
       - name: Consolidate releases
@@ -229,73 +237,26 @@ jobs:
           mkdir releases
           # cp -R combined-artifacts/combined-releases-*/alpine/* releases/
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
-          tree releases/
+          tree -a releases/
+
+      # Script required the txt extension
+      - name: Asset renaming as required
+        run: |
+          mv releases/linux/LICENSE releases/linux/LICENSE.txt
 
       - name: Build/Runner dependecies
         run: |
-          sudo apt -y install devscripts build-essential lintian debhelper
-
-      # GHA: Checking /lib/x86_64-linux-gnu
-      - name: Checking /lib/x86_64-linux-gnu pre install
-        if: ${{ always() }}
-        run: |
-          echo "list the so files"
-          sudo ls -la /lib/x86_64-linux-gnu/
-
-      # GHA: Checking pcre error
-      - name: Build/Runner dependecies 2
-        run: |
-          sudo find / -name libpcre.so.*
-          sudo apt-get install libpcre3 libpcre3-dev
-          sudo cp /usr/lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
-          # remove old symlink
-          sudo rm /usr/lib/x86_64-linux-gnu/libpcre.so
-          # Creating new symlink
-          sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.1 /usr/lib/x86_64-linux-gnu/libpcre.so
-          echo "list the so files"
-          sudo ls -la /usr/lib/x86_64-linux-gnu/
-          sudo find / -name libpcre.so.*
-
-      # GHA: Solutions testing based on
-      # https://stackoverflow.com/questions/11238134/dpkg-shlibdeps-error-no-dependency-information-found-for
-      # https://man7.org/linux/man-pages/man1/dpkg-shlibdeps.1.html
-      - name: PCRE Solutions testing
-        run: |
-          # echo "Can we run this command?"
-          # dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
-          # echo "Check value of info"
-          # sudo ls -la /var/lib/dpkg/info
-          sudo cat /var/lib/dpkg/info/libpcre3:amd64.shlibs
-          mkdir debian
-          touch debian/shlibs.local
-          tee -a debian/shlibs.local <<EOF
-
-          libpcre 1 libpcre1
-          libpcreposix 1 libpcre1
-          EOF
-
-      # GHA: Checking /lib/x86_64-linux-gnu
-      - name: Checking /lib/x86_64-linux-gnu post install
-        if: ${{ always() }}
-        run: |
-          echo "list the so files"
-          sudo ls -la /lib/x86_64-linux-gnu/
+          sudo apt -y install devscripts build-essential lintian debhelper gzip
 
       - name: Build Debian
         run: |
           echo "Calling build-debian.sh"
           ./packaging/build-debian.sh
 
-      # - name: "Attempt to resolve dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper"
-      #   if: ${{ failure() }}
-      #   run: |
-      #     sudo apt install \
-      #     -y $(dpkg-checkbuilddeps 2>&1 | sed -e 's/dpkg-checkbuilddeps:\serror:\sUnmet build dependencies: //g' -e  's/[\(][^)]*[\)] //g')
-
       # Check for new content in releases
       - name: Check for new content in releases
         run: |
-          tree releases/
+          tree -a releases/
 
 
   # GHA: This job requires Ubuntu runner

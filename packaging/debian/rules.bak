@@ -84,7 +84,7 @@ binary-indep:
 	echo 'exec $${NR_INSTALL_LOCATION}/newrelic-install.sh "$$@"' >> debian/newrelic-php5-common/usr/bin/newrelic-install
 	chmod 755 debian/newrelic-php5-common/usr/bin/newrelic-install
 	dh_install -pnewrelic-php5-common
-	dh_installdocs -pnewrelic-php5-common $(SRCDIR)/LICENSE.txt $(SRCDIR)/README.txt
+	dh_installdocs -pnewrelic-php5-common $(SRCDIR)/LICENSE $(SRCDIR)/README.txt
 	dh_installman -pnewrelic-php5-common
 	dh_installlogcheck -pnewrelic-php5-common
 	dh_installlogrotate -pnewrelic-php5-common --name=newrelic-php5

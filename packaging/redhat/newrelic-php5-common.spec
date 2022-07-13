@@ -32,7 +32,7 @@ the actual PHP extension (agent).
 %setup -cT
 
 %build
-cp -f %{_sourcedir}/LICENSE.txt LICENSE.txt
+cp -f %{_sourcedir}/LICENSE LICENSE
 cp -f %{_sourcedir}/README.txt  README.txt
 
 # Create the installer front-end script
@@ -62,7 +62,7 @@ install -m 0755 newrelic-install ${RPM_BUILD_ROOT}%{_bindir}/newrelic-install
 
 %files
 %defattr(-,root,root,-)
-%doc README.txt LICENSE.txt
+%doc README.txt LICENSE
 %attr(0755,root,root) %dir %{_usr}/lib/newrelic-php5
 %attr(0755,root,root) %dir %{_usr}/lib/newrelic-php5/agent
 %attr(0755,root,root) %dir %{_usr}/lib/newrelic-php5/scripts

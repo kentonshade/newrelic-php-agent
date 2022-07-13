@@ -7,7 +7,7 @@
 # are consistent. We'll do this by taking a SHA-512 checksum of each file and
 # comparing them to each other: this may result in false positives if there are
 # whitespace or comment only changes, but that's OK, since the fallback
-# behaviour is to warn the user and not try anything clever.
+# behavior is to warn the user and not try anything clever.
 are_newrelic_ini_files_consistent () {
   get_config_path
   known_hash=""
@@ -199,6 +199,9 @@ version_to_api () {
     7.4*)
       echo 20190902
       ;;
+    8.0*)
+      echo 20200930
+      ;;
     *)
       echo "Unknown PHP version: $1" 1>&2
       return 1
@@ -213,7 +216,7 @@ version_to_api () {
 #
 # Supported: the API number appears in $PHP_API_VERSIONS. These versions will
 #            always be installed, and the .so will be removed on both upgrade
-#            and uninstallation.
+#            and uninstall.
 #
 # Deprecated: the API number appears in $DEPRECATED_PHP_API_VERSIONS. These
 #             versions will always be installed, but the .so will NOT be removed
@@ -237,7 +240,7 @@ version_to_api () {
 #                     package version. For the subsequent release, remove the
 #                     version from $DEPRECATED_PHP_API_VERSIONS and add it to
 #                     $UNSUPPORTED_PHP_API_VERSIONS.
-PHP_API_VERSIONS="20090626 20100525 20121212 20131226 20151012 20160303 20170718 20180731 20190902"
+PHP_API_VERSIONS="20090626 20100525 20121212 20131226 20151012 20160303 20170718 20180731 20190902 20200930"
 DEPRECATED_PHP_API_VERSIONS=""
 UNSUPPORTED_PHP_API_VERSIONS="20050922 20060613"
 

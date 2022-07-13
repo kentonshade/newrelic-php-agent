@@ -1,9 +1,4 @@
-#!/bin/bash
-
-#
-# Copyright 2022 New Relic Corporation. All rights reserved.
-#
-#
+#!/bin/sh
 
 #
 # Usage: build-tgz.sh [RELEASE_HANDLE...]
@@ -69,7 +64,7 @@ build_tgz() (
 
   # Be conservative about what we include in redistributables.
   rsync -av --delete --delete-excluded \
-        --include=/LICENSE.txt \
+        --include=/LICENSE \
         --include=/README.txt \
         --include=/newrelic-install \
         --include=/agent/ \
@@ -109,7 +104,7 @@ build_tgz() (
 
   # Read-only files.
   chmod 0444 \
-        "${destdir}/LICENSE.txt" \
+        "${destdir}/LICENSE" \
         "${destdir}/MD5SUMS" \
         "${destdir}/README.txt" \
         "${destdir}/scripts/newrelic.cfg.template" \
