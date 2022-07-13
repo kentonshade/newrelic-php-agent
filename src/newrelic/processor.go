@@ -179,6 +179,8 @@ func ConnectApplication(args *ConnectArgs) ConnectAttempt {
 		Name:      collector.CommandPreconnect,
 		Collector: collectorHostname,
 		License:   args.License,
+		// Use default maximum, because we don't know the collector limit yet
+		MaxPayloadSize: limits.DefaultMaxPayloadSizeInBytes,
 	}
 
 	// Make call to preconnect
@@ -406,16 +408,18 @@ func (p *Processor) processConnectAttempt(rep ConnectAttempt) {
 	app.RawConnectReply = rep.RawReply.Body
 	if rep.RawReply.IsDisconnect() {
 		app.state = AppStateDisconnected
-		log.Warnf("app '%s' connect attempt returned %s", app, rep.RawReply.Err)
+		log.Warnf("app '%s' connect attempt returned %s; disconnecting", app, rep.RawReply.Err)
 		return
 	} else if rep.RawReply.IsRestartException() {
-		app.state = AppStateRestart
 		// in accord with the spec, invalid license is a restart exception. Except we want
 		//    to shutdown instead of restart.
 		if rep.RawReply.IsInvalidLicense() {
 			app.state = AppStateInvalidLicense
+		    log.Warnf("app '%s' connect attempt returned %s; shutting down", app, rep.RawReply.Err)
+		} else {
+			app.state = AppStateRestart
+			log.Warnf("app '%s' connect attempt returned %s; restarting", app, rep.RawReply.Err)
 		}
-		log.Warnf("app '%s' connect attempt returned %s", app, rep.RawReply.Err)
 		return
 	} else if nil != rep.Err {
 		app.state = AppStateUnknown
@@ -463,6 +467,7 @@ type harvestArgs struct {
 	client              collector.Client
 	splitLargePayloads  bool
 	RequestHeadersMap   map[string]string
+	maxPayloadSize      int
 
 	// Used for final harvest before daemon exit
 	blocking bool
@@ -475,6 +480,7 @@ func harvestPayload(p PayloadCreator, args *harvestArgs) {
 		License:           args.license,
 		RunID:             args.id.String(),
 		RequestHeadersMap: args.RequestHeadersMap,
+		MaxPayloadSize:    args.maxPayloadSize,
 	}
 	cs := collector.RpmControls{
 		AgentLanguage: args.agentLanguage,
@@ -657,6 +663,7 @@ func (p *Processor) doHarvest(ph ProcessorHarvest) {
 		harvestErrorChannel: p.harvestErrorChannel,
 		client:              p.cfg.Client,
 		RequestHeadersMap:   app.connectReply.RequestHeadersMap,
+		maxPayloadSize:      app.connectReply.MaxPayloadSizeInBytes,
 		// Splitting large payloads is limited to applications that have
 		// distributed tracing on. That restriction is a saftey measure
 		// to not overload the backend by sending two payloads instead
@@ -664,7 +671,6 @@ func (p *Processor) doHarvest(ph ProcessorHarvest) {
 		splitLargePayloads: app.info.Settings["newrelic.distributed_tracing_enabled"] == true,
 		blocking:           ph.Blocking,
 	}
-
 	harvestByType(ph.AppHarvest, &args, harvestType)
 }
 
@@ -680,6 +686,8 @@ func (p *Processor) processHarvestError(d HarvestError) {
 
 	app := h.App
 	log.Warnf("app %q with run id %q received %s", app, d.id, d.Reply.Err)
+
+	h.Harvest.IncrementHttpErrors(d.Reply.StatusCode)
 
 	if d.Reply.ShouldSaveHarvestData() {
 		d.data.FailedHarvest(h.Harvest)

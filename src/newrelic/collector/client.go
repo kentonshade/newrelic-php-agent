@@ -40,6 +40,7 @@ type RpmCmd struct {
 	Data              []byte
 	License           LicenseKey
 	RequestHeadersMap map[string]string
+	MaxPayloadSize    int
 }
 
 // RpmControls contains fields which will be the same for all calls made
@@ -88,6 +89,8 @@ func (resp RPMResponse) IsDisconnect() bool {
 }
 
 // IsRestartException indicates that the agent should restart.
+// 401 (License Exception) is considered a restart exception according to the spec,
+//   and is included here as such, however the PHP agent will not restart on a 401 and instead stop
 func (resp RPMResponse) IsRestartException() bool {
 	return resp.StatusCode == 401 || resp.StatusCode == 409
 }
@@ -323,6 +326,10 @@ func (c *clientImpl) perform(url string, cmd RpmCmd, cs RpmControls) RPMResponse
 		return RPMResponse{Err: err}
 	}
 
+	if l := deflated.Len(); l > cmd.MaxPayloadSize {
+		return RPMResponse{Err: fmt.Errorf("payload size too large: %d greater than %d", l, cmd.MaxPayloadSize)}
+	}
+
 	req, err := http.NewRequest("POST", url, deflated)
 
 	if nil != err {
@@ -415,7 +422,7 @@ func (c *clientImpl) Execute(cmd RpmCmd, cs RpmControls) RPMResponse {
 	cleanURL := cmd.url(true)
 
 	log.Audit("command='%s' url='%s' payload={%s}", cmd.Name, url, audit)
-	log.Debugf("command='%s' url='%s' payload={%s}", cmd.Name, cleanURL, data)
+	log.Debugf("command='%s' url='%s' max_payload_size_in_bytes='%d' payload={%s}", cmd.Name, cleanURL, cmd.MaxPayloadSize, data)
 
 	resp := c.perform(url, cmd, cs)
 	if err != nil {
