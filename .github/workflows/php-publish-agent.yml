@@ -97,7 +97,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 24616877 -R ${{ inputs.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
-      - name: Download combined-artifacts
+      - name: Download combined-artifacts from php-bigchange-packages.yml
         if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
@@ -121,7 +121,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 24616878 -R ${{ inputs.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
-      - name: Download combined-artifacts
+      - name: Download combined-artifacts from php-bigchange-tarballs.yml
         if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -172,7 +172,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 24182732 -R ${{ inputs.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
-      - name: Download combined-artifacts
+      - name: Download combined-artifacts from php-release-packages.yml
         if: ${{ inputs.ACTION == 'release-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
@@ -195,7 +195,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 24616878 -R ${{ inputs.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       # GHA: temp ref used for davidd6 due to issue with latest
-      - name: Download combined-artifacts
+      - name: Download combined-artifacts from php-release-tarballs.yml
         if: ${{ inputs.ACTION == 'release-2-testing' }}
         uses: dawidd6/action-download-artifact@v2.21.0
         with:

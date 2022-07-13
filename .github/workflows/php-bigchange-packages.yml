@@ -118,7 +118,7 @@ jobs:
         password: ${{ secrets.DOCKER_USER_TOKEN }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # GHA: Required to return latest release run
       # We will need to install gh for this container
@@ -263,7 +263,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # GHA: Required to return latest release run
       # We will need to install gh for this container
