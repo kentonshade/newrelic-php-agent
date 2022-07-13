@@ -1,6 +1,6 @@
 # GHA: This is copied from php-release-packages.  It has not yet been refactored
 # We need to determine if workflow_run is still applicable.  If so, then
-# we may have to refaactor grabbing the Workflow ID below.
+# we may have to refactor grabbing the Workflow ID below.
 
 name: php-bigchange-packages
 
@@ -38,10 +38,6 @@ jobs:
       ## GHA: We will download all artifacts and then remove what is not needed
       ##
       # Download Alpine release artifacts
-      # GHa: Determine the ref to use with the download action
-
-      # GHA: Need an action here that checks the latest workflow run ID
-      # for NEW-release-build.yml.  Use gh command
       # Set env variable to run ID.  I don't think run number is necessary
       - name: Get dependent workflow ID
         env:
@@ -78,7 +74,7 @@ jobs:
           # Optional, no need to specify if PR is
           # commit: ${{github.event.pull_request.head.sha}}
           # Optional, will use the branch
-          branch: gha-dev
+          branch: main
           # Optional, defaults to all types
           # event: push
           ## GHA: testing static values below
@@ -139,7 +135,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.21.0
         with:
           workflow: NEW-release-build.yml
-          branch: gha-dev
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: combined-artifacts
           repo: ${{github.repository}}
@@ -282,7 +278,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: NEW-release-build.yml
-          branch: gha-dev
+          branch: main
           run_id: ${{ env.RUN_ID }}
           path: combined-artifacts
           repo: ${{github.repository}}
