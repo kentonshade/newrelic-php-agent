@@ -153,10 +153,11 @@ jobs:
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
 
-      # Script required the tct extension
-      - name: Asset renaming as required
+      # Script required the txt extension
+      # GHA As og 07/13/2022 this is not required -changin to cp
+      - name: Asset copying as required
         run: |
-          mv releases/linux/LICENSE releases/linux/LICENSE.txt
+          cp releases/linux/LICENSE releases/linux/LICENSE.txt
 
       # Install any remaining dependencies
       - name: Install any remaining dependencies
@@ -236,9 +237,10 @@ jobs:
           tree -a releases/
 
       # Script required the txt extension
-      - name: Asset renaming as required
+      # GHA As og 07/13/2022 this is not required -changin to cp
+      - name: Asset copying as required
         run: |
-          mv releases/linux/LICENSE releases/linux/LICENSE.txt
+          cp releases/linux/LICENSE releases/linux/LICENSE.txt
 
       - name: Build/Runner dependecies
         run: |
@@ -296,10 +298,11 @@ jobs:
           cp -R combined-artifacts/combined-releases-*/centos/* releases/
           tree releases/
 
-      # Script required the tct extension
-      - name: Asset renaming as required
+      # Script required the txt extension
+      # GHA As og 07/13/2022 this is not required -changin to cp
+      - name: Asset copying as required
         run: |
-          mv releases/linux/LICENSE releases/linux/LICENSE.txt
+          cp releases/linux/LICENSE releases/linux/LICENSE.txt
 
       - name: Build Tar
         run: |

@@ -206,6 +206,14 @@ jobs:
           # GHA: This should always be from the agent repo, but confirm
           repo: ${{github.repository}}
 
+      # Check incoming contents
+      - name: Check incoming
+        id: check-incoming
+        if: ${{ always() }}
+        run: |
+          tree -a ./incoming
+          ls -la ./incoming
+
       # Set DEPLOY_HOME, source common.bash
       # This should probably go to the top?
       # Need to set DEPLOY_HOME for subsequent steps.
