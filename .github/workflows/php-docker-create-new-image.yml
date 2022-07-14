@@ -84,7 +84,7 @@ jobs:
           git status -sb
 
       - uses: stefanzweifel/git-auto-commit-action@v4
-        if: ${{ inputs.PUSH_CHANGES == 'true' }}
+        if: ${{ inputs.PUSH_CHANGES == true }}
         with:
           # Optional. Commit message for the created commit.
           # Defaults to "Apply automatic changes"
