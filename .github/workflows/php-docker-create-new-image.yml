@@ -95,6 +95,13 @@ jobs:
         run: |
           git status -sb
 
+      # GHA GH CLI Submit PR
+      - name: Push new branch
+        id: push-new-branch
+        if: ${{ inputs.PUSH_CHANGES == true }}
+        run: |
+          git push origin "${version_short}"
+
       - name: Authenitcate GH CLI
         env:
           ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -109,6 +116,7 @@ jobs:
         if: ${{ inputs.PUSH_CHANGES == true }}
         run: |
           echo "Submitting PR"
+          gh pr create --title "php-docker-create-new-image-version bump to ${version_short}" --body "testing only"  --reviewer @kentonshade
 
       # - uses: stefanzweifel/git-auto-commit-action@v4
       #   if: ${{ inputs.PUSH_CHANGES == true }}
