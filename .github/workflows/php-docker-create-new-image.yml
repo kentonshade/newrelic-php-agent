@@ -120,7 +120,7 @@ jobs:
         if: ${{ inputs.PUSH_CHANGES == true }}
         run: |
           echo "Submitting PR"
-          gh pr create --title "php-docker-create-new-image-version bump to ${version_short}" --body "testing only"  --reviewer @kentonshade
+          gh pr create --title "php-docker-create-new-image-version bump to ${version_short}" --body "testing only"  --reviewer kentonshade
 
       # - uses: stefanzweifel/git-auto-commit-action@v4
       #   if: ${{ inputs.PUSH_CHANGES == true }}
