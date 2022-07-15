@@ -99,6 +99,13 @@ jobs:
           git status -sb
           git branch --show-current
 
+      # GHA pull this testing version for now
+      # Just need to test PR creation, etc.
+      - name: git pull version_short
+        run: |
+          git remote update
+          git pull origin "${version_short}"
+
       # GHA GH CLI Submit PR
       - name: Push new branch
         id: push-new-branch
