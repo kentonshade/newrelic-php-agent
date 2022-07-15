@@ -22,6 +22,11 @@ on:
         required: true
         default: ''
         type: string
+      base_repo:
+        description: "The base repository to use in the PR creation (GH CLI"
+        required: true
+        default: 'kentonshade/newrelic-php-daemon-docker'
+        type: string
       PUSH_CHANGES:
         description: "Whether or not to push the changes"
         default: false
@@ -39,6 +44,11 @@ on:
         required: true
         default: ''
         type: string
+      base_repo:
+        description: "The base repository to use in the PR creation (GH CLI"
+        required: true
+        default: 'kentonshade/newrelic-php-daemon-docker'
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -48,6 +58,7 @@ jobs:
     env:
       version: ${{ inputs.version }}
       version_short: ${{ inputs.version_short }}
+      base_repo: ${{ inputs.base_repo }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - uses: actions/checkout@v2
@@ -128,7 +139,7 @@ jobs:
         if: ${{ inputs.PUSH_CHANGES == true }}
         run: |
           echo "Submitting PR"
-          gh pr create --title "php-docker-create-new-image-version bump to ${version_short}" --body "testing only"  --reviewer kentonshade
+          gh pr create --title "php-docker-create-new-image-version bump to ${version_short}" --body "testing only" --base gha-dev --head "${version_short}" -R "${base_repo}" --reviewer kentonshade --assignee @me
 
       # - uses: stefanzweifel/git-auto-commit-action@v4
       #   if: ${{ inputs.PUSH_CHANGES == true }}
