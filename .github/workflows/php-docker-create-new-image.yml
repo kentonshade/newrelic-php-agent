@@ -70,6 +70,18 @@ jobs:
         run: |
           rm -rf 9.21*
 
+      # GHA testing only - creating/updating text file
+      # GHA: REMOVE THIS STEP PRIOR TO MERGING
+      - name: GHA testing only - creating text file
+        run: |
+          echo "${GITHUB_RUN_ID}" > run_id.txt
+          cat run_id.txt
+
+      # GHA testing the script - grab status
+      - name: git status
+        run: |
+          git status -sb
+
       # Call update-docker-image.bash
       # GHA testing the script
       - name: Call update-docker-image.bash
@@ -83,66 +95,81 @@ jobs:
         run: |
           git status -sb
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Authenitcate GH CLI
+        env:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ always() }}
+        run: |
+          echo "${ACCESS_TOKEN}" | gh auth login --with-token
+          gh auth status
+
+      # GHA GH CLI Submit PR
+      - name: GH CLI Submit PR
+        id: submit-pr
         if: ${{ inputs.PUSH_CHANGES == true }}
-        with:
-          # Optional. Commit message for the created commit.
-          # Defaults to "Apply automatic changes"
-          commit_message: version bump to ${{ inputs.version_short }}
+        run: |
+          echo "Submitting PR"
 
-          # Optional. Create given branch name in local and remote repository.
-          create_branch: true
+      # - uses: stefanzweifel/git-auto-commit-action@v4
+      #   if: ${{ inputs.PUSH_CHANGES == true }}
+      #   with:
+      #     # Optional. Commit message for the created commit.
+      #     # Defaults to "Apply automatic changes"
+      #     commit_message: version bump to ${{ inputs.version_short }}
 
-          # Optional. Local and remote branch name where commit is going to be pushed
-          #  to. Defaults to the current branch.
-          #  You might need to set `create_branch: true` if the branch does not exist.
-          branch: ${{ inputs.version_short }}
+      #     # Optional. Create given branch name in local and remote repository.
+      #     create_branch: true
 
-          # Optional. Options used by `git-commit`.
-          # See https://git-scm.com/docs/git-commit#_options
-          # commit_options: '--no-verify --signoff'
+      #     # Optional. Local and remote branch name where commit is going to be pushed
+      #     #  to. Defaults to the current branch.
+      #     #  You might need to set `create_branch: true` if the branch does not exist.
+      #     branch: ${{ inputs.version_short }}
 
-          # Optional glob pattern of files which should be added to the commit
-          # Defaults to all (.)
-          # See the `pathspec`-documentation for git
-          # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
-          # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
-          # file_pattern: src/*.js tests/*.js *.php
+      #     # Optional. Options used by `git-commit`.
+      #     # See https://git-scm.com/docs/git-commit#_options
+      #     # commit_options: '--no-verify --signoff'
 
-          # Optional. Local file path to the repository.
-          # Defaults to the root of the repository.
-          # repository: .
+      #     # Optional glob pattern of files which should be added to the commit
+      #     # Defaults to all (.)
+      #     # See the `pathspec`-documentation for git
+      #     # - https://git-scm.com/docs/git-add#Documentation/git-add.txt-ltpathspecgt82308203
+      #     # - https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
+      #     # file_pattern: src/*.js tests/*.js *.php
 
-          # Optional commit user and author settings
-          commit_user_name: kentonshade # defaults to "github-actions[bot]"
-          commit_user_email: kshade@newrelic.com # defaults to "github-actions[bot]@users.noreply.github.com"
-          commit_author: kentonshade # defaults to author of the commit that triggered the run
+      #     # Optional. Local file path to the repository.
+      #     # Defaults to the root of the repository.
+      #     # repository: .
 
-          # Optional. Tag name being created in the local repository and
-          # pushed to remtoe repository and defined branch.
-          # tagging_message: 'v1.0.0'
+      #     # Optional commit user and author settings
+      #     commit_user_name: kentonshade # defaults to "github-actions[bot]"
+      #     commit_user_email: kshade@newrelic.com # defaults to "github-actions[bot]@users.noreply.github.com"
+      #     commit_author: kentonshade # defaults to author of the commit that triggered the run
 
-          # Optional. Option used by `git-status` to determine if the repository is
-          # dirty. See https://git-scm.com/docs/git-status#_options
-          # status_options: '--untracked-files=no'
+      #     # Optional. Tag name being created in the local repository and
+      #     # pushed to remtoe repository and defined branch.
+      #     # tagging_message: 'v1.0.0'
 
-          # Optional. Options used by `git-add`.
-          # See https://git-scm.com/docs/git-add#_options
-          # add_options: '-u'
+      #     # Optional. Option used by `git-status` to determine if the repository is
+      #     # dirty. See https://git-scm.com/docs/git-status#_options
+      #     # status_options: '--untracked-files=no'
 
-          # Optional. Options used by `git-push`.
-          # See https://git-scm.com/docs/git-push#_options
-          # push_options: '--dry-run'
+      #     # Optional. Options used by `git-add`.
+      #     # See https://git-scm.com/docs/git-add#_options
+      #     # add_options: '-u'
 
-          # Optional. Disable dirty check and always try to create a commit and push
-          skip_dirty_check: true
+      #     # Optional. Options used by `git-push`.
+      #     # See https://git-scm.com/docs/git-push#_options
+      #     # push_options: '--dry-run'
 
-          # Optional. Skip internal call to `git fetch`
-          skip_fetch: true
+      #     # Optional. Disable dirty check and always try to create a commit and push
+      #     skip_dirty_check: true
 
-          # Optional. Skip internal call to `git checkout`
-          skip_checkout: true
+      #     # Optional. Skip internal call to `git fetch`
+      #     skip_fetch: true
 
-          # Optional. Prevents the shell from expanding filenames.
-          # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
-          disable_globbing: true
+      #     # Optional. Skip internal call to `git checkout`
+      #     skip_checkout: true
+
+      #     # Optional. Prevents the shell from expanding filenames.
+      #     # Details: https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html
+      #     disable_globbing: true
