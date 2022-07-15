@@ -127,7 +127,7 @@ jobs:
 
       - name: Authenitcate GH CLI
         env:
-          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.API_CLI_TOKEN }}
         if: ${{ always() }}
         run: |
           echo "${ACCESS_TOKEN}" | gh auth login --with-token
