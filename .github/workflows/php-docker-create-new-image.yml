@@ -45,6 +45,9 @@ jobs:
   # This workflow contains a single job called "build"
   php-docker-create-new-image:
     runs-on: ubuntu-latest
+    env:
+      version: ${{ inputs.version }}
+      version_short: ${{ inputs.version_short }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - uses: actions/checkout@v2
@@ -87,13 +90,14 @@ jobs:
       - name: Call update-docker-image.bash
         run: |
           chmod +x ./tools/update-docker-image.bash
-          ./tools/update-docker-image.bash ${{ inputs.version }}
+          ./tools/update-docker-image.bash "${version}"
           # cat ./tools/update-docker-image.bash
 
       # GHA testing the script - grab status
       - name: git status
         run: |
           git status -sb
+          git branch --show-current
 
       # GHA GH CLI Submit PR
       - name: Push new branch
