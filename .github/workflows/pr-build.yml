@@ -60,12 +60,10 @@ jobs:
     strategy:
       matrix:
         registry: [mycirrus]
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image_os:
-          - newrelic:nr-centos8-1.1
-          - newrelic:nr-centos7-1.2
-          - newrelic:nr-alpine3.4-1.1
+          - newrelic:nr-centos8-1.1-pcre
+          - newrelic:nr-centos7-1.2-pcre
+          - newrelic:nr-alpine3.4-1.1-pcre
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
         # php_ver: ['5.5', '5.6', '7.0']
@@ -74,11 +72,6 @@ jobs:
         # Check the arch for the new docker images
         arch: [x64]
     steps:
-      # GHA: We need to also checkout the build script repo
-      # Per Amber, run the source command for eavh version of PHP:
-      # source [WHEREVERYOUPUTBUILDSCRIPTS]/php-build-scripts/bin/phpvm.bash change <PHP_VER>
-      # New workflow_trigger action section
-
       - name: Checkout PHP Agent Repo
         uses: actions/checkout@v3
         with:
@@ -96,10 +89,6 @@ jobs:
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: php-build-scripts
 
-      # This might have to exist within ".github"
-      # GHA No need to build these images? everything should be installed
-      # - name: Build Custom Docker Image
-      #   run: docker build --build-arg ARCH=$ARCH --build-arg PHP_VER=$PHP_VER --build-arg BUILD_TYPE=$BUILD_TYPE -f ./.github/docker/${OS}/${ARCH}/Dockerfile -t $image_name .
       - name: Check the workspace
         run: |
           echo "current directory is " $(pwd)
@@ -133,8 +122,6 @@ jobs:
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
       - name: 'Test call phpvm.bash, then release_build_gha.sh'
-        # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' || matrix.image_os == 'newrelic:nr-centos7-1.1' }}
-        # if: ${{ matrix.arch == 'x64' }}
         run: |
           set -x
           echo "Calling phpvm.bash"
@@ -146,10 +133,8 @@ jobs:
           ./.github/docker/linux/release_build_gha.sh
 
       - name: Check content of releases directory
-        # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
-        # if: ${{ matrix.arch == 'x64' }}
         run: |
-          tree releases/
+          tree -a releases/
           ls -laR releases/
 
       # GHA: Check the contents of bin and agent/.lib/
@@ -164,10 +149,6 @@ jobs:
       - name: Check environmental variables
         if: ${{ always() }}
         run: printenv | sort -f
-
-      # GHA: below fails
-      # - name: Dump Env Context
-      #   run: echo env is ${{ toJSON(env) }}
 
       # Rename matrix item to remove problem characers
       # GHA only required for custom artifact naming
@@ -184,24 +165,16 @@ jobs:
       # Will we have to download abd comine as done in the following step?
       # Or the aggregation can happen in workflows?
       - name: Save build artifacts
-        # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
-        # if: ${{ matrix.arch == 'x64' }}
         uses: actions/upload-artifact@v2
         with:
-          # name: ${{ matrix.php_ver }}binaries
-          # name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}binaries
-          # path: releases
           name: ${{ env.MATRIX_IMAGE }}-${{ matrix.php_ver }}-${{ matrix.arch }}-for-int-tests
           path: |
             ./bin
             ./agent/.libs/newrelic.so
           if-no-files-found: error
 
-  # GHA: Need to a job to provision the arm64 runner
-  # GHA: Need to run command in instance to start runner (.$HOME/actions-runner/run.sh)
-  # GHA: Create secrets for all inputs to increase sec.
   start-runner:
-    if: ${{ github.event.inputs.ARM64 == 'true' && github.event.inputs.START_RUNNER == 'true' }}
+    if: ${{ inputs.ARM64 == 'true' && inputs.START_RUNNER == 'true' }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
@@ -238,7 +211,7 @@ jobs:
   # GHA: We need to check if runner online/started
   agent_release_arm64:
     # GHA: Do not tun this job if false
-    if: ${{ github.event.inputs.ARM64 == 'true' }}
+    if: ${{ inputs.ARM64 == 'true' }}
     # needs: start-runner
     env:
       # GHA we need to add the various PHP versions supported to PHP_VER
@@ -269,11 +242,6 @@ jobs:
         # Check the arch for the new docker images
         arch: [x64]
     steps:
-      # GHA: We need to also checkout the build script repo
-      # Per Amber, run the source command for eavh version of PHP:
-      # source [WHEREVERYOUPUTBUILDSCRIPTS]/php-build-scripts/bin/phpvm.bash change <PHP_VER>
-      # New workflow_trigger action section
-
       - name: Checkout PHP Agent Repo
         uses: actions/checkout@v3
         with:
@@ -291,10 +259,6 @@ jobs:
           token: ${{ secrets.ACTIONS_TOKEN }}
           path: php-build-scripts
 
-      # This might have to exist within ".github"
-      # GHA No need to build these images? everything should be installed
-      # - name: Build Custom Docker Image
-      #   run: docker build --build-arg ARCH=$ARCH --build-arg PHP_VER=$PHP_VER --build-arg BUILD_TYPE=$BUILD_TYPE -f ./.github/docker/${OS}/${ARCH}/Dockerfile -t $image_name .
       - name: Check the workspace
         run: |
           echo "current directory is " $(pwd)
@@ -304,14 +268,6 @@ jobs:
         run: |
           echo "current directory is " $(pwd)
           ls -la php-build-scripts/
-
-      # - name: Build and Test
-      #   run: |
-      #     echo "current directory is " $(pwd)
-      #     ls -la
-      #     cd / && ls -la
-      #     ls -la opt/nr/
-      #     ls -la github/
 
       # GHA: This step shouldn't be necessary with the phpvm.bash
       - name: Add the "opt/nr" path, install packages
@@ -333,24 +289,7 @@ jobs:
         run: |
           echo "${SECRETS_MK}" > make/secrets.mk
 
-      # GHA: Spme path issues need resolving
-      # GHA: We may have to run this and build-release in same step
-      # - name: 'Test call phpvm.bash, then release_build_gha.sh'
-      #   # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' || matrix.image_os == 'newrelic:nr-centos7-1.1' }}
-      #   # if: ${{ matrix.arch == 'x64' }}
-      #   run: |
-      #     set -x
-      #     echo "Calling phpvm.bash"
-      #     source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
-      #     # echo "Where is phpize?"
-      #     # find / -name phpize
-      #     whereis phpize
-      #     echo "Calling release_build_gha.sh"
-      #     ./.github/docker/linux/release_build_gha.sh
-
       - name: 'Testing pr_build.sh'
-        # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' || matrix.image_os == 'newrelic:nr-centos7-1.1' }}
-        # if: ${{ matrix.arch == 'x64' }}
         run: |
           set -x
           echo "Calling phpvm.bash"
@@ -422,7 +361,6 @@ jobs:
 
   Integration-CentOS:
     runs-on: ubuntu-latest
-    # runs-on: ubuntu-18.04
     needs: pr_build_by_os
     name: Integration tests for Integration-CentOS
     env:
@@ -435,8 +373,8 @@ jobs:
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image:
-          - nr-centos7-1.2
-          - nr-centos8-1.1
+          - nr-centos7-1.2-pcre
+          - nr-centos8-1.1-pcre
         os: [linux]
         # php_ver: ['5.5', '7.0']
         php_ver: ['7.0']
@@ -501,52 +439,6 @@ jobs:
         run: |
           echo "${SECRETS_MK}" > make/secrets.mk
 
-      # GHA: PCRE issues
-      - name: libpcre issues
-        if: ${{ success() }}
-        run: |
-          cd /usr/lib/x86_64-linux-gnu/
-          sudo cp libpcre.so libpcre.so.1
-
-      ## GHA Troubleshooting pcre issues
-
-      # GHA: PCRE issues
-      - name: List contents of /var/lib/dpkg/info
-        if: ${{ success() }}
-        run: |
-          ls /var/lib/dpkg/info | grep 'libpcre'
-
-      # GHA: PCRE issues
-      - name: List dynamic dependecies
-        if: ${{ success() }}
-        run: |
-          ldd ./agent/.libs/newrelic.so
-
-      # GHA: PCRE issues
-      - name: check header and file names of the libraries
-        if: ${{ success() }}
-        run: |
-          ldconfig -p | grep libpcre
-
-      # GHA: PCRE issues
-      - name: Check libs
-        if: ${{ success() }}
-        run: |
-          ldconfig -p | grep libpcre
-          ls -la /lib/x86_64-linux-gnu/ | grep 'libpcre'
-
-      # GHA: PCRE issues
-      - name: Check lib path
-        if: ${{ success() }}
-        run: |
-          echo "${LD_LIBRARY_PATH}"
-
-      # GHA: PCRE issues
-      # - name: Create libpcre.so.1 symlink
-      #   if: ${{ success() }}
-      #   run: |
-      #     sudo ln -s /lib/x86_64-linux-gnu/libpcre.so.3 /lib/x86_64-linux-gnu/libpcre.so.1
-
       # GHA: Run Make command
       - name: Run Make commands
         if: ${{ always() }}
@@ -574,7 +466,7 @@ jobs:
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image:
-          - nr-alpine3.4-1.1
+          - nr-alpine3.4-1.1-pcre
         os: [linux]
         # php_ver: ['5.5', '7.0']
         php_ver: ['7.0']
