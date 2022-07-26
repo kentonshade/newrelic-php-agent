@@ -67,7 +67,7 @@ jobs:
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
         # php_ver: ['5.5', '5.6', '7.0']
-        php_ver: ['5.5', '7.0']
+        php_ver: ['5.5', '8.0']
         # GHA we'll need to exclude some combinations I believe
         # Check the arch for the new docker images
         arch: [x64]
@@ -121,7 +121,7 @@ jobs:
 
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
-      - name: 'Test call phpvm.bash, then release_build_gha.sh'
+      - name: 'Test call phpvm.bash, then pr_build.sh'
         run: |
           set -x
           echo "Calling phpvm.bash"
@@ -129,13 +129,8 @@ jobs:
           echo "Where is phpize?"
           find / -name phpize
           whereis phpize
-          echo "Calling release_build_gha.sh"
-          ./.github/docker/linux/release_build_gha.sh
-
-      - name: Check content of releases directory
-        run: |
-          tree -a releases/
-          ls -laR releases/
+          echo "Calling pr_build_gha.sh"
+          ./.github/docker/linux/pr_build.sh
 
       # GHA: Check the contents of bin and agent/.lib/
       - name: "Check the contents of bin/ and agent/.lib/"
@@ -376,8 +371,8 @@ jobs:
           - nr-centos7-1.2-pcre
           - nr-centos8-1.1-pcre
         os: [linux]
-        # php_ver: ['5.5', '7.0']
-        php_ver: ['7.0']
+        php_ver: ['5.5', '8.0']
+        # php_ver: ['7.0']
         arch: [x64]
     steps:
       - uses: actions/checkout@v2
@@ -468,8 +463,8 @@ jobs:
         image:
           - nr-alpine3.4-1.1-pcre
         os: [linux]
-        # php_ver: ['5.5', '7.0']
-        php_ver: ['7.0']
+        php_ver: ['5.5', '8.0']
+        # php_ver: ['7.0']
         arch: [x64]
     steps:
       - uses: actions/checkout@v3
