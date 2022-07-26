@@ -472,27 +472,12 @@ jobs:
         php_ver: ['7.0']
         arch: [x64]
     steps:
-<<<<<<< HEAD
-      - uses: actions/checkout@v2
-
-      - name: Checkout build scripts repository
-        uses: actions/checkout@v3
-        with:
-          repository: newrelic/php-agent-php-build-scripts
-          # Chaging ref temporarily for testing
-          # ref: master
-          ref: gha-dev
-          # GHA: Check for token
-          token: ${{ secrets.ACTIONS_TOKEN }}
-          path: php-build-scripts
-=======
       - uses: actions/checkout@v3
       # GHA: Grab the required artifacts and cp as appropriate
       - name: Grab the required artifacts and cp as appropriate
         if: ${{ always() }}
         run: |
           echo "use download artifact action"
->>>>>>> d5ded52... NR-711: Updates and troubleshooting pr-build.yml
 
       # GHA: Download the previosly generated bin and .so artifacts
       - name: Download bin and .so to directory
@@ -529,28 +514,12 @@ jobs:
         run: |
           echo "${SECRETS_MK}" > make/secrets.mk
 
-      # GHA: Alpine complains of no phpize?
-      # POssibly need this in the step below
-      - name: 'Test call phpvm.bash'
-        run: |
-          set -x
-          echo "Calling phpvm.bash"
-          source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
-          echo "Where is phpize?"
-          find / -name phpize
-          whereis phpize
-
       # GHA: Run Make command
       - name: Run Make commands
         if: ${{ success() }}
         run: |
-<<<<<<< HEAD
-          # make clean
-          make daemon_tests
-=======
           make clean
           # make daemon_tests
->>>>>>> d5ded52... NR-711: Updates and troubleshooting pr-build.yml
           make valgrind
           make integration
 
