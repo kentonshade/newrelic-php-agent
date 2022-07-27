@@ -294,13 +294,14 @@ jobs:
           whereis phpize
           echo "Calling release_build_gha.sh"
           # ./.github/docker/linux/release_build_gha.sh
-          # ./.github/docker/linux/pr_build.sh
+          ./.github/docker/linux/pr_build.sh
 
-      - name: Make commands in place of pr_build.sh
-        run: |
-          make -j10 all
-          make valgrind
-          make integration
+      # Commenting out per @zsistla, using pr_build.sh above
+      # - name: Make commands in place of pr_build.sh
+      #   run: |
+      #     make -j10 all
+      #     make valgrind
+      #     make integration
 
       - name: Check content of releases directory
         # if: ${{ matrix.image_os == 'newrelic:nr-centos8-1.0' && matrix.arch == 'x64' }}
@@ -418,7 +419,7 @@ jobs:
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
           tree -a ./bin
           tree -a ./agent/.libs/
-          chmod +x -R ./bin
+          chmod 777 -R ./bin
 
       # Check ENV variables
       # GHA: Check for IMAGE_OS value per matix run
@@ -501,7 +502,7 @@ jobs:
           cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
           tree ./bin/
           tree ./agent/.libs/
-          chmod +x -R ./bin
+          chmod 777 -R ./bin
 
       # GHA: Create secrets.mk
       - name: Create secrets.mk
