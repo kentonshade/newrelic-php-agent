@@ -55,15 +55,15 @@ jobs:
     container:  ## GHA: testing using private docker image
       image: ${{ matrix.registry }}/${{ matrix.image_os }}
       credentials:
-        username: ${{ secrets.DOCKER_REPO_USER }}
-        password: ${{ secrets.DOCKER_USER_TOKEN }}
+        username: ${{ secrets.DOCKER_REPO_NR_USER }}
+        password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
     strategy:
       matrix:
-        registry: [mycirrus]
+        registry: [newrelic]
         image_os:
-          - newrelic:nr-centos8-1.1-pcre
-          - newrelic:nr-centos7-1.2-pcre
-          - newrelic:nr-alpine3.4-1.1-pcre
+          - php-build-images:nr-centos8-1.1-pcre
+          - php-build-images:nr-centos7-1.2-pcre
+          - php-build-images:nr-alpine3.4-1.1-pcre
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
         # php_ver: ['5.5', '5.6', '7.0']
@@ -447,10 +447,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: pr_build_by_os
     container:  ## GHA: testing using private docker image
-      image: mycirrus/newrelic:nr-alpine3.4-1.1-pcre
+      image: newrelic/php-build-images:nr-alpine3.4-1.1-pcre
       credentials:
-        username: ${{ secrets.DOCKER_REPO_USER }}
-        password: ${{ secrets.DOCKER_USER_TOKEN }}
+        username: ${{ secrets.DOCKER_REPO_NR_USER }}
+        password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
     name: Integration tests for Integration-Alpine
     env:
       OS: ${{ matrix.image }}
@@ -469,6 +469,18 @@ jobs:
         arch: [x64]
     steps:
       - uses: actions/checkout@v3
+
+      - name: Checkout build scripts repository
+        uses: actions/checkout@v3
+        with:
+          repository: newrelic/php-agent-php-build-scripts
+          # Chaging ref temporarily for testing
+          # ref: master
+          ref: gha-dev
+          # GHA: Check for token
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          path: php-build-scripts
+
       # GHA: Grab the required artifacts and cp as appropriate
       - name: Grab the required artifacts and cp as appropriate
         if: ${{ always() }}
@@ -509,6 +521,13 @@ jobs:
         if: ${{ success() }}
         run: |
           echo "${SECRETS_MK}" > make/secrets.mk
+
+      # GHA: build complains it cannot find phpize
+      - name: 'Test call phpvm.bash'
+        run: |
+          set -x
+          echo "Calling phpvm.bash"
+          source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
 
       # GHA: Run Make command
       - name: Run Make commands
