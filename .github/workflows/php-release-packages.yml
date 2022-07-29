@@ -121,13 +121,13 @@ jobs:
   build-redhat:
     runs-on: ubuntu-latest
     env:
-      GROUP: 'mycirrus'
-      IMAGE: 'newrelic:nr-centos6-1.2'
+      GROUP: 'newrelic'
+      IMAGE: 'php-build-images:nr-centos6-1.2'
     container:  ## GHA: testing using private docker image
-      image: mycirrus/newrelic:nr-centos8-1.1
+      image: newrelic/php-build-images:nr-centos8-1.1
       credentials:
-        username: ${{ secrets.DOCKER_REPO_USER }}
-        password: ${{ secrets.DOCKER_USER_TOKEN }}
+        username: ${{ secrets.DOCKER_REPO_NR_USER }}
+        password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
