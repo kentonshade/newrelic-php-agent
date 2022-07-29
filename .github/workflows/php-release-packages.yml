@@ -124,7 +124,7 @@ jobs:
       GROUP: 'newrelic'
       IMAGE: 'php-build-images:nr-centos6-1.2'
     container:  ## GHA: testing using private docker image
-      image: newrelic/php-build-images:nr-centos8-1.1
+      image: newrelic/php-build-images:nr-centos8-1.1-pcre
       credentials:
         username: ${{ secrets.DOCKER_REPO_NR_USER }}
         password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
