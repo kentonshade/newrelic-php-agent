@@ -334,26 +334,25 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           path: releases
-      # - run: sudo apt install tree
 
       - run: |
           tree releases/
           cd releases/
           mkdir alpine centos arm64
           ls -la
-          # cp -R newrelic-nr-alpine*/* alpine/
-          # cp -R newrelic-nr-centos*/* centos/
-          # rm -rf newrelic-nr-alpine*/ newrelic-nr-centos*/
-          # cp -R newrelic-nr-arm64*/* arm64/
+          # cp -R php-build-images-nr-alpine*/* alpine/
+          # cp -R php-build-images-nr-centos*/* centos/
+          # rm -rf php-build-images-nr-alpine*/ php-build-images-nr-centos*/
+          # cp -R php-build-images-nr-arm64*/* arm64/
           # tree releases/
 
       - name: Consolidate per OS
         # if: ${{ always() }}
         run: |
           cd releases/
-          cp -R newrelic-nr-alpine*/* alpine/
-          cp -R newrelic-nr-centos*/* centos/
-          rm -rf newrelic-nr-alpine*/ newrelic-nr-centos*/
+          cp -R php-build-images-nr-alpine*/* alpine/
+          cp -R php-build-images-nr-centos*/* centos/
+          rm -rf php-build-images-nr-alpine*/ php-build-images-nr-centos*/
           cd ../ && mv releases combined-releases
           tree combined-releases/
 
