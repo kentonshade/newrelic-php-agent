@@ -54,16 +54,16 @@ jobs:
     container:  ## GHA: testing using private docker image
       image: ${{ matrix.registry }}/${{ matrix.image_os }}
       credentials:
-        username: ${{ secrets.DOCKER_REPO_USER }}
-        password: ${{ secrets.DOCKER_USER_TOKEN }}
+        username: ${{ secrets.DOCKER_REPO_NR_USER }}
+        password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
     strategy:
       matrix:
-        registry: [mycirrus]
+        registry: [newrelic]
         image_os:
-          - newrelic:nr-centos8-1.1-pcre
-          - newrelic:nr-centos7-1.2-pcre
-          - newrelic:nr-alpine3.4-1.1-pcre
-          - newrelic:nr-alpine-3.14--1.2-pcre
+          - php-build-images:nr-centos8-1.1-pcre
+          - php-build-images:nr-centos7-1.2-pcre
+          - php-build-images:nr-alpine3.4-1.1-pcre
+          - php-build-images:nr-alpine-3.14--1.2-pcre
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
         # php_ver: ['5.5', '5.6', '7.0']
