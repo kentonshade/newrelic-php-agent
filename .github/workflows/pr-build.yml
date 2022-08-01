@@ -38,6 +38,10 @@ on:
         description: "BUILD_NUMBER to pass to workflow"
         required: false
         default: false
+      BRANCH:
+        description: "Branch to use for build"
+        required: false
+        default: 'main'
 
 jobs:
   pr_build_by_os:
@@ -76,7 +80,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           # ref: ${{ github.event.client_payload.ref }}
-          ref: main
+          # ref: main
+          ref: ${{ inputs.BRANCH }}
 
       - name: Checkout build scripts repository
         uses: actions/checkout@v3
