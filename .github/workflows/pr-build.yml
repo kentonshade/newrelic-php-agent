@@ -411,16 +411,16 @@ jobs:
       - name: Check the artifacts in an OS
         if: ${{ success() }}
         run: |
-          ls -la ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
-          tree -a ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+          ls -la ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+          tree -a ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
 
       # GHA: Copy the artifacts and change perms
       - name: Copy the artifacts
         if: ${{ success() }}
         run: |
           mkdir -p bin
-          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
-          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
+          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
+          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
           tree -a ./bin
           tree -a ./agent/.libs/
           chmod 777 -R ./bin
@@ -508,14 +508,14 @@ jobs:
       - name: Check the artifacts in an OS
         if: ${{ success() }}
         run: |
-          ls -la ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+          ls -la ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
 
       # GHA: Copy the artifacts and change perms
       - name: Copy the artifacts
         if: ${{ success() }}
         run: |
-          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
-          cp -R ./bin-so-artifacts/newrelic-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
+          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
+          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
           tree ./bin/
           tree ./agent/.libs/
           chmod 777 -R ./bin
