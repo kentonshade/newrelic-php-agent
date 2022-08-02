@@ -38,8 +38,8 @@ on:
         description: "BUILD_NUMBER to pass to workflow"
         required: false
         default: false
-      BRANCH:
-        description: "Branch to use for build"
+      AGENT_BRANCH:
+        description: "Agent repo Branch to use for build"
         required: false
         default: 'main'
 
@@ -110,8 +110,8 @@ jobs:
           echo "/opt/nr/php/${PHP_VER}/bin" >> $GITHUB_PATH
           echo "/opt/nr/php/${PHP_VER}/bin/phpize" >> $GITHUB_PATH
           echo "/opt/nr/php/${PHP_VER}/bin/php-config" >> $GITHUB_PATH
-          echo "Adding pcre path"
-          echo "/opt/nr/pcre/8.40/bin" >> $GITHUB_PATH
+          # echo "Adding pcre path"
+          # echo "/opt/nr/pcre/8.40/bin" >> $GITHUB_PATH
 
       # Add ENV variables required in makefile
       - name: Add ENV variables required in makefile
@@ -136,7 +136,7 @@ jobs:
           echo "Where is phpize?"
           find / -name phpize
           whereis phpize
-          echo "Calling pr_build_gha.sh"
+          echo "Calling pr_build.sh"
           ./.github/docker/linux/pr_build.sh
 
       # GHA: Check the contents of bin and agent/.lib/
@@ -301,7 +301,7 @@ jobs:
           # echo "Where is phpize?"
           # find / -name phpize
           whereis phpize
-          echo "Calling release_build_gha.sh"
+          echo "Calling pr_build.sh"
           # ./.github/docker/linux/release_build_gha.sh
           ./.github/docker/linux/pr_build.sh
 
@@ -385,7 +385,7 @@ jobs:
         # php_ver: ['7.0']
         arch: [x64]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       # GHA: Grab the required artifacts and cp as appropriate
       - name: Grab the required artifacts and cp as appropriate
         if: ${{ always() }}
