@@ -56,12 +56,14 @@ jobs:
       IMAGE_OS: ${{ matrix.image_os }}
       SECRETS_MK: ${{ secrets.SECRETS_MK }}
     runs-on: ubuntu-latest
+    # continue-on-error: true
     container:  ## GHA: testing using private docker image
       image: ${{ matrix.registry }}/${{ matrix.image_os }}
       credentials:
         username: ${{ secrets.DOCKER_REPO_NR_USER }}
         password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
     strategy:
+      fail-fast: false
       matrix:
         registry: [newrelic]
         image_os:
