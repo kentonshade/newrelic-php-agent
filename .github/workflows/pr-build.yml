@@ -248,7 +248,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           # ref: ${{ github.event.client_payload.ref }}
-          ref: main
+          # ref: main
+          ref: ${{ inputs.BRANCH }}
 
       - name: Checkout build scripts repository
         uses: actions/checkout@v3
@@ -385,7 +386,12 @@ jobs:
         # php_ver: ['7.0']
         arch: [x64]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout PHP Agent Repo
+        uses: actions/checkout@v3
+        with:
+          # ref: ${{ github.event.client_payload.ref }}
+          # ref: main
+          ref: ${{ inputs.BRANCH }}
       # GHA: Grab the required artifacts and cp as appropriate
       - name: Grab the required artifacts and cp as appropriate
         if: ${{ always() }}
@@ -477,7 +483,12 @@ jobs:
         # php_ver: ['7.0']
         arch: [x64]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout PHP Agent Repo
+        uses: actions/checkout@v3
+        with:
+          # ref: ${{ github.event.client_payload.ref }}
+          # ref: main
+          ref: ${{ inputs.BRANCH }}
 
       - name: Checkout build scripts repository
         uses: actions/checkout@v3
