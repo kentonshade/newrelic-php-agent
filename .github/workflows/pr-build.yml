@@ -68,7 +68,7 @@ jobs:
         registry: [newrelic]
         image_os:
           - php-build-images:nr-centos8-1.1-pcre
-          - php-build-images:nr-centos7-1.2-pcre
+          - php-build-images:nr-centos7-1.3-pcre
           - php-build-images:nr-alpine3.4-1.1-pcre
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
@@ -236,7 +236,7 @@ jobs:
     strategy:
       matrix:
         # registry: [mycirrus]
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         os: [linux]
         # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
@@ -378,10 +378,10 @@ jobs:
     strategy:
       matrix:
         # registry: [mycirrus]
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image:
-          - nr-centos7-1.2-pcre
+          - nr-centos7-1.3-pcre
           - nr-centos8-1.1-pcre
         os: [linux]
         php_ver: ['5.5', '8.0']
@@ -476,7 +476,7 @@ jobs:
     strategy:
       matrix:
         # registry: [mycirrus]
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.2', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
         image:
           - nr-alpine3.4-1.1-pcre
