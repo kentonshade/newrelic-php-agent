@@ -4,7 +4,7 @@
 
 ---
 
-name: 'NEW PR Build'
+name: 'NEW PR Build (PR Runner)'
 
 
 on:
@@ -75,7 +75,7 @@ jobs:
         # php_ver: ['5.5', '5.6', '7.0']
         # php_ver: ['5.5', '8.0']
         php_ver:
-          - 8.0
+          - 7.0
         # GHA we'll need to exclude some combinations I believe
         # Check the arch for the new docker images
         arch: [x64]
