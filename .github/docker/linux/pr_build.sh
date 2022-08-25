@@ -133,9 +133,6 @@ EOF
 
   printf \\n
   case "$PHPS" in 
-  *8.0*)
-    printf "Skipping integration tests on PHP=%s while tests are under construction\n" "$PHPS"
-    ;;
   *zts*)
     printf "Skipping integration tests on ZTS (PHP=%s ZTS=enabled)\n" "$PHPS"
     ;;
