@@ -142,7 +142,8 @@ EOF
   *)
     printf "Running agent integration tests (PHP=%s ZTS=disabled)\n" "$PHPS"
     #printf "Temporarily disable integration tests in GHA while determining what to do with private keys.\n"
-    make integration PHPS="$PHPS" "ARCH=${ARCH}" INTEGRATION_ARGS="tests/integration/api/datastore/test_basic.php"
+    # make integration PHPS="$PHPS" "ARCH=${ARCH}" INTEGRATION_ARGS="tests/integration/api/datastore/test_basic.php"
+    make lasp-test-all PHPS="$PHPS"
     ;;
   esac
   printf \\n
