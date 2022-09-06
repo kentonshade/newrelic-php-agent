@@ -183,7 +183,7 @@ jobs:
           if-no-files-found: error
 
   start-runner:
-    if: ${{ inputs.ARM64 == 'true' && inputs.START_RUNNER == 'true' }}
+    if: ${{ inputs.START_RUNNER == 'true' }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
@@ -201,26 +201,27 @@ jobs:
         uses: machulav/ec2-github-runner@v2
         with:
           mode: start
-          github-token: ${{ secrets.ACTIONS_TOKEN }}
+          github-token: ${{ secrets.API_CLI_TOKEN }}
           ec2-image-id: ${{ secrets.AWS_AMI_ID }}
           ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }}
           subnet-id: ${{ secrets.AWS_SUBNET }}
           security-group-id: ${{ secrets.AWS_SEC_GROUP }}
-          # runner-home-dir: "$HOME/actions-runner"
+          runner-home-dir: "/home/hudson/actions-runner"
           # iam-role-name: my-role-name  # optional, requires additional permissions
-          aws-resource-tags: > # optional, requires additional permissions
-            [
-              {"Key": "Name", "Value": "kentonshade"},
-              {"Key": "owning_team", "Value": "PHPC"},
-              {"Key": "environment", "Value": "development"},
-              {"Key": "product", "Value": "agents"},
-              {"Key": "department, "Value": "product"}
-            ]
+          # aws-resource-tags: > # optional, requires additional permissions
+          #   [
+          #     {"Key": "Name", "Value": "kentonshade"},
+          #     {"Key": "owning_team", "Value": "PHPC"},
+          #     {"Key": "environment", "Value": "development"},
+          #     {"Key": "product", "Value": "agents"},
+          #     {"Key": "department, "Value": "product"}
+          #   ]
 
   # GHA: We need to check if runner online/started
   agent_release_arm64:
     # GHA: Do not tun this job if false
     if: ${{ inputs.ARM64 == 'true' }}
+    needs: start-runner
     # needs: start-runner
     env:
       # GHA we need to add the various PHP versions supported to PHP_VER
