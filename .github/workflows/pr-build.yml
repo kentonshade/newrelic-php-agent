@@ -183,7 +183,7 @@ jobs:
           if-no-files-found: error
 
   start-runner:
-    if: ${{ inputs.START_RUNNER == 'true' }}
+    if: ${{ inputs.START_RUNNER == true }}
     name: Start self-hosted EC2 runner
     runs-on: ubuntu-latest
     outputs:
@@ -220,7 +220,7 @@ jobs:
   # GHA: We need to check if runner online/started
   agent_release_arm64:
     # GHA: Do not tun this job if false
-    if: ${{ inputs.ARM64 == 'true' }}
+    if: ${{ inputs.ARM64 == true }}
     needs: start-runner
     # needs: start-runner
     env:
