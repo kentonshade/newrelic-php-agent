@@ -206,7 +206,7 @@ jobs:
           ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }} 
           subnet-id: ${{ secrets.AWS_SUBNET }}
           security-group-id: ${{ secrets.AWS_SEC_GROUP }}
-          # runner-home-dir: "/home/hudson/actions-runner"
+          runner-home-dir: "/home/hudson/actions-runner"
           # iam-role-name: my-role-name  # optional, requires additional permissions
           # aws-resource-tags: > # optional, requires additional permissions
           #   [
