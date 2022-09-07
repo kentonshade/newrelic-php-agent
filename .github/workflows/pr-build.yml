@@ -133,6 +133,10 @@ jobs:
         run: |
           git config --global --add safe.directory /__w/newrelic-php-agent/newrelic-php-agent
 
+      - name: Check go version
+        run: |
+          go version
+
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
       - name: 'Test call phpvm.bash, then pr_build.sh'
