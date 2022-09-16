@@ -125,6 +125,7 @@ jobs:
         run: |
           git push --force origin "${version_short}"
 
+      # GHA Use GH_TOKEN instead
       - name: Authenitcate GH CLI
         env:
           ACCESS_TOKEN: ${{ secrets.API_CLI_TOKEN }}
