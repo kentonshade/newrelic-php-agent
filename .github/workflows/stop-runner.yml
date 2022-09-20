@@ -1,0 +1,106 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI Stop Runner
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      IMAGE_ID:
+        description: "The AWS AMI ID"
+        required: false
+        default: false
+      INSTANCE_TYPE:
+        description: "The type of EC2 instance desired"
+        required: false
+        default: false
+      KEY_NAME:
+        description: "The PEM file name"
+        required: false
+        default: ""
+      USER_DATA_FILE:
+        description: "Filename to pass to --user-data"
+        required: false
+        default: 'user_data.sh'
+      REPO_ORG:
+        description: "GitHUb Organization"
+        required: false
+        default: 'My-Cirrus-CI'
+      REPO_NAME:
+        description: "Repository Name"
+        required: false
+        default: 'aws'
+  workflow_call:
+    inputs:
+      IMAGE_ID:
+        description: "The AWS AMI ID"
+        required: false
+        default: false
+        type: string
+      INSTANCE_TYPE:
+        description: "The type of EC2 instance desired"
+        required: false
+        default: false
+        type: string
+      KEY_NAME:
+        description: "The PEM file name"
+        required: false
+        default: ""
+        type: string
+      USER_DATA_FILE:
+        description: "Filename to pass to --user-data"
+        required: false
+        default: 'user_data.sh'
+        type: string
+      REPO_ORG:
+        description: "GitHUb Organization"
+        required: false
+        default: 'My-Cirrus-CI'
+        type: string
+      REPO_NAME:
+        description: "Repository Name"
+        required: false
+        default: 'aws'
+        type: string
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  stop-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Authenticate with AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Get the instance ID once the instance is created
+      - name: Get the instance ID once the instance is created
+        if: ${{ success() }}
+        run: |
+          # Sleep for now for testing
+          sleep 10
+          RUNNER_ID=$(aws ec2 describe-instances --filter Name=tag:runner,Values=true Name=instance-state-code,Values=16 --query Reservations[*].Instances[*].[InstanceId] --output text)
+          while [[ $RUNNER_ID != *"i-"* ]]; do
+            RUNNER_ID=$(aws ec2 describe-instances --filter Name=tag:runner,Values=true Name=instance-state-code,Values=16 --query Reservations[*].Instances[*].[InstanceId] --output text)
+            sleep 2
+          done
+          echo "${RUNNER_ID}"
+          echo "RUNNER_ID="${RUNNER_ID}"" >> $GITHUB_ENV
+
+      - name: Terminate the runner instance
+        run: |
+          echo "${RUNNER_ID} should be in ENV variables"
+          aws ec2 terminate-instances --instance-ids ${RUNNER_ID}

@@ -187,6 +187,7 @@ jobs:
           if-no-files-found: error
 
   start-runner:
+    if: ${{ inputs.START_RUNNER == true }}
     # GHA we will use version when hosted non-local
     # uses: ./.github/workflows/create-runner.yml@main
     uses: ./.github/workflows/create-runner.yml
@@ -198,41 +199,6 @@ jobs:
       REPO_ORG: 'My-Cirrus-CI'
       REPO_NAME: 'aws'
     secrets: inherit
-
-  # start-runner:
-  #   if: ${{ inputs.START_RUNNER == true }}
-  #   name: Start self-hosted EC2 runner
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     label: ${{ steps.start-ec2-runner.outputs.label }}
-  #     ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
-  #   steps:
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-  #     - name: Start EC2 runner
-  #       id: start-ec2-runner
-  #       uses: machulav/ec2-github-runner@v2
-  #       with:
-  #         mode: start
-  #         github-token: ${{ secrets.API_CLI_TOKEN }}
-  #         ec2-image-id: ${{ secrets.AWS_AMI_ID }}
-  #         ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }} 
-  #         subnet-id: ${{ secrets.AWS_SUBNET }}
-  #         security-group-id: ${{ secrets.AWS_SEC_GROUP }}
-  #         runner-home-dir: "/home/hudson/actions-runner"
-          # iam-role-name: my-role-name  # optional, requires additional permissions
-          # aws-resource-tags: > # optional, requires additional permissions
-          #   [
-          #     {"Key": "Name", "Value": "kentonshade"},
-          #     {"Key": "owning_team", "Value": "PHPC"},
-          #     {"Key": "environment", "Value": "development"},
-          #     {"Key": "product", "Value": "agents"},
-          #     {"Key": "department, "Value": "product"}
-          #   ]
 
   # GHA: We need to check if runner online/started
   agent_release_arm64:
@@ -390,6 +356,21 @@ jobs:
             ./bin
             ./agent/.libs/newrelic.so
           if-no-files-found: error
+
+  Stop-runners:
+    needs: start-runner
+    if: ${{ success() }}
+    # GJHA we will use version when hosted non-local
+    # uses: ./.github/workflows/create-runner.yml@main
+    uses: ./.github/workflows/stop-runner.yml
+    with:
+      # IMAGE_ID: dev
+      INSTANCE_TYPE: 't4g.xlarge'
+      # KEY_NAME: ''
+      USER_DATA_FILE: 'user_data.sh'
+      REPO_ORG: 'My-Cirrus-CI'
+      REPO_NAME: 'aws'
+    secrets: inherit
 
   # Integration-CentOS:
   #   runs-on: ubuntu-latest
