@@ -180,10 +180,6 @@ jobs:
           # https://cli.github.com/manual/gh_api
 
           gh auth status
-          curl \
-           -H "Accept: application/vnd.github+json" \
-           -H "Authorization: Bearer ${GH_TOKEN}" \
-           https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners
           RUNNER_INFO=$(curl \
            -H "Accept: application/vnd.github+json" \
            -H "Authorization: Bearer ${GH_TOKEN}" \
@@ -193,7 +189,12 @@ jobs:
           cat runner_info.json | jq 'select(objects)|=[.]'
           RUNNER_STATUS=$(cat runner_info.json | jq 'select(objects)|=[.]' | grep 'status')
           while [[ $RUNNER_STATUS != *"online"* ]]; do
-            cat runner_info.json | jq 'select(objects)|=[.]' | grep 'status'
+            RUNNER_INFO=$(curl \
+             -H "Accept: application/vnd.github+json" \
+             -H "Authorization: Bearer ${GH_TOKEN}" \
+             https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
+            # echo ${RUNNER_INFO} > runner_info.json
+            RUNNER_STATUS=$(echo ${RUNNER_INFO} | jq 'select(objects)|=[.]' | grep 'status')
             echo "Runner is still offline"
             sleep 30
           done
