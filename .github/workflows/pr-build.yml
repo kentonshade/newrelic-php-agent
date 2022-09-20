@@ -4,7 +4,7 @@
 
 ---
 
-name: 'NEW PR Build'
+name: 'NEW PR Build (PR Runner)'
 
 
 on:
@@ -70,10 +70,11 @@ jobs:
           - php-build-images:nr-centos8-1.1-pcre
           - php-build-images:nr-centos7-1.3-pcre
           - php-build-images:nr-alpine3.4-1.1-pcre
+          - php-build-images:nr-alpine-3.14--1.2-pcre
         os: [linux]
-        # php_ver: ['7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
+        # php_ver: ['5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.0-zts']
         # php_ver: ['5.5', '5.6', '7.0']
-        php_ver: ['5.5', '8.0']
+        php_ver: ['8.0']
         # GHA we'll need to exclude some combinations I believe
         # Check the arch for the new docker images
         arch: [x64]
@@ -132,6 +133,10 @@ jobs:
         run: |
           git config --global --add safe.directory /__w/newrelic-php-agent/newrelic-php-agent
 
+      - name: Check go version
+        run: |
+          go version
+
       # GHA: Spme path issues need resolving
       # GHA: We may have to run this and build-release in same step
       - name: 'Test call phpvm.bash, then pr_build.sh'
@@ -182,44 +187,24 @@ jobs:
           if-no-files-found: error
 
   start-runner:
-    if: ${{ inputs.ARM64 == 'true' && inputs.START_RUNNER == 'true' }}
-    name: Start self-hosted EC2 runner
-    runs-on: ubuntu-latest
-    outputs:
-      label: ${{ steps.start-ec2-runner.outputs.label }}
-      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      - name: Start EC2 runner
-        id: start-ec2-runner
-        uses: machulav/ec2-github-runner@v2
-        with:
-          mode: start
-          github-token: ${{ secrets.ACTIONS_TOKEN }}
-          ec2-image-id: ${{ secrets.AWS_AMI_ID }}
-          ec2-instance-type: ${{ secrets.AWS_INSTANCE_TYPE }}
-          subnet-id: ${{ secrets.AWS_SUBNET }}
-          security-group-id: ${{ secrets.AWS_SEC_GROUP }}
-          # runner-home-dir: "$HOME/actions-runner"
-          # iam-role-name: my-role-name  # optional, requires additional permissions
-          aws-resource-tags: > # optional, requires additional permissions
-            [
-              {"Key": "Name", "Value": "kentonshade"},
-              {"Key": "owning_team", "Value": "PHPC"},
-              {"Key": "environment", "Value": "development"},
-              {"Key": "product", "Value": "agents"},
-              {"Key": "department, "Value": "product"}
-            ]
+    if: ${{ inputs.START_RUNNER == true }}
+    # GHA we will use version when hosted non-local
+    # uses: ./.github/workflows/create-runner.yml@main
+    uses: ./.github/workflows/create-runner.yml
+    with:
+      # IMAGE_ID: dev
+      INSTANCE_TYPE: 't4g.xlarge'
+      # KEY_NAME: ''
+      USER_DATA_FILE: 'user_data.sh'
+      REPO_ORG: 'My-Cirrus-CI'
+      REPO_NAME: 'aws'
+    secrets: inherit
 
   # GHA: We need to check if runner online/started
   agent_release_arm64:
     # GHA: Do not tun this job if false
-    if: ${{ inputs.ARM64 == 'true' }}
+    if: ${{ inputs.ARM64 == true }}
+    needs: start-runner
     # needs: start-runner
     env:
       # GHA we need to add the various PHP versions supported to PHP_VER
@@ -238,6 +223,7 @@ jobs:
     #     username: ${{ secrets.DOCKER_REPO_USER }}
     #     password: ${{ secrets.DOCKER_USER_TOKEN }}
     strategy:
+      fail-fast: false
       matrix:
         # registry: [mycirrus]
         # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
@@ -371,198 +357,221 @@ jobs:
             ./agent/.libs/newrelic.so
           if-no-files-found: error
 
-  Integration-CentOS:
-    runs-on: ubuntu-latest
-    needs: pr_build_by_os
-    name: Integration tests for Integration-CentOS
-    env:
-      OS: ${{ matrix.image }}
-      PHP_VER: ${{ matrix.php_ver }}
-      SECRETS_MK: ${{ secrets.SECRETS_MK }}
-    strategy:
-      matrix:
-        # registry: [mycirrus]
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
-        image:
-          - nr-centos7-1.3-pcre
-          - nr-centos8-1.1-pcre
-        os: [linux]
-        php_ver: ['5.5', '8.0']
-        # php_ver: ['7.0']
-        arch: [x64]
-    steps:
-      - name: Checkout PHP Agent Repo
-        uses: actions/checkout@v3
-        with:
-          # ref: ${{ github.event.client_payload.ref }}
-          # ref: main
-          ref: ${{ inputs.BRANCH }}
-      # GHA: Grab the required artifacts and cp as appropriate
-      - name: Grab the required artifacts and cp as appropriate
-        if: ${{ always() }}
-        run: |
-          echo "use download artifact action"
+  Stop-runners:
+    needs: start-runner
+    if: ${{ success() }}
+    # GJHA we will use version when hosted non-local
+    # uses: ./.github/workflows/create-runner.yml@main
+    uses: ./.github/workflows/stop-runner.yml
+    with:
+      # IMAGE_ID: dev
+      INSTANCE_TYPE: 't4g.xlarge'
+      # KEY_NAME: ''
+      USER_DATA_FILE: 'user_data.sh'
+      REPO_ORG: 'My-Cirrus-CI'
+      REPO_NAME: 'aws'
+    secrets: inherit
 
-      # GHA: Download the previosly generated bin and .so artifacts
-      - name: Download bin and .so to directory
-        uses: actions/download-artifact@v2
-        with:
-          path: bin-so-artifacts
+  # Integration-CentOS:
+  #   runs-on: ubuntu-latest
+  #   needs: pr_build_by_os
+  #   name: Integration tests for Integration-CentOS
+  #   env:
+  #     OS: ${{ matrix.image }}
+  #     PHP_VER: ${{ matrix.php_ver }}
+  #     SECRETS_MK: ${{ secrets.SECRETS_MK }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       # registry: [mycirrus]
+  #       # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+  #       # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
+  #       image:
+  #         # - nr-centos7-1.3-pcre
+  #         - nr-centos8-1.1-pcre
+  #       os: [linux]
+  #       # php_ver: ['5.5', '8.0']
+  #       php_ver: ['8.0']
+  #       # php_ver: ['7.0']
+  #       arch: [x64]
+  #   steps:
+  #     - name: Checkout PHP Agent Repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         # ref: ${{ github.event.client_payload.ref }}
+  #         # ref: main
+  #         ref: ${{ inputs.BRANCH }}
+  #     # GHA: Grab the required artifacts and cp as appropriate
+  #     - name: Grab the required artifacts and cp as appropriate
+  #       if: ${{ always() }}
+  #       run: |
+  #         echo "use download artifact action"
 
-      # GHA: Check workspace
-      - name: Check workspace and contents
-        if: ${{ success() }}
-        run: |
-          pwd
-          ls -la
+  #     # GHA: Download the previosly generated bin and .so artifacts
+  #     - name: Download bin and .so to directory
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         path: bin-so-artifacts
 
-      # GHA: Check the artifacts
-      - name: Check the artifacts
-        if: ${{ success() }}
-        run: |
-          tree -a ./bin-so-artifacts
-          ls -la ./bin-so-artifacts
+  #     # GHA: Check workspace
+  #     - name: Check workspace and contents
+  #       if: ${{ success() }}
+  #       run: |
+  #         pwd
+  #         ls -la
 
-      # GHA: Check the artifacts in an OS
-      - name: Check the artifacts in an OS
-        if: ${{ success() }}
-        run: |
-          ls -la ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
-          tree -a ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+  #     # GHA: Check the artifacts
+  #     - name: Check the artifacts
+  #       if: ${{ success() }}
+  #       run: |
+  #         tree -a ./bin-so-artifacts
+  #         ls -la ./bin-so-artifacts
 
-      # GHA: Copy the artifacts and change perms
-      - name: Copy the artifacts
-        if: ${{ success() }}
-        run: |
-          mkdir -p bin
-          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
-          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
-          tree -a ./bin
-          tree -a ./agent/.libs/
-          chmod 777 -R ./bin
+  #     # GHA: Check the artifacts in an OS
+  #     - name: Check the artifacts in an OS
+  #       if: ${{ success() }}
+  #       run: |
+  #         ls -la ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+  #         tree -a ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
 
-      # Check ENV variables
-      # GHA: Check for IMAGE_OS value per matix run
-      - name: Check environmental variables
-        if: ${{ always() }}
-        run: |
-          printenv | sort -f
-          echo "PWD is equal to ${PWD}"
+  #     # GHA: Copy the artifacts and change perms
+  #     - name: Copy the artifacts
+  #       if: ${{ success() }}
+  #       run: |
+  #         mkdir -p bin
+  #         cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
+  #         cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
+  #         tree -a ./bin
+  #         tree -a ./agent/.libs/
+  #         chmod 777 -R ./bin
 
-      # GHA: Create secrets.mk
-      - name: Create secrets.mk
-        if: ${{ success() }}
-        run: |
-          echo "${SECRETS_MK}" > make/secrets.mk
+  #     # Check ENV variables
+  #     # GHA: Check for IMAGE_OS value per matix run
+  #     - name: Check environmental variables
+  #       if: ${{ always() }}
+  #       run: |
+  #         printenv | sort -f
+  #         echo "PWD is equal to ${PWD}"
+
+  #     # GHA: Create secrets.mk
+  #     - name: Create secrets.mk
+  #       if: ${{ success() }}
+  #       run: |
+  #         echo "${SECRETS_MK}" > make/secrets.mk
+
+  #     # GHA: Run Make command
+  #     - name: Run Make commands
+  #       if: ${{ always() }}
+  #       run: |
+  #         # ./files/set_path.sh
+  #         # make clean
+  #         make dev-integration-tests
+
+  # Integration-Alpine:
+  #   runs-on: ubuntu-latest
+  #   needs: pr_build_by_os
+  #   container:  ## GHA: testing using private docker image
+  #     image: newrelic/php-build-images:nr-alpine3.4-1.1-pcre
+  #     credentials:
+  #       username: ${{ secrets.DOCKER_REPO_NR_USER }}
+  #       password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
+  #   name: Integration tests for Integration-Alpine
+  #   env:
+  #     OS: ${{ matrix.image }}
+  #     PHP_VER: ${{ matrix.php_ver }}
+  #     SECRETS_MK: ${{ secrets.SECRETS_MK }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       # registry: [mycirrus]
+  #       # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
+  #       # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
+  #       image:
+  #         - nr-alpine3.4-1.1-pcre
+  #       os: [linux]
+  #       # php_ver: ['5.5', '8.0']
+  #       php_ver: ['8.0']
+  #       # php_ver: ['7.0']
+  #       arch: [x64]
+  #   steps:
+  #     - name: Checkout PHP Agent Repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         # ref: ${{ github.event.client_payload.ref }}
+  #         # ref: main
+  #         ref: ${{ inputs.BRANCH }}
+
+  #     - name: Checkout build scripts repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         repository: newrelic/php-agent-php-build-scripts
+  #         # Chaging ref temporarily for testing
+  #         # ref: master
+  #         ref: gha-dev
+  #         # GHA: Check for token
+  #         token: ${{ secrets.ACTIONS_TOKEN }}
+  #         path: php-build-scripts
+
+  #     # GHA: Grab the required artifacts and cp as appropriate
+  #     - name: Grab the required artifacts and cp as appropriate
+  #       if: ${{ always() }}
+  #       run: |
+  #         echo "use download artifact action"
+
+  #     # GHA: Download the previosly generated bin and .so artifacts
+  #     - name: Download bin and .so to directory
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         path: bin-so-artifacts
+
+  #     # GHA: Check the artifacts
+  #     - name: Check the artifacts
+  #       if: ${{ success() }}
+  #       run: |
+  #         tree ./bin-so-artifacts
+  #         ls -la ./bin-so-artifacts
+
+  #     # GHA: Check the artifacts in an OS
+  #     - name: Check the artifacts in an OS
+  #       if: ${{ success() }}
+  #       run: |
+  #         ls -la ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
+
+  #     # GHA: Copy the artifacts and change perms
+  #     - name: Copy the artifacts
+  #       if: ${{ success() }}
+  #       run: |
+  #         cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
+  #         cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
+  #         tree ./bin/
+  #         tree ./agent/.libs/
+  #         chmod 777 -R ./bin
+
+  #     # GHA: Create secrets.mk
+  #     - name: Create secrets.mk
+  #       if: ${{ success() }}
+  #       run: |
+  #         echo "${SECRETS_MK}" > make/secrets.mk
+
+  #     # GHA: build complains it cannot find phpize
+  #     - name: 'Test call phpvm.bash and run make commands'
+  #       run: |
+  #         set -x
+  #         echo "Calling phpvm.bash"
+  #         source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
+  #         make clean
+  #         # make daemon_tests
+  #         make valgrind
+  #         make integration
 
       # GHA: Run Make command
-      - name: Run Make commands
-        if: ${{ always() }}
-        run: |
-          # ./files/set_path.sh
-          # make clean
-          make dev-integration-tests
-
-  Integration-Alpine:
-    runs-on: ubuntu-latest
-    needs: pr_build_by_os
-    container:  ## GHA: testing using private docker image
-      image: newrelic/php-build-images:nr-alpine3.4-1.1-pcre
-      credentials:
-        username: ${{ secrets.DOCKER_REPO_NR_USER }}
-        password: ${{ secrets.DOCKER_USER_NR_TOKEN }}
-    name: Integration tests for Integration-Alpine
-    env:
-      OS: ${{ matrix.image }}
-      PHP_VER: ${{ matrix.php_ver }}
-      SECRETS_MK: ${{ secrets.SECRETS_MK }}
-    strategy:
-      matrix:
-        # registry: [mycirrus]
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-centos7-1.3', 'newrelic:nr-alpine-3.14--1.2', 'newrelic:nr-alpine3.4-1.1']
-        # image_os: ['newrelic:nr-centos8-1.1', 'newrelic:nr-alpine3.4-1.1']
-        image:
-          - nr-alpine3.4-1.1-pcre
-        os: [linux]
-        php_ver: ['5.5', '8.0']
-        # php_ver: ['7.0']
-        arch: [x64]
-    steps:
-      - name: Checkout PHP Agent Repo
-        uses: actions/checkout@v3
-        with:
-          # ref: ${{ github.event.client_payload.ref }}
-          # ref: main
-          ref: ${{ inputs.BRANCH }}
-
-      - name: Checkout build scripts repository
-        uses: actions/checkout@v3
-        with:
-          repository: newrelic/php-agent-php-build-scripts
-          # Chaging ref temporarily for testing
-          # ref: master
-          ref: gha-dev
-          # GHA: Check for token
-          token: ${{ secrets.ACTIONS_TOKEN }}
-          path: php-build-scripts
-
-      # GHA: Grab the required artifacts and cp as appropriate
-      - name: Grab the required artifacts and cp as appropriate
-        if: ${{ always() }}
-        run: |
-          echo "use download artifact action"
-
-      # GHA: Download the previosly generated bin and .so artifacts
-      - name: Download bin and .so to directory
-        uses: actions/download-artifact@v2
-        with:
-          path: bin-so-artifacts
-
-      # GHA: Check the artifacts
-      - name: Check the artifacts
-        if: ${{ success() }}
-        run: |
-          tree ./bin-so-artifacts
-          ls -la ./bin-so-artifacts
-
-      # GHA: Check the artifacts in an OS
-      - name: Check the artifacts in an OS
-        if: ${{ success() }}
-        run: |
-          ls -la ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/
-
-      # GHA: Copy the artifacts and change perms
-      - name: Copy the artifacts
-        if: ${{ success() }}
-        run: |
-          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/bin .
-          cp -R ./bin-so-artifacts/php-build-images-"${OS}"-"${PHP_VER}"-x64-for-int-tests/agent .
-          tree ./bin/
-          tree ./agent/.libs/
-          chmod 777 -R ./bin
-
-      # GHA: Create secrets.mk
-      - name: Create secrets.mk
-        if: ${{ success() }}
-        run: |
-          echo "${SECRETS_MK}" > make/secrets.mk
-
-      # GHA: build complains it cannot find phpize
-      - name: 'Test call phpvm.bash'
-        run: |
-          set -x
-          echo "Calling phpvm.bash"
-          source php-build-scripts/bin/phpvm.bash change ${{ matrix.php_ver }}
-
-      # GHA: Run Make command
-      - name: Run Make commands
-        if: ${{ success() }}
-        run: |
-          make clean
-          # make daemon_tests
-          make valgrind
-          make integration
+      # - name: Run Make commands
+      #   if: ${{ success() }}
+      #   run: |
+      #     make clean
+      #     # make daemon_tests
+      #     make valgrind
+      #     make integration
 
 
   # GHA renamed for better readability ⇓

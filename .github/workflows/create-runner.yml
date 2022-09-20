@@ -1,0 +1,208 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI Create Runner
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # push:
+  #   branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      IMAGE_ID:
+        description: "The AWS AMI ID"
+        required: false
+        default: false
+      INSTANCE_TYPE:
+        description: "The type of EC2 instance desired"
+        required: false
+        default: false
+      KEY_NAME:
+        description: "The PEM file name"
+        required: false
+        default: ""
+      USER_DATA_FILE:
+        description: "Filename to pass to --user-data"
+        required: false
+        default: 'user_data.sh'
+      REPO_ORG:
+        description: "GitHUb Organization"
+        required: false
+        default: 'My-Cirrus-CI'
+      REPO_NAME:
+        description: "Repository Name"
+        required: false
+        default: 'aws'
+  workflow_call:
+    inputs:
+      IMAGE_ID:
+        description: "The AWS AMI ID"
+        required: false
+        default: false
+        type: string
+      INSTANCE_TYPE:
+        description: "The type of EC2 instance desired"
+        required: false
+        default: false
+        type: string
+      KEY_NAME:
+        description: "The PEM file name"
+        required: false
+        default: ""
+        type: string
+      USER_DATA_FILE:
+        description: "Filename to pass to --user-data"
+        required: false
+        default: 'user_data.sh'
+        type: string
+      REPO_ORG:
+        description: "GitHUb Organization"
+        required: false
+        default: 'My-Cirrus-CI'
+        type: string
+      REPO_NAME:
+        description: "Repository Name"
+        required: false
+        default: 'aws'
+        type: string
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  create-runner:
+    env:
+      PEM_FILE: ${{ secrets.MYAWSCITESTING }}
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Authenticate with AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Version check
+      - name: Version check
+        run: |
+          aws --version
+
+      - name: API test with token
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN}}
+          OWNER: ${{ inputs.REPO_ORG }}
+          REPO: ${{ inputs.REPO_NAME }}
+        run: |
+          echo "OWNER is equal to ${OWNER}"
+          echo "REPO is equal to ${REPO}"
+          # GitHub CLI api
+          # https://cli.github.com/manual/gh_api
+
+          curl \
+           -H "Accept: application/vnd.github+json" \
+           -H "Authorization: Bearer ${GH_TOKEN}" \
+           https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners
+
+      # Check if we can get back instaances
+      # - name: Check if we can get instances
+      #   run: |
+      #     aws ec2 describe-instances \
+      #         --filter Name=tag:Name,Values=ARM64-4.2 \
+      #         --query Reservations[*].Instances[*].[InstanceId] \
+      #         --output text
+
+      # Create the EC2 instance from the appropriate AMI
+      # GHA: This is my personal AMI, this will be possibly shared back to NR
+      - name: Create the EC2 instance from the appropriate AMI
+        if: ${{ success() }}
+        run: |
+          aws ec2 run-instances \
+              --image-id ${{ secrets.AWS_AMI_ID || inputs.IMAGE_ID}} \
+              --count 1 --instance-type ${{ secrets.AWS_INSTANCE_TYPE || inputs.INSTANCE_TYPE }} \
+              --key-name ${{ secrets.AWS_KEY_NAME }} \
+              --security-group-ids ${{ secrets.AWS_SEC_GROUP }} \
+              --subnet-id ${{ secrets.AWS_SUBNET }} \
+              --tag-specifications 'ResourceType=instance,Tags=[{Key=runner,Value=true}]' \
+              --user-data file://ec2/run-instances/${{ inputs.USER_DATA_FILE }}
+
+      # Get the instance ID once the instance is created
+      - name: Get the instance ID once the instance is created
+        if: ${{ success() }}
+        run: |
+          # Sleep for now for testing
+          sleep 10
+          RUNNER_ID=$(aws ec2 describe-instances --filter Name=tag:runner,Values=true Name=instance-state-code,Values=16 --query Reservations[*].Instances[*].[InstanceId] --output text)
+          while [[ $RUNNER_ID != *"i-"* ]]; do
+            RUNNER_ID=$(aws ec2 describe-instances --filter Name=tag:runner,Values=true Name=instance-state-code,Values=16 --query Reservations[*].Instances[*].[InstanceId] --output text)
+            sleep 2
+          done
+          echo "${RUNNER_ID}"
+          echo "RUNNER_ID="${RUNNER_ID}"" >> $GITHUB_ENV
+
+      # Check ENV variables
+      - name: Check environmental variables
+        if: ${{ always() }}
+        run: printenv | sort -f
+
+      - name: API test with token
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN}}
+          OWNER: ${{ inputs.REPO_ORG }}
+          REPO: ${{ inputs.REPO_NAME }}
+        run: |
+          echo "OWNER is equal to ${OWNER}"
+          echo "REPO is equal to ${REPO}"
+          # GitHub CLI api
+          # https://cli.github.com/manual/gh_api
+
+          curl \
+           -H "Accept: application/vnd.github+json" \
+           -H "Authorization: Bearer ${GH_TOKEN}" \
+           https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners
+
+      - name: Check to see what runners are available
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN}}
+          OWNER: ${{ inputs.REPO_ORG }}
+          REPO: ${{ inputs.REPO_NAME }}
+        run: |
+          # GitHub CLI api
+          # https://cli.github.com/manual/gh_api
+
+          gh auth status
+          RUNNER_INFO=$(curl \
+           -H "Accept: application/vnd.github+json" \
+           -H "Authorization: Bearer ${GH_TOKEN}" \
+           https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
+          touch runner_info.json
+          echo ${RUNNER_INFO} > runner_info.json
+          cat runner_info.json | jq 'select(objects)|=[.]'
+          RUNNER_STATUS=$(cat runner_info.json | jq 'select(objects)|=[.]' | grep 'status')
+          while [[ $RUNNER_STATUS != *"online"* ]]; do
+            RUNNER_INFO=$(curl \
+             -H "Accept: application/vnd.github+json" \
+             -H "Authorization: Bearer ${GH_TOKEN}" \
+             https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
+            # echo ${RUNNER_INFO} > runner_info.json
+            RUNNER_STATUS=$(echo ${RUNNER_INFO} | jq 'select(objects)|=[.]' | grep 'status')
+            echo "Runner is still offline"
+            sleep 30
+          done
+          echo "Runner is ready!"
+
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
