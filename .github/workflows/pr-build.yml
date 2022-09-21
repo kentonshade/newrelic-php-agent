@@ -30,6 +30,11 @@ on:
         required: false
         type: boolean
         default: false
+      RUNNER_DRYRUN:
+        description: "Test the creation of the runner without running ARM64 job(s)"
+        required: false
+        type: boolean
+        default: true
       BUILD_NUMBER:
         description: "BUILD_NUMBER to pass to workflow"
         required: false
@@ -203,7 +208,7 @@ jobs:
   # GHA: We need to check if runner online/started
   agent_release_arm64:
     # GHA: Do not tun this job if false
-    if: ${{ inputs.ARM64 == true }}
+    if: ${{ inputs.ARM64 == true && inputs.RUNNER_DRYRUN == false }}
     needs: start-runner
     # needs: start-runner
     env:
@@ -357,17 +362,24 @@ jobs:
             ./agent/.libs/newrelic.so
           if-no-files-found: error
 
-  Stop-runners:
+  Stop-runner_test:
     needs: start-runner
-    if: ${{ success() }}
+    if: ${{ inputs.RUNNER_DRYRUN == true }}
     # GJHA we will use version when hosted non-local
     # uses: ./.github/workflows/create-runner.yml@main
     uses: ./.github/workflows/stop-runner.yml
     with:
-      # IMAGE_ID: dev
-      INSTANCE_TYPE: 't4g.xlarge'
-      # KEY_NAME: ''
-      USER_DATA_FILE: 'user_data.sh'
+      REPO_ORG: 'My-Cirrus-CI'
+      REPO_NAME: 'aws'
+    secrets: inherit
+
+  Stop-runners:
+    needs: [start-runner, agent_release_arm64]
+    if: ${{ inputs.RUNNER_DRYRUN == false }}
+    # GJHA we will use version when hosted non-local
+    # uses: ./.github/workflows/stop-runner.yml@main
+    uses: ./.github/workflows/stop-runner.yml
+    with:
       REPO_ORG: 'My-Cirrus-CI'
       REPO_NAME: 'aws'
     secrets: inherit
