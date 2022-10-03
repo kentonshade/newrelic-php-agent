@@ -35,14 +35,14 @@ on:
         required: false
         type: boolean
         default: true
-      BUILD_NUMBER:
-        description: "BUILD_NUMBER to pass to workflow"
-        required: false
-        default: ""
-      BIGCHANGE:
-        description: "BUILD_NUMBER to pass to workflow"
-        required: false
-        default: false
+      # BUILD_NUMBER:
+      #   description: "BUILD_NUMBER to pass to workflow"
+      #   required: false
+      #   default: ""
+      # BIGCHANGE:
+      #   description: "BUILD_NUMBER to pass to workflow"
+      #   required: false
+      #   default: false
       AGENT_BRANCH:
         description: "Agent repo Branch to use for build"
         required: false
