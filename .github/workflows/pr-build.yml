@@ -47,6 +47,30 @@ on:
         description: "Agent repo Branch to use for build"
         required: false
         default: 'main'
+      IMAGE_ID:
+        description: "The AWS AMI ID"
+        required: false
+        default: false
+      INSTANCE_TYPE:
+        description: "The type of EC2 instance desired"
+        required: false
+        default: false
+      KEY_NAME:
+        description: "The PEM file name"
+        required: false
+        default: ""
+      USER_DATA_FILE:
+        description: "Filename to pass to --user-data"
+        required: false
+        default: 'user_data.sh'
+      REPO_ORG:
+        description: "GitHUb Organization"
+        required: false
+        default: 'My-Cirrus-CI'
+      REPO_NAME:
+        description: "Repository Name"
+        required: false
+        default: 'aws'
 
 jobs:
   pr_build_by_os:
@@ -197,12 +221,12 @@ jobs:
     # uses: ./.github/workflows/create-runner.yml@main
     uses: ./.github/workflows/create-runner.yml
     with:
-      # IMAGE_ID: dev
-      INSTANCE_TYPE: 't4g.xlarge'
+      IMAGE_ID: ${{ inputs.IMAGE_ID }}
+      INSTANCE_TYPE: ${{ inputs.INSTANCE_TYPE }}
       # KEY_NAME: ''
-      USER_DATA_FILE: 'user_data.sh'
-      REPO_ORG: 'My-Cirrus-CI'
-      REPO_NAME: 'aws'
+      USER_DATA_FILE: ${{ inputs.USER_DATA_FILE }}
+      REPO_ORG: ${{ inputs.REPO_ORG }}
+      REPO_NAME: ${{ inputs.REPO_NAME }}
     secrets: inherit
 
   # GHA: We need to check if runner online/started
@@ -369,8 +393,12 @@ jobs:
     # uses: ./.github/workflows/create-runner.yml@main
     uses: ./.github/workflows/stop-runner.yml
     with:
-      REPO_ORG: 'My-Cirrus-CI'
-      REPO_NAME: 'aws'
+      # IMAGE_ID: dev
+      INSTANCE_TYPE: ${{ inputs.INSTANCE_TYPE }}
+      # KEY_NAME: ''
+      USER_DATA_FILE: ${{ inputs.USER_DATA_FILE }}
+      REPO_ORG: ${{ inputs.REPO_ORG }}
+      REPO_NAME: ${{ inputs.REPO_NAME }}
     secrets: inherit
 
   Stop-runners:
@@ -380,8 +408,12 @@ jobs:
     # uses: ./.github/workflows/stop-runner.yml@main
     uses: ./.github/workflows/stop-runner.yml
     with:
-      REPO_ORG: 'My-Cirrus-CI'
-      REPO_NAME: 'aws'
+      # IMAGE_ID: dev
+      INSTANCE_TYPE: ${{ inputs.INSTANCE_TYPE }}
+      # KEY_NAME: ''
+      USER_DATA_FILE: ${{ inputs.USER_DATA_FILE }}
+      REPO_ORG: ${{ inputs.REPO_ORG }}
+      REPO_NAME: ${{ inputs.REPO_NAME }}
     secrets: inherit
 
   # Integration-CentOS:
