@@ -181,25 +181,15 @@ jobs:
            -H "Accept: application/vnd.github+json" \
            -H "Authorization: Bearer ${GH_TOKEN}" \
            https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
-          touch runner_info.json
-          echo ${RUNNER_INFO} > runner_info.json
-          cat runner_info.json | jq 'select(objects)|=[.]'
-          RUNNER_STATUS=$(cat runner_info.json | jq 'select(objects)|=[.]' | grep 'status')
-          while [[ -z "$RUNNER_STATUS"]]; do
+          # touch runner_info.json
+          # echo ${RUNNER_INFO} > runner_info.json
+          # cat runner_info.json | jq 'select(objects)|=[.]'
+          RUNNER_STATUS=$(echo "${RUNNER_INFO}" | jq 'select(objects)|=[.]' | grep 'status')
+          while [[ $RUNNER_STATUS != *"online"* ]] || [[ -z "$RUNNER_STATUS" ]]; do
             RUNNER_INFO=$(curl \
              -H "Accept: application/vnd.github+json" \
              -H "Authorization: Bearer ${GH_TOKEN}" \
              https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
-            echo ${RUNNER_INFO} > runner_info.json
-            RUNNER_STATUS=$(cat runner_info.json | jq 'select(objects)|=[.]' | grep 'status')
-            sleep 20
-          done
-          while [[ $RUNNER_STATUS != *"online"* ]]; do
-            RUNNER_INFO=$(curl \
-             -H "Accept: application/vnd.github+json" \
-             -H "Authorization: Bearer ${GH_TOKEN}" \
-             https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
-            # echo ${RUNNER_INFO} > runner_info.json
             RUNNER_STATUS=$(echo ${RUNNER_INFO} | jq 'select(objects)|=[.]' | grep 'status')
             echo "Runner is still offline"
             sleep 30
