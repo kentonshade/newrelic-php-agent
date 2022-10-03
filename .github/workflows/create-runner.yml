@@ -108,18 +108,18 @@ jobs:
           # GitHub CLI api
           # https://cli.github.com/manual/gh_api
 
-          curl \
+          gh api \
            -H "Accept: application/vnd.github+json" \
-           -H "Authorization: Bearer ${GH_TOKEN}" \
-           https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners
+           /repos/"${OWNER}"/"${REPO}"/actions/runners
 
-      # Check if we can get back instaances
-      # - name: Check if we can get instances
-      #   run: |
-      #     aws ec2 describe-instances \
-      #         --filter Name=tag:Name,Values=ARM64-4.2 \
-      #         --query Reservations[*].Instances[*].[InstanceId] \
-      #         --output text
+      # Add required variables to user_data
+      - name: Add required variables to user_data
+        run: |
+          sed -i "/^# Secrets.*/a export RUNNER_NAME=${{ secrets.RUNNER_NAME }}" ec2/run-instances/${{ inputs.USER_DATA_FILE }}
+          sed -i "/^# Secrets.*/a export GH_TOKEN=${{ secrets.GH_TOKEN }}" ec2/run-instances/${{ inputs.USER_DATA_FILE }}
+          sed -i "/^# Secrets.*/a export OWNER=${{ inputs.REPO_ORG }}" ec2/run-instances/${{ inputs.USER_DATA_FILE }}
+          sed -i "/^# Secrets.*/a export REPO=${{ inputs.REPO_NAME }}" ec2/run-instances/${{ inputs.USER_DATA_FILE }}
+          cat ec2/run-instances/${{ inputs.USER_DATA_FILE }}
 
       # Create the EC2 instance from the appropriate AMI
       # GHA: This is my personal AMI, this will be possibly shared back to NR
@@ -127,8 +127,8 @@ jobs:
         if: ${{ success() }}
         run: |
           aws ec2 run-instances \
-              --image-id ${{ secrets.AWS_AMI_ID || inputs.IMAGE_ID}} \
-              --count 1 --instance-type ${{ secrets.AWS_INSTANCE_TYPE || inputs.INSTANCE_TYPE }} \
+              --image-id ${{ inputs.IMAGE_ID || secrets.AWS_AMI_ID }} \
+              --count 1 --instance-type ${{ inputs.INSTANCE_TYPE || secrets.AWS_INSTANCE_TYPE }} \
               --security-group-ids ${{ secrets.AWS_SEC_GROUP }} \
               --subnet-id ${{ secrets.AWS_SUBNET }} \
               --tag-specifications 'ResourceType=instance,Tags=[{Key=runner,Value=true}]' \
@@ -153,7 +153,7 @@ jobs:
         if: ${{ always() }}
         run: printenv | sort -f
 
-      - name: API test with token
+      - name: API test with token (curl method)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN}}
           OWNER: ${{ inputs.REPO_ORG }}
@@ -161,8 +161,6 @@ jobs:
         run: |
           echo "OWNER is equal to ${OWNER}"
           echo "REPO is equal to ${REPO}"
-          # GitHub CLI api
-          # https://cli.github.com/manual/gh_api
 
           curl \
            -H "Accept: application/vnd.github+json" \
@@ -198,10 +196,3 @@ jobs:
             sleep 30
           done
           echo "Runner is ready!"
-
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
