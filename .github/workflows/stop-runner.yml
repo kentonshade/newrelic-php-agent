@@ -102,5 +102,44 @@ jobs:
 
       - name: Terminate the runner instance
         run: |
+          echo "About to terminate instance, ${RUNNER_ID}"
+          echo "Cancel this workflow if this is not desired"
+          sleep 30
           echo "${RUNNER_ID} should be in ENV variables"
           aws ec2 terminate-instances --instance-ids ${RUNNER_ID}
+
+      # GHA - get the GHA runner ID
+      - name: Get the GHA runner ID
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN}}
+          OWNER: ${{ inputs.REPO_ORG }}
+          REPO: ${{ inputs.REPO_NAME }}
+        run: |
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/"${OWNER}"/"${REPO}"/actions/runners
+
+
+      # GHA we need to remove the runner from the repo as well
+      # We will need a token
+      - name: Remove the runner from Repository
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN}}
+          OWNER: ${{ inputs.REPO_ORG }}
+          REPO: ${{ inputs.REPO_NAME }}
+        run: |
+          # Return Runner info:
+          RUNNER_INFO=$(curl \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer $GH_TOKEN" \
+          https://api.github.com/repos/"$OWNER"/"$REPO"/actions/runners)
+          # To remove, this should return Runner IDs that also have the ephemeral label:
+          echo "${RUNNER_INFO}" | jq -r '.runners[] | select(.labels[].name == "ephemeral") | .id' > runnerIds-deprovision
+          # Use for loop to iterate over file.
+          while read id; do
+            echo "Removing runner: ${id}"
+            gh api \
+              --method DELETE \
+              -H "Accept: application/vnd.github+json" \
+              /repos/"${OWNER}"/"${REPO}"/actions/runners/"${id}"
+          done < runnerIds-deprovision

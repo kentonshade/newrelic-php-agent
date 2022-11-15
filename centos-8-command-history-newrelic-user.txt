@@ -1,0 +1,173 @@
+    1  ls -la
+    2  cd /
+    3  ls -la
+    4  sudo mkdir /opt/nr && sudo chmod 755 /opt/nr && sudo chown $USER:$USER /opt/nr
+    5  sudo chmod 755 /opt/nr && sudo chown $USER:$USER /opt/nr
+    6  cd host-tempmount/
+    7  ls -l
+    8  ls -la
+    9  sudo ./provision-centos8.sh 
+   10  ./make-world.sh 
+   11  cd ../
+   12  ls -la
+   13  cd opt/
+   14  ls -la
+   15  cd nr/
+   16  ls -la
+   17  cd ../
+   18  sudo chown -R $USER:$USER /opt/nr
+   19  cd host-tempmount/
+   20  ./make-world.sh 
+   21  yum search openssl
+   22  yum info openssl
+   23  exit
+   24  ls -la
+   25  wget https://www.openssl.org/source/old/1.0.2/openssl-1.0.2k.tar.gz
+   26  ls -la
+   27  exit
+   28  ls -la
+   29  cd /
+   30  ls -la
+   31  cd host-tempmount/
+   32  ls -la
+   33  ./make-world.sh 
+   34  exit
+   35  cd /
+   36  cd apps
+   37  cd /apps
+   38  cd
+   39  cd /
+   40  cd apps
+   41  cd /
+   42  ls -la
+   43  cd host-tempmount/
+   44  ls -la
+   45  git status -sb
+   46  ./make-world.sh 
+   47  git staus -sb
+   48  git stTUS -SB
+   49  git status -sb
+   50  ./make-world.sh 
+   51  cd ../
+   52  cd opt/nr/php/
+   53  ls -1v
+   54  exit
+   55  ls -la
+   56  cd /
+   57  sudo yum update
+   58  cd /
+   59  ls -la
+   60  cd php-agent/
+   61  git status -sb
+   62  ls -la
+   63  source ../apps/bin/phpvm.bash change 7.0
+   64  pwd
+   65  ls -la
+   66  make run_tests
+   67  git status -sb
+   68  make valgrind
+   69  ls -la
+   70  ./.github/docker/linux/release_build.sh 
+   71  ls -la
+   72  git status -sb
+   73  history
+   74  git status -sb
+   75  source ../apps/bin/phpvm.bash change 7.0
+   76  touch run_tests.log
+   77  make run_tests | tee run_tests.log 
+   78  ls -la
+   79  git status -sb
+   80  sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+   81  sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+   82  sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+   83  sudo yum update -y
+   84  yum search gcc
+   85  yum install gcc
+   86  sudo yum install gcc
+   87  git branch --all
+   88  exit
+   89  cd /
+   90  ls -la
+   91  cd php-agent/
+   92  ls -la
+   93  source ../apps/bin/phpvm.bash change 7.0
+   94  ./.github/docker/linux/release_build.sh
+   95  git status -sb
+   96  ls -la
+   97  cd releases/
+   98  ls -la
+   99  cd ../
+  100  source ../apps/bin/phpvm.bash change 7.1
+  101  ./.github/docker/linux/release_build.sh
+  102  git status -sb
+  103  make clean
+  104  exit
+  105  cd /
+  106  ls -la
+  107  source ../apps/bin/phpvm.bash change 7.1
+  108  ./.github/docker/linux/release_build.sh
+  109  cd php-agent/
+  110  ./.github/docker/linux/release_build.sh
+  111  ls -la
+  112  cd releases/\
+  113  cd releases/
+  114  ls -la
+  115  cd ../
+  116  make install-exec-hook
+  117  make -C protobuf-c install
+  118  make clean
+  119  make all
+  120  ls -la
+  121  make clean
+  122  ./.github/docker/linux/release_build.sh
+  123  cd releases/
+  124  ls -la
+  125  cd linux/
+  126  ls -la
+  127  cd ../
+  128  make clean
+  129  ./.github/docker/linux/release_build.sh
+  130  cd ../
+  131  ls -la
+  132  cd opt/nr/
+  133  ls -la
+  134  cd ../
+  135  cd php-agent/
+  136  make clean
+  137  source ../apps/bin/phpvm.bash change 7.1
+  138  ./.github/docker/linux/release_build.sh
+  139  ls -la
+  140  cd releases/
+  141  ls -la
+  142  cd linux/
+  143  ls -la
+  144  cd agent/
+  145  ls -la
+  146  cd x64/
+  147  ls -la
+  148  cd ../../
+  149  git status -sb
+  150  make clean
+  151  git status -sb
+  152  source ../apps/bin/phpvm.bash change 7.1
+  153  ./.github/docker/linux/release_build.sh
+  154  ls -la releases/
+  155  tree releases/
+  156  ls -laR releases/
+  157  make clean
+  158  git status -sb
+  159  yum update -y
+  160  sudo yum update
+  161  sudo yum install tree
+  162  exit
+  163  cd /
+  164  cd opt/nr/php/
+  165  ls -la
+  166  cd ../
+  167  cd ../../
+  168  ls -la
+  169  exit
+  170  history
+  171  cd /
+  172  cd php-agent
+  173  history > centos-8-command-history-newrelic-user.txt
