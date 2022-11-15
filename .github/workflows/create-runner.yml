@@ -129,7 +129,6 @@ jobs:
           aws ec2 run-instances \
               --image-id ${{ inputs.IMAGE_ID || secrets.AWS_AMI_ID }} \
               --count 1 --instance-type ${{ inputs.INSTANCE_TYPE || secrets.AWS_INSTANCE_TYPE }} \
-              --key-name ${{ secrets.AWS_KEY_NAME }} \
               --security-group-ids ${{ secrets.AWS_SEC_GROUP }} \
               --subnet-id ${{ secrets.AWS_SUBNET }} \
               --tag-specifications 'ResourceType=instance,Tags=[{Key=runner,Value=true}]' \
