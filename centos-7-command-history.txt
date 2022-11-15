@@ -1,0 +1,222 @@
+    1  su - newrelic
+    2  echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheel'
+    3  echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheel'
+    4  echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheel
+    5  su - newrelic
+    6  ulimit -a
+    7  su - newrelic
+    8  adduser wheel newrelic
+    9  su - newrelic
+   10  exit
+   11  sudo su
+   12  yum update
+   13  yum install sudo
+   14  adduser newrelic
+   15  passwd newrelic
+   16  usermod -aG wheel newrelic
+   17  sudo su
+   18  exit
+   19  echo $USER
+   20  ls -la
+   21  su - newrelic
+   22  ulimit -u
+   23  cd /etc/security/
+   24  ls -la
+   25  cd limits.d/
+   26  ls -la
+   27  cd ../
+   28  ls -la
+   29  vim limits.conf 
+   30  yum install vim
+   31  vim limits.conf 
+   32  cd limits.d/
+   33  vim 20-nproc.conf 
+   34  su - newrelic
+   35  exit
+   36  cd /
+   37  ls -la
+   38  echo $USER
+   39  sudo su
+   40  exit
+   41  yum info openssl
+   42  exit
+   43  yum info openssl
+   44  exit
+   45  su -newrelic
+   46  su - newrelic
+   47  exit
+   48  ls -la
+   49  cd opt/nr/
+   50  ls -la
+   51  cd php
+   52  ls -la
+   53  cd ../
+   54  ls -la
+   55  rm -rf src/
+   56  exit
+   57  ls -la
+   58  cd apps/
+   59  ls -la
+   60  git status -sb
+   61  git branch --all
+   62  git fetch && git checkout php81_investigation
+   63  ls -la
+   64  su - newrelic
+   65  exit
+   66  su -newrleic
+   67  su - newrelic
+   68  exit
+   69  ls -la
+   70  cd /opt/nr
+   71  ls -a
+   72  ls -la
+   73  du -sh src/
+   74  cd src
+   75  rm -rf *
+   76  cd ../
+   77  cd src
+   78  exit
+   79  exit
+   80  ls -la
+   81  cd php-agent/
+   82  git status -sb
+   83  ls -la
+   84  source ../apps/bin/phpvm.bash change 7.0
+   85  make clean
+   86  make run-tests
+   87  make run_tests
+   88  git branch --all
+   89  source ../apps/bin/phpvm.bash change 7.0
+   90  make clean
+   91  git status -sb
+   92  make run_tests
+   93  git status -sb
+   94  make valgrind
+   95  git status -sb
+   96  make clean
+   97  source ../apps/bin/phpvm.bash change 7.0
+   98  make clean
+   99  git branch
+  100  make run_tests
+  101  git status -sb
+  102  make clean
+  103  git checkout gha-dev
+  104  make run_tests
+  105  make valgrind
+  106  ./.github/docker/linux/release_build.sh
+  107  git branch
+  108  source ../apps/bin/phpvm.bash change 7.0
+  109  echo php $PHP_VER
+  110  echo arch
+  111  git status -sb
+  112  ./.github/docker/linux/release_build.sh
+  113  git status -sb
+  114  ls -la
+  115  cd ../
+  116  ls -la
+  117  cd php-agent/
+  118  ls -la
+  119  cd releases/
+  120  ls -la
+  121  cd ../
+  122  git branch
+  123  git status -sb
+  124  ./.github/docker/linux/release_build.sh
+  125  git status -sb
+  126  exit
+  127  ls -la
+  128  su - newrelic
+  129  exit
+  130  gpg --version
+  131  exit
+  132  yum search go
+  133  yum install go
+  134  yum install go
+  135  go --version
+  136  go version
+  137  exit
+  138  cd apps
+  139  ls -la
+  140  cd apps
+  141  ./make.sh pcre
+  142  export PATH=/opt/nr/pcre/8.40/bin/:$PATH
+  143  echo $PATH
+  144  exit
+  145  cd opt/nr/
+  146  ls -la
+  147  cd
+  148  echo $PATH
+  149  export PATH=/opt/nr/pcre/8.40/bin/:$PATH
+  150  echo $PATH
+  151  exit
+  152  git --version
+  153  sdc ls
+  154  exit
+  155  git --version
+  156  exit
+  157  dnf --help
+  158  yun search dnf
+  159  yum search dnf
+  160  yum install dnf
+  161  sudo dnf install dh-autoreconf curl-devel expat-devel gettext-devel   openssl-devel perl-devel zlib-devel
+  162  sudo dnf install dh-autoreconf curl-devel expat-devel gettext-devel   openssl-devel perl-devel zlib-devel
+  163  sudo dnf install asciidoc xmlto docbook2X
+  164  sudo dnf install getopt
+  165  sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+  166  ls -la
+  167  wget https://github.com/git/git/archive/refs/tags/v2.37.2.tar.gz
+  168  yum update
+  169  yum install wget
+  170  wget https://github.com/git/git/archive/refs/tags/v2.37.2.tar.gz
+  171  ls -la
+  172  tar -zxf v2.37.2.tar.gz 
+  173  ls -la
+  174  cd git-2.37.2/
+  175  ls -la
+  176  make configure
+  177  ./configure --prefix=/usr
+  178  make all doc info
+  179  make all doc info -std=gnu99
+  180  sudo make install install-doc install-html install-info
+  181  make install
+  182  make configure
+  183  make all doc
+  184  gcc -std=c99 -o outputfile sourcefile.c
+  185  ls -la
+  186  vim Makefile 
+  187  make configure
+  188  ./configure --prefix=/usr
+  189  make all doc info
+  190  yum remove git
+  191  wget https://github.com/git/git/archive/refs/tags/v2.32.2.tar.gz
+  192  ls -la
+  193  tar -zxf v2.32.2.tar.gz 
+  194  ls -la
+  195  rm v2.32.2.tar.gz 
+  196  ls -la
+  197  rm -rf git-2.32.2/
+  198  cd ../
+  199  wget https://github.com/git/git/archive/refs/tags/v2.32.2.tar.gz
+  200  ls -la
+  201  tar -zxf v2.32.2.tar.gz 
+  202  cd git-2.32.2/
+  203  make configure
+  204  ./configure --help
+  205  ./configure --prefix=/usr
+  206  make all doc info
+  207  sudo make install install-doc install-html install-info
+  208  git --version
+  209  ls -la
+  210  cd ../
+  211  ls -la
+  212  rm -rf git-2.37.2/
+  213  rm -rf *tar.gz
+  214  ls -la
+  215  su - newrelic
+  216  exit
+  217  cat /etc/*release
+  218  exit
+  219  ls -la
+  220  cd php-agent/
+  221  ls -la
+  222  history > centos-7-command-history.txt

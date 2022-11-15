@@ -1,0 +1,240 @@
+    1  rpm –qa centos-release
+    2  cat /etc/os-release
+    3  cd host-tempmount/
+    4  ls -la
+    5  ./provision-centos7.sh 
+    6  yum --help
+    7  exit
+    8  cd host-tempmount/
+    9  ./provision-centos7.sh 
+   10  yum upgrade
+   11  ./provision-centos7.sh 
+   12  yu search
+   13  yum --help
+   14  yum search openssl-static
+   15  ls -la
+   16  ls -la
+   17  ./make-world.sh 
+   18  yum install libxml2-devel
+   19  ./make-world.sh 
+   20  yum search libssl
+   21  yum search libssl-dev
+   22  yum php libssl
+   23  yum search php libssl
+   24  yum install openssl-devel
+   25  ./make-world.sh 
+   26  yum install libcurl-devel
+   27  ./make-world.sh 
+   28  yum install libmcrypt
+   29  ./make-world.sh 
+   30  yum -y install     vim     bzip2-devel     freetds-devel     freetype-devel     httpd-devel     libmcrypt-devel     libjpeg-turbo-devel     libtool-ltdl-devel     libmemcached-devel     libpng-devel     libtidy-devel     libxml2-devel     libxslt-devel     libzip-devel     libedit-devel     mariadb-devel     postgresql-devel     readline-devel     sqlite-devel
+   31  yum install libmcrypt
+   32  yum install libmcrypt-dev
+   33  yum install libmcrypt-devel
+   34  ./make-world.sh 
+   35  yum -y install     vim     bzip2-devel     freetds-devel     freetype-devel     httpd-devel     libmcrypt-devel     libjpeg-turbo-devel     libtool-ltdl-devel     libmemcached-devel     libpng-devel     libtidy-devel     libxml2-devel     libxslt-devel     libzip-devel     libedit-devel     mariadb-devel     postgresql-devel     readline-devel     sqlite-devel
+   36  yum -y install     vim     bzip2-devel     freetds-devel     freetype-devel     httpd-devel     libmcrypt-devel     libjpeg-turbo-devel     libtool-ltdl-devel     libpng-devel     libtidy-devel     libxml2-devel     libxslt-devel     libzip-devel     mariadb-devel     postgresql-devel     readline-devel     sqlite-devel
+   37  ./make-world.sh 
+   38  yum install libedit
+   39  ./make-world.sh 
+   40  yum install libreadline-dev
+   41  yum install libreadline-devel
+   42  yum install libreadline
+   43  exit
+   44  cd host-tempmount/
+   45  ls -la
+   46  ./provision-centos8.sh 
+   47  ./make-world.sh 
+   48  exit
+   49  yum update -y
+   50  yum install sudo
+   51  adduser newrelic
+   52  passwd newrelic
+   53  yum install passwd
+   54  passwd newrelic
+   55  usermod -aG wheel newrelic
+   56  su - newrelic
+   57  exit
+   58  yum downgrade --help
+   59  yum downgrade openssl
+   60  yum search openssl
+   61  yum info openssl
+   62  yum install wget
+   63  ls -la
+   64  su - newrelic
+   65  exit
+   66  su - newrelic
+   67  exit
+   68  ls -la
+   69  cd /opt/nr/
+   70  ls -la
+   71  rm -rf src/
+   72  exit
+   73  su - newrelic
+   74  exit
+   75  ls -la
+   76  cd /opt/nr
+   77  du -sh src/
+   78  cd src
+   79  rm -rf *
+   80  exit
+   81  ls -la
+   82  su -newrelic
+   83  su - newrelic
+   84  eit
+   85  exit
+   86  ls -la
+   87  cd php-agent/
+   88  ls -la
+   89  git status -sb
+   90  source ../apps/bin/phpvm.bash change 7.0
+   91  make clean
+   92  make run_tests
+   93  make valgrind
+   94  make axiom-valgrind
+   95  make valgrind
+   96  make clean
+   97  exit
+   98  cd php-agent/
+   99  history
+  100  source ../apps/bin/phpvm.bash change 7.0
+  101  ./.github/docker/linux/release_build.sh
+  102  source ../apps/bin/phpvm.bash change 7.0
+  103  ./.github/docker/linux/release_build.sh
+  104  git status -sb
+  105  git status -sb
+  106  ls -la
+  107  make clean
+  108  ls -la
+  109  su - newrelic
+  110  exit
+  111  su -newrelic
+  112  su - newrelic
+  113  exit
+  114  ls -la
+  115  su - newrelic
+  116  exit
+  117  ls -la
+  118  openssl --version
+  119  openssl help
+  120  openssl version
+  121  cd /opt/nr/
+  122  ls -la
+  123  cd php/
+  124  ls -la
+  125  cd /
+  126  cd apps/
+  127  ls -la
+  128  git status -sb
+  129  pkg-config --help
+  130  pkg-config --modversion openssl
+  131  ./make-world.sh 
+  132  cd /
+  133  cd opt/nr/
+  134  cd php/
+  135  ls -la
+  136  cd /apps/
+  137  ./make-world.sh 
+  138  cd /opt/nr/
+  139  cd src/
+  140  ls -la
+  141  rm -rf php-5.*
+  142  cd ../
+  143  cd php/
+  144  ls -la
+  145  ls -lv
+  146  ls -1v
+  147  cd /
+  148  cd php-agent/
+  149  source ../apps/bin/phpvm.bash change 7.1
+  150  ./.github/docker/linux/release_build.sh
+  151  ./.github/docker/linux/release_build.sh
+  152  yum --help
+  153  yum search tree
+  154  yum install tree
+  155  tree releases/
+  156  vim /etc/passwd
+  157  make clean
+  158  exit
+  159  git version
+  160  gh --version
+  161  yum --help
+  162  yum search gh
+  163  ls -la
+  164  sudo dnf install 'dnf-command(config-manager)'
+  165  sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+  166  sudo dnf install gh
+  167  gh --version
+  168  exit
+  169  gpg --version
+  170  gpg --help
+  171  gpg --help
+  172  gpg --version
+  173  exit
+  174  yum info gpg
+  175  yum info GnuPG
+  176  gpg --version
+  177  yum search gpg
+  178  exit
+  179  rpm --help
+  180  rpmbuild --help
+  181  exit
+  182  git vresion
+  183  git --version
+  184  exit
+  185  gpg --version
+  186  yum list gpg --showduplicates
+  187  yum info gpg
+  188  yum search gnupg
+  189  yum list gnupg1.x86_64 --showduplicates
+  190  yum install gnupg1.x86_64-1.4.23-14.el8
+  191  yum list gnupg --showduplicates
+  192  yum install gnupg1.x86_64
+  193  gpg --version
+  194  gpg1 --version
+  195  gpg2 --version
+  196  whereis gpg
+  197  whereis gpg1
+  198  exit
+  199  history
+  200  exit
+  201  whereis gpg1
+  202  whereis gpg
+  203  exit
+  204  ls -la
+  205  cd apps/
+  206  ./make.sh pcre
+  207  export PATH=/opt/nr/pcre/8.40/bin/:$PATH
+  208  echo $PATH
+  209  exit
+  210  echo $PATH
+  211  ls -la
+  212  cd opt/nr/
+  213  ls -la
+  214  cd
+  215  ls -la
+  216  export PATH=/opt/nr/pcre/8.40/bin/:$PATH
+  217  echo $PATH
+  218  exit
+  219  cd /
+  220  cd opt/nr/php/
+  221  ls -la
+  222  cd /
+  223  cds apps/
+  224  cd apps
+  225  ls -la
+  226  ./make-world.sh 
+  227  exit
+  228  ls -la
+  229  history
+  230  exit
+  231  rpm –qa centos-release
+  232  rpm –qa centos-release
+  233  rpm �centos-release
+  234  uname -r
+  235  cat /etc/*release
+  236  exit
+  237  ls -la
+  238  cd php-agent
+  239  ls -la
+  240  history > centos-8-command-history.txt

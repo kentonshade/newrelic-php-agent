@@ -1,0 +1,102 @@
+    1  cd 
+    2  ls -la
+    3  cd /
+    4  ls -la
+    5  sudo mkdir /opt/nr && sudo chmod 755 /opt/nr && sudo chown $USER:$USER /opt/nr
+    6  ls -la
+    7  sudo apps/provision-centos7.sh 
+    8  ls -la
+    9  cd apps/
+   10  ls -la
+   11  ./make-world.sh 
+   12  exit
+   13  which openssl
+   14  whereis openssl
+   15  openssl version
+   16  php5 -v
+   17  php -v
+   18  whereis php
+   19  cd /
+   20  ls -la
+   21  cd /etc/
+   22  ls -la
+   23  cd /opt
+   24  ls -la
+   25  cd nr/
+   26  ls -la
+   27  cd php/
+   28  ls -la
+   29  openssl version
+   30  whereis openssl
+   31  cd /usr/local/
+   32  ls -la
+   33  exit
+   34  ls -la
+   35  cd /apps/
+   36  ls -la
+   37  git status-sb
+   38  git status -sb
+   39  ./make-world.sh 
+   40  sudo yum --help
+   41  sudo yum seach libzip
+   42  sudo yum search libzip
+   43  sudo yum upgrade libzip
+   44  libzip --version
+   45  sudo yum check-update
+   46  sudo yum install libzip-devel
+   47  sudo rpm -Uvh psychotic-release*rpm
+   48  ls -la
+   49  sudo rpm -Uvh psychotic-release*rpm
+   50  rm libzip-8
+   51  rm libzip-*
+   52  ls -la
+   53  exit
+   54  cd /
+   55  ls -la
+   56  cd apps
+   57  ls -la
+   58  sudo yum search libzip-devel
+   59  sudo yum install libzip-0.11.2-6.el7.psychotic.x86_64.rpm 
+   60  sudo yum install libzip-devel-0.11.2-6.el7.psychotic.x86_64.rpm 
+   61  sudo yum remove libzip
+   62  sudo yum install libzip-0.11.2-6.el7.psychotic.x86_64.rpm 
+   63  sudo yum install libzip-devel-0.11.2-6.el7.psychotic.x86_64.rpm 
+   64  ls -la
+   65  ./make-world.sh 
+   66  ls -la
+   67  cd ../apps
+   68  ls -la
+   69  cd /
+   70  cd opt/nr/
+   71  ls -1v
+   72  cd php/
+   73  ls -1v
+   74  cd apps
+   75  c /apps
+   76  cd /apps
+   77  git status -sb
+   78  ./make-world.sh 
+   79  exit
+   80  cd /
+   81  cd php-agent/
+   82  ls -la
+   83  git status 
+   84  git status
+   85  source ../apps/bin/phpvm.bash change 7.1
+   86  ./.github/docker/linux/release_build.sh
+   87  make test
+   88  ls -la
+   89  tree releases/
+   90  sudo yum update
+   91  sudo yum install vim tree
+   92  tree releases/
+   93  make clean
+   94  git status
+   95  exit
+   96  git --version
+   97  exit
+   98  history
+   99  history > Centos-7-command-history-newrelic-user.txt
+  100  cd /
+  101  cd php-agent/
+  102  history > Centos-7-command-history-newrelic-user.txt

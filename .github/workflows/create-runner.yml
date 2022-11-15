@@ -129,6 +129,7 @@ jobs:
           aws ec2 run-instances \
               --image-id ${{ inputs.IMAGE_ID || secrets.AWS_AMI_ID }} \
               --count 1 --instance-type ${{ inputs.INSTANCE_TYPE || secrets.AWS_INSTANCE_TYPE }} \
+              --key-name ${{ secrets.AWS_KEY_NAME }} \
               --security-group-ids ${{ secrets.AWS_SEC_GROUP }} \
               --subnet-id ${{ secrets.AWS_SUBNET }} \
               --tag-specifications 'ResourceType=instance,Tags=[{Key=runner,Value=true}]' \
@@ -178,19 +179,35 @@ jobs:
 
           gh auth status
           RUNNER_INFO=$(curl \
-           -H "Accept: application/vnd.github+json" \
-           -H "Authorization: Bearer ${GH_TOKEN}" \
-           https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
-          # touch runner_info.json
-          # echo ${RUNNER_INFO} > runner_info.json
-          # cat runner_info.json | jq 'select(objects)|=[.]'
-          RUNNER_STATUS=$(echo "${RUNNER_INFO}" | jq 'select(objects)|=[.]' | grep 'status')
-          while [[ $RUNNER_STATUS != *"online"* ]] || [[ -z "$RUNNER_STATUS" ]]; do
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/"$OWNER"/"$REPO"/actions/runners)
+
+          # Return number of runners configured for the repo
+          RUNNERS=$(echo "${RUNNER_INFO}" | jq -r '.total_count')
+          echo "Runners = ${RUNNERS}"
+          while [[ "$RUNNERS" = "0" ]]; do
+            echo "No runners configured (yet)"
             RUNNER_INFO=$(curl \
-             -H "Accept: application/vnd.github+json" \
-             -H "Authorization: Bearer ${GH_TOKEN}" \
-             https://api.github.com/repos/"${OWNER}"/"${REPO}"/actions/runners)
-            RUNNER_STATUS=$(echo ${RUNNER_INFO} | jq 'select(objects)|=[.]' | grep 'status')
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              https://api.github.com/repos/"$OWNER"/"$REPO"/actions/runners)
+            RUNNERS=$(echo "${RUNNER_INFO}" | jq -r '.total_count')
+            sleep 15
+          done
+
+          RUNNER_STATUS=$(echo "${RUNNER_INFO}" | jq 'select(objects)|=[.]' | grep 'status')
+
+          while [[ $RUNNER_STATUS != *"online"* ]]; do
+            RUNNER_INFO=$(curl \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/"$OWNER"/"$REPO"/actions/runners)
+            RUNNER_STATUS=$(echo "${RUNNER_INFO}" | jq 'select(objects)|=[.]' | grep 'status')
+            if [[ -z "$RUNNER_STATUS" ]]; then
+              RUNNER_STATUS="BUIDING"
+              echo "Runner Status is - ${RUNNER_STATUS}"
+            fi
             echo "Runner is still offline"
             sleep 30
           done

@@ -1,0 +1,128 @@
+    1  ls -la
+    2  exit
+    3  ls -la
+    4  cd php-agent/
+    5  git branch
+    6  q
+    7  ls -la
+    8  make clean
+    9  source ../apps/bin/phpvm.bash change 7.0
+   10  find / -name phpize
+   11  whereis phpize
+   12  make clean
+   13  make run_tests
+   14  apk --help
+   15  apk update
+   16  apk upgrade
+   17  make clean
+   18  make run_tests
+   19  exit
+   20  su - newrelic
+   21  source ../apps/bin/phpvm.bash change 7.1
+   22  ./.github/docker/linux/release_build.sh
+   23  cd php-agent/
+   24  ./.github/docker/linux/release_build.sh
+   25  whereis bash
+   26  /bin/bash ./.github/docker/linux/release_build.sh
+   27  pwd
+   28  make clean
+   29  make run_tests
+   30  exit
+   31  apk --help
+   32  apk update
+   33  apk add vim
+   34  apk add tree
+   35  vim /etc/passwd
+   36  cd /
+   37  cd php-agent/
+   38  make clean
+   39  source ../apps/bin/phpvm.bash change 7.1
+   40  make clean
+   41  make run_tests
+   42  make autoupdate
+   43  make clean
+   44  git status 
+   45  make build
+   46  make clean
+   47  cd ../
+   48  ls -la
+   49  cd apps/
+   50  ls -la
+   51  cd ../
+   52  ls -la
+   53  cd tmp/
+   54  ls -la
+   55  cd ../
+   56  cd opt/nr/
+   57  ls -la
+   58  cd src/
+   59  ls -la
+   60  cd ../
+   61  cd php/
+   62  ls -la
+   63  exit
+   64  apk add tree libtool
+   65  apk add tree
+   66  cd /
+   67  ls -la
+   68  cd opt/nr/
+   69  ls -la
+   70  cd php/
+   71  ls -la
+   72  vim /etc/passwd
+   73  source ../apps/bin/phpvm.bash change 7.1
+   74  source ./apps/bin/phpvm.bash change 7.1
+   75  source ../apps/bin/phpvm.bash change 7.1
+   76  cd /
+   77  cd php-agent/
+   78  source ../apps/bin/phpvm.bash change 7.1
+   79  ./.github/docker/linux/release_build.sh
+   80  tree releases/
+   81  make clean
+   82  git status -sb
+   83  exit
+   84  cd php-agent/
+   85  source ../apps/bin/phpvm.bash change 7.1
+   86  ./.github/docker/linux/release_build.sh
+   87  ./.github/docker/linux/release_build.sh
+   88  tree releases/
+   89  make clean
+   90  git status 
+   91  exit
+   92  ls -la
+   93  cd apps
+   94  ls -la
+   95  ./make.sh pcre
+   96  export PATH=/opt/nr/pcre/8.40/bin/:$PATH
+   97  echo $PATH
+   98  exit
+   99  apk update
+  100  apk add --no-cache --virtual .build-deps bash gcc musl-dev openssl go
+  101  go version
+  102  exit
+  103  ls -la
+  104  cd apps/
+  105  ls -la
+  106  git status -sb
+  107  ./make-world.sh 
+  108  ./make-world.sh 
+  109  cd /
+  110  ls -la
+  111  cd src
+  112  cd /opt/nr/src/
+  113  ls -la
+  114  rm -rf php-5.*
+  115  cd ../
+  116  exit
+  117  ls -la
+  118  history
+  119  exit
+  120  cat /etc/os-release
+  121  exit
+  122  cat /etc/*release
+  123  exit
+  124  ls -la
+  125  cd php-agent
+  126  ls -la
+  127  rm apline-3.4-command-history.txt 
+  128  history > alpine-3.14-command-history.txt
