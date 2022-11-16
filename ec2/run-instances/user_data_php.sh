@@ -14,9 +14,9 @@ echo "export GH_TOKEN=${GH_TOKEN}" >> ~/.bashrc
 echo "export RUNNER_NAME=${RUNNER_NAME}" >> ~/.bashrc
 echo "export OWNER=${OWNER}" >> ~/.bashrc
 echo "export REPO=${REPO}" >> ~/.bashrc
-source ~/.bashrc
+source ~/.bashrc && ~/runner-test-php.sh
 EOF
 
 # This must be created on the AMI
-sudo -i -u hudson "/home/hudson/runner-test-php.sh"
-sleep 10
+# sudo -i -u hudson "/home/hudson/runner-test-php.sh"
+# sleep 10
