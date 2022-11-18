@@ -66,11 +66,11 @@ on:
       REPO_ORG:
         description: "GitHUb Organization"
         required: false
-        default: 'My-Cirrus-CI'
+        default: 'kentonshade'
       REPO_NAME:
         description: "Repository Name"
         required: false
-        default: 'aws'
+        default: 'newrelic-php-agent'
 
 jobs:
   pr_build_by_os:
@@ -386,7 +386,7 @@ jobs:
             ./agent/.libs/newrelic.so
           if-no-files-found: error
 
-  Stop-runner_test:
+  Stop-runner-test:
     needs: start-runner
     if: ${{ inputs.RUNNER_DRYRUN == true }}
     # GJHA we will use version when hosted non-local
