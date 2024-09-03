@@ -55,7 +55,7 @@ jobs:
       - name: Create directory
         run: mkdir releases
       - name: Download to directory
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           path: releases
       - run: sudo apt install tree
