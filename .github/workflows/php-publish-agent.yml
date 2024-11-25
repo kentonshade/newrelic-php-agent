@@ -99,7 +99,7 @@ jobs:
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts from php-bigchange-packages.yml
         if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
-        uses: dawidd6/action-download-artifact@v2.21.0
+        uses: dawidd6/action-download-artifact@v6
         with:
           # GHA: Will we be able to use php-release-packages?
           workflow: php-bigchange-packages.yml
@@ -123,7 +123,7 @@ jobs:
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts from php-bigchange-tarballs.yml
         if: ${{ inputs.ACTION == 'bigchange-2-testing' }}
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           # GHA: Can we use php-release-packages.yml, as php-release-tarballs consolidated?
           workflow: php-bigchange-tarballs.yml
@@ -150,7 +150,7 @@ jobs:
       # # GHA: temp ref used for davidd6 due to issue with latest
       # - name: Download combined-artifacts
       #   if: ${{ inputs.ACTION == 'master-2-testing' }}
-      #   uses: dawidd6/action-download-artifact@v2.21.0
+      #   uses: dawidd6/action-download-artifact@v6
       #   with:
       #     workflow: php-bigchange-packages.yml
       #     branch: gha-dev
@@ -174,7 +174,7 @@ jobs:
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts from php-release-packages.yml
         if: ${{ inputs.ACTION == 'release-2-testing' }}
-        uses: dawidd6/action-download-artifact@v2.21.0
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: php-release-packages.yml
           branch: main
@@ -197,7 +197,7 @@ jobs:
       # GHA: temp ref used for davidd6 due to issue with latest
       - name: Download combined-artifacts from php-release-tarballs.yml
         if: ${{ inputs.ACTION == 'release-2-testing' }}
-        uses: dawidd6/action-download-artifact@v2.21.0
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: php-release-tarballs.yml
           branch: main

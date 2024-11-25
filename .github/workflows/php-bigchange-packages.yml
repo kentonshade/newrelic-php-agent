@@ -56,7 +56,7 @@ jobs:
       - name: Download combined-artifacts
         # uses: dawidd6/action-download-artifact@v2.14.1
         # GHA: Testing new version of action
-        uses: dawidd6/action-download-artifact@v2.21.0
+        uses: dawidd6/action-download-artifact@v6
         with:
           # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
           # Required, if artifact is from a different repo
@@ -132,7 +132,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifacts
-        uses: dawidd6/action-download-artifact@v2.21.0
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: NEW-release-build.yml
           branch: main
@@ -215,7 +215,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 20074295 -R ${{ env.REPO }} -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifacts
-        uses: dawidd6/action-download-artifact@v2.21.0
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: NEW-release-build.yml
           branch: main
@@ -277,7 +277,7 @@ jobs:
           echo "RUN_ID=$(gh run list -w 20074295 -L 1 | cut -f 7)" >> $GITHUB_ENV
 
       - name: Download combined-artifactsv2
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: NEW-release-build.yml
           branch: main
